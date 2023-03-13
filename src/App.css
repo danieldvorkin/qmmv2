@@ -89,6 +89,9 @@ img {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
+  border-radius: 5px;
+  background-color: silver;
+  padding: 50px 50px;
 }
 .img1 {
   background-image: url('https://thehousecannabis.ca/static/ec2cc83b5630cab0eb8e9ca65e1f8e63/08684/hero_hd_eebbc18ed0.avif');
@@ -103,8 +106,9 @@ img {
 }
 
 .onHoverPanel:hover {
-  box-shadow: 0 0 11px rgba(53, 52, 52, 0.2); 
-  transition: 0.3s;
+  box-shadow: 5px 5px 11px rgba(53, 52, 52, 0.2); 
+  transition: 0.5s;
+  cursor: pointer;
 }
 
 .title {
@@ -122,6 +126,42 @@ img {
   z-index: 2;
   width: 32.5%;
   font-weight: 500;
+}
+
+.panel1 {
+  min-height: 350px;
+}
+
+.panel2 {
+  min-height: 720px;
+}
+
+.shortPanel {
+  min-height: 350px;
+}
+
+.tallPanel {
+  min-height: 720px;
+}
+
+.happy {
+  background-image: url('https://thehousecannabis.ca/static/fc6d9d6dd958ccb752033a8098089bab/c6cd1/happy_resize_6f810886c4.avif');
+}
+
+.calm {
+  background-image: url('https://thehousecannabis.ca/static/d19eefd9a53bf5f7232e5426ea8a0e9a/c6cd1/calm_resize_a3de15e265.avif');
+}
+
+.energetic {
+  background-image: url('https://thehousecannabis.ca/static/01f246e94944c3d417446d0b2c5fd05c/64339/energetic_resize_e7478c3950.avif');
+}
+
+.sleepy {
+  background-image: url('https://thehousecannabis.ca/static/557c1dbd58da105da307e732b6e887b9/c6cd1/sleepy_resize_8af5e9ca9c.avif');
+}
+
+.creative {
+  background-image: url('https://thehousecannabis.ca/static/15595b8544a5e94738c15fb683cb7944/c6cd1/creative_resize_5c09c42e2e.avif');
 }
 
 :focus {
