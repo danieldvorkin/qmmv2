@@ -1,24 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
+import MainNavbar from './components/navbar';
+import { Outlet } from "react-router-dom";
+import Cart from './components/cart';
+import { ChakraProvider, useDisclosure } from '@chakra-ui/react';
+import { useLocation } from 'react-router-dom'
 
 function App() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const location = useLocation();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider>
+      <div className={location !== "root" ? '' : "container"}>
+        <MainNavbar cartClick={onOpen} />
+        <Outlet />
+      </div>
+      <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+    </ChakraProvider>
   );
 }
 
