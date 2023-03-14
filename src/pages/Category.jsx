@@ -9,7 +9,7 @@ import {
 import { Col, Row } from "react-bootstrap";
 import { Divider } from "@blueprintjs/core";
 import CategoryDetail from "../components/CategoryDetail";
-import Item from "../components/Item";
+import Product from "./Product";
 
 const Category = () => {
   let { slug } = useParams();
@@ -44,10 +44,12 @@ const Category = () => {
           if(item.inventory > 0 && item.price !== null){
             return (
               <Col md={4} key={item.id}>
-                <Item item={item} />
+                <Product product={item} />
               </Col>
             )
           }
+
+          return '';
         })}
       </Row>
     </div>

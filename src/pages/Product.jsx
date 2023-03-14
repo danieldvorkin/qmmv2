@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Card, CardBody, Heading, Stack, Text, Image, Button, ButtonGroup, CardFooter } from '@chakra-ui/react';
+import React from "react";
+import { Card, CardBody, Heading, Stack, Text, Image, Button, ButtonGroup, CardFooter, CardHeader } from '@chakra-ui/react';
 import { Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
 
 const Product = (props) => {
   const { product } = props;
+  const firstVariant = product.variants[0];
 
   return (
-    <Card maxW='sm' style={{ margin: 5 }}>
+    <Card maxW='sm' style={{ margin: 5, minHeight: 600, maxHeight: 600 }}>
       <CardBody>
+        <CardHeader>
+          <Text>{product.category?.name}</Text>
+        </CardHeader>
         <Carousel variant="dark">
           <Carousel.Item>
             <Image
@@ -19,7 +23,7 @@ const Product = (props) => {
           </Carousel.Item>
           {product?.images?.map((img) => {
             return (
-              <Carousel.Item>
+              <Carousel.Item key={img}>
                 <Image
                   src={img}
                   borderRadius='lg'
@@ -39,7 +43,7 @@ const Product = (props) => {
             {product.description}
           </Text>
           <Text color='blue.600' fontSize='2xl'>
-            {/* <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={'$'} /> */}
+            <CurrencyFormat value={product.price || firstVariant?.price || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
           </Text>
         </Stack>
       </CardBody>

@@ -175,6 +175,18 @@ img {
   position: relative;
   right: 10px;
 }
+.badge .bp4-button .bp4-icon {
+  color: white !important;
+}
+
+.badge .bp4-button .bp4-icon:hover {
+  color: silver !important;
+}
+
+.rounded-pill {
+  padding: 2px 5px 2px 15px;
+}
+
 :focus {
   outline: none;
 }

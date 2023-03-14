@@ -4,7 +4,6 @@ import { Outlet } from "react-router-dom";
 import Cart from './components/cart';
 import { ChakraProvider, useDisclosure } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom'
-import Footer from './components/Footer';
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
