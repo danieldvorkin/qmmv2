@@ -78,12 +78,12 @@ const LandingPage = (props) => {
             </Row>
 
             <Row style={{marginTop: 20}}>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <div className="onHoverPanel shortPanel">
                   <h1 className="header">{Object.keys(categories)[1]}</h1>
                 </div>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <div className="onHoverPanel shortPanel">
                   <h1 className="header">{Object.keys(categories)[2]}</h1>
                 </div>

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Products from "../components/Products";
+import { featuredItems, getCategories, getCategory } from "../utils/util";
 
 const Shop = () => {
   const [queryParams, _] = useSearchParams();
@@ -18,18 +19,12 @@ const Shop = () => {
     let slug = queryParams.get('filter');
     setFilterSlug(slug);
 
-    axios.get("https://queenmarymedical.com/api/v1/categories").then((resp) => {
-      setCategories(resp.data);
-    });
+    getCategories().then((resp) => setCategories(resp));
 
     if(slug?.length > 0){
-      axios.get("https://queenmarymedical.com/api/v1/categories/" + slug).then((resp) => {
-        setProducts(resp.data.items);
-      })
+      getCategory(slug).then((resp) => setProducts(resp));
     } else {
-      axios.get("https://queenmarymedical.com/api/v1/items/featured_items").then((resp) => {
-        setProducts(resp.data);
-      })
+      featuredItems().then((resp) => setProducts(resp))
     }
   }, [])
 

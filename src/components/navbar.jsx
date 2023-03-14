@@ -3,7 +3,7 @@
 import { Button } from '@blueprintjs/core';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Nav, Navbar, NavbarBrand, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../logov2.svg';
