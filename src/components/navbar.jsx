@@ -4,6 +4,7 @@ import { Button } from '@blueprintjs/core';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Nav, Navbar, NavbarBrand, NavDropdown } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../logov2.svg';
 
@@ -26,33 +27,30 @@ const MainNavbar = (props) => {
 
   return (
     <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="#">
-        <Link to="/">
+      <LinkContainer to="/">
+        <Navbar.Brand href="#">
           <img alt="img" style={{ height: 70 }} src={logo} />
-        </Link>
-      </Navbar.Brand>
+        </Navbar.Brand>
+      </LinkContainer>
+      
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-          <Nav.Link href="#">
-            <Link to="/">
-              Home
-            </Link>
-          </Nav.Link>
-          <Nav.Link href="#">
-            <Link to="/shop">
-              Shop
-            </Link>    
-          </Nav.Link>
+          <Link className="nav-link" to="/">
+            Home
+          </Link>
+          <Link className="nav-link" to="/shop">
+            Shop
+          </Link>    
           { Object.keys(categories).length > 0 && Object.keys(categories).map((category) => {
             const list = categories[category];
             return (
-              <NavDropdown title={category} id={"dropdown-" + category}>
+              <NavDropdown title={category} key={"dropdown-" + category} id={"dropdown-" + category}>
                 {list.map((item) => {
                   return (
-                    <NavDropdown.Item>
-                      <Link to={"/category/" + item.slug}>{item.name}</Link>
-                    </NavDropdown.Item>  
+                    <LinkContainer key={item.slug} to={"/category/" + item.slug}>
+                      <NavDropdown.Item>{item.name}</NavDropdown.Item>
+                    </LinkContainer>
                   )
                 })}
               </NavDropdown>

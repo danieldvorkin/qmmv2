@@ -8,9 +8,11 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get("https://queenmarymedical.com/api/v1/categories").then((resp) => {
-      setCategories(resp.data)
-    });
+    if(!params.query){
+      axios.get("https://queenmarymedical.com/api/v1/categories").then((resp) => {
+        setCategories(resp.data)
+      });
+    }
   }, []);
 
 

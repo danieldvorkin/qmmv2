@@ -1,17 +1,28 @@
-import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Box, Divider } from "@chakra-ui/react";
+import { Button } from "@blueprintjs/core";
+import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import Products from "../components/Products";
 
 const Shop = () => {
+  const [queryParams, _] = useSearchParams();
+  const filter = queryParams.get('filter');
   const [categories, setCategories] = useState([]);
-
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
+  
   useEffect(() => {
     axios.get("https://queenmarymedical.com/api/v1/categories").then((resp) => {
       setCategories(resp.data);
     });
+
+    axios.get("https://queenmarymedical.com/api/v1/items").then((resp) => {
+      setProducts(resp.data);
+    })
   }, [])
+
   
   return(
     <div style={{ marginTop: 30 }}>
@@ -32,6 +43,9 @@ const Shop = () => {
                             return (
                               <li key={category.id}>
                                 <Link to={"/shop?filter=" + category.slug}>{category.name}</Link>
+                                {filter === category.slug && (
+                                  <Button className="bp4-minimal" icon="cross" onClick={() => navigate("/shop")} />
+                                )}
                               </li>
                             )
                           })}
@@ -45,8 +59,10 @@ const Shop = () => {
           </Col>
           <Col lg="9">
             <h1 className="header">Products</h1>
-            <Divider/>
-
+            <Divider />
+            <Container fluid style={{marginTop: 10}}>
+              <Products selectedFilter={filter} products={products} />
+            </Container>
           </Col>
         </Row>
       </Container>
