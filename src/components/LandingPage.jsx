@@ -9,14 +9,14 @@ const LandingPage = (props) => {
   return (
     <Container fluid>
       <Row>
-        <Col md="7" sm="12" style={{marginTop: 10, marginRight: '-5px'}}>
+        <Col lg={7} md={12} style={{marginTop: 10, marginRight: '-5px'}}>
           <div className="onHoverPanel img1" style={{ minHeight: 542 }}>
             <h1 className="title">Queen Mary Medical</h1>
             <h5 className="header">Ontario's best cannibas delivery service</h5>
-            <Link to="/shop"><Button style={{ minWidth: 400}}>SHOP NOW</Button></Link>
+            <Link to="/shop"><Button>SHOP NOW</Button></Link>
           </div>
         </Col>
-        <Col md="5" sm="12">
+        <Col lg={5} sm={12}>
           <Row>
             <Col style={{marginTop: 10}}>
               <div className="onHoverPanel img2" style={{ minHeight: 250 }}>
@@ -68,7 +68,7 @@ const LandingPage = (props) => {
 
       {Object.keys(categories).length > 0 && (
         <Row style={{marginBottom: 50}}>
-          <Col lg={7}>
+          <Col lg={7} sm={12}>
             <Row >
               <Col>
                 <div className="onHoverPanel shortPanel">
@@ -78,19 +78,19 @@ const LandingPage = (props) => {
             </Row>
 
             <Row style={{marginTop: 20}}>
-              <Col>
+              <Col sm={12}>
                 <div className="onHoverPanel shortPanel">
                   <h1 className="header">{Object.keys(categories)[1]}</h1>
                 </div>
               </Col>
-              <Col>
+              <Col sm={12}>
                 <div className="onHoverPanel shortPanel">
                   <h1 className="header">{Object.keys(categories)[2]}</h1>
                 </div>
               </Col>
             </Row>
           </Col>
-          <Col lg={5}>
+          <Col lg={5} sm={12}>
             <div className="onHoverPanel tallPanel">
               <h1 className="header">{Object.keys(categories)[3]}</h1>
             </div>

@@ -15,7 +15,7 @@ function App() {
       <div className={location !== "root" ? '' : "container"}>
         <MainNavbar cartClick={onOpen} />
         <Outlet />
-        <Footer />
+        {/* <Footer /> */}
       </div>
       <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
     </ChakraProvider>

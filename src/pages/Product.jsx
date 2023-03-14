@@ -14,7 +14,7 @@ const Product = () => {
   const [product, setProduct] = useState({});
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/v1/items/" + slug).then((resp) => setProduct(resp.data));
+    axios.get("https://queenmarymedical.com/api/v1/items/" + slug).then((resp) => setProduct(resp.data));
   }, [slug]);
 
   return (

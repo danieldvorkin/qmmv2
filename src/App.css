@@ -164,6 +164,17 @@ img {
   background-image: url('https://thehousecannabis.ca/static/15595b8544a5e94738c15fb683cb7944/c6cd1/creative_resize_5c09c42e2e.avif');
 }
 
+.navbar-collapse {
+  padding: 0 20px;
+}
+
+.navbar .bp4-button, .navbar .bp4-button:hover {
+  background-color: transparent;
+}
+.navbar-toggler {
+  position: relative;
+  right: 10px;
+}
 :focus {
   outline: none;
 }

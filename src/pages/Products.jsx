@@ -6,7 +6,7 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/v1/categories").then((resp) => {
+    axios.get("https://queenmarymedical.com/api/v1/categories").then((resp) => {
       setCategories(resp.data)
     })
   }, []);
