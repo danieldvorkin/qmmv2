@@ -58,7 +58,7 @@ const Cart = (props) => {
         <Divider/>
         
         <DrawerBody>
-          <div style={{ maxHeight: '90%', overflowY: 'auto', overflowX: 'hidden' }}>
+          <div className="content-container">
             {localCart?.length > 0 && localCart.map((item, index) => {
               return(
                 <>
