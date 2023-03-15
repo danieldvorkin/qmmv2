@@ -187,6 +187,25 @@ img {
   padding: 2px 5px 2px 15px;
 }
 
+.bottomSection {
+  border-top: 1px solid silver;
+  padding-top: 5px;
+  position: absolute;
+  bottom: 107px;
+  text-align: right;
+  width: 93%;
+}
+
+.chakra-slide .chakra-modal__body {
+  padding: 5px 0px 5px 5px;
+}
+
+.bp4-toast-container {
+  position: fixed !important;
+  padding: 95px 20px 20px;
+  z-index: 999 !important;
+}
+
 :focus {
   outline: none;
 }
@@ -196,5 +215,12 @@ img {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+
+@media only screen and (max-width: 600px) {
+  .addToCart {
+    margin-left: 180px;
   }
 }

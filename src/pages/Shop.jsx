@@ -1,6 +1,5 @@
 import { Button } from "@blueprintjs/core";
 import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Text } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -39,13 +38,9 @@ const Shop = () => {
       setFilterObject(filterHash[0]);
 
       if(filterSlug?.length > 0){
-        axios.get("https://queenmarymedical.com/api/v1/categories/" + filterSlug).then((resp) => {
-          setProducts(resp.data.items);
-        })
+        getCategory(filterSlug).then((resp) => setProducts(resp));
       } else {
-        axios.get("https://queenmarymedical.com/api/v1/items/featured_items").then((resp) => {
-          setProducts(resp.data);
-        })
+        featuredItems().then((resp) => setProducts(resp));
       }
     }
   }, [categories, filterSlug])
