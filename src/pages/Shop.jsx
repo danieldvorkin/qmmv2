@@ -62,7 +62,7 @@ const Shop = () => {
               <Accordion allowToggle>
                 {Object.keys(categories).map((key) => {
                   return (
-                    <AccordionItem key={categories[key].id}>
+                    <AccordionItem key={"according-" + key}>
                       <Text><AccordionButton>{key}<AccordionIcon /></AccordionButton></Text>
                       <AccordionPanel>
                         <ul key={key} style={{listStyle: 'none'}}>

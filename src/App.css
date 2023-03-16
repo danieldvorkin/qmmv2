@@ -219,7 +219,7 @@ img {
 }
 
 .content-container {
-  max-height: 90%;
+  max-height: 88%;
   overflow-y: auto;
   overflow-x: hidden;
 }
