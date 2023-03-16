@@ -1,3 +1,4 @@
+import { Divider } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -23,7 +24,8 @@ const Home = () => {
     <div>
       {query ? (
         <Container>
-          <h1>Searching for: {query}</h1>
+          <h1 className="header">Searching for: {query}</h1>
+          <Divider /><br/>
           <Row>
             {results?.length > 0 && results.map((product) => {
               return (

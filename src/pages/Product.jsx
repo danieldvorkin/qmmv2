@@ -58,7 +58,8 @@ const Product = (props) => {
 
           <Text noOfLines={[3, 3]}>
             <strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc}{' | '}
-            <strong style={{fontSize: 10}}>CBD:{' '}</strong>{product.cbd}<br/>
+            <strong style={{fontSize: 10}}>CBD:{' '}</strong>{product.cbd}{' | '}
+            <strong style={{fontSize: 10}}>BRAND:{' '}</strong>{product.brand}<br/>
             {product.description || 'No Description Available'}
           </Text>
           <Text color='blue.600' fontSize='2xl'>
