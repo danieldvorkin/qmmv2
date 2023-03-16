@@ -1,11 +1,14 @@
 
 
 import { Button } from '@blueprintjs/core';
+import { Badge } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../logov2.svg';
+import store from '../store';
 import { getCategories } from '../utils/util';
 
 const MainNavbar = (props) => {
@@ -20,11 +23,13 @@ const MainNavbar = (props) => {
   }
 
   useEffect(() => {
+    console.log("Props: ", props)
+  }, [props]);
+
+  useEffect(() => {
     getCategories().then((resp) => setCategories(resp));
     window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-        window.removeEventListener('resize', handleWindowSizeChange);
-    }
+    return () => window.removeEventListener('resize', handleWindowSizeChange);
   }, []);
 
   const checkForEnter = (e) => {
@@ -74,7 +79,9 @@ const MainNavbar = (props) => {
       
       <Navbar.Collapse className="justify-content-end">
         {!isMobile && (
-          <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick} />
+          <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
+            <Badge colorScheme="red">{props.cart.length}</Badge>
+          </Button>
         )}
         <Button className="bp4-minimal" text="Account" />
         <input className="bp4-input" placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} />
@@ -87,4 +94,10 @@ const MainNavbar = (props) => {
   )
 }
 
-export default MainNavbar;
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart
+  }
+}
+
+export default connect(mapStateToProps)(MainNavbar);

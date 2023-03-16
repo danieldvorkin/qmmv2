@@ -33,10 +33,8 @@ function App() {
           </div>
           <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
         </PersistGate>
-      </Provider>
-      
+      </Provider> 
     </ChakraProvider>
   );
 }
-
 export default App;

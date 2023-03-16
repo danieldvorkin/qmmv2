@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -18,20 +18,18 @@ import {
 } from '@chakra-ui/react'
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
-import store from "../store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { remove, updateQty } from "../manageCart";
+import { connect } from "react-redux";
 
 const Cart = (props) => {
   const dispatch = useDispatch();
-  const stateee = useSelector((state) => state.cart )
-  const cartData = store.getState("cart").cart;
 
   const getCartTotal = () => {
     let subtotal = 0;
     
-    if(cartData.length > 0){
-      subtotal = cartData.map((curr) => curr.quantity * ((curr.product?.price || curr.product?.variants.length > 0) ? (curr.product.price || curr.product.variants[0].price) : 0));
+    if(props.cart.length > 0){
+      subtotal = props.cart.map((curr) => curr.quantity * ((curr.product?.price || curr.product?.variants.length > 0) ? (curr.product.price || curr.product.variants[0].price) : 0));
       return subtotal.reduce((total, current) => total = total + current);
     }
     
@@ -59,10 +57,10 @@ const Cart = (props) => {
         <Divider/>
         <DrawerBody>
           <div className="content-container">
-            {cartData?.length > 0 && cartData.map((item, index) => {
+            {props.cart?.length > 0 && props.cart.map((item, index) => {
               return(
-                <>
-                  <Row style={{paddingLeft: 10}} key={"index-" + index}>
+                <div key={"index-" + index}>
+                  <Row style={{paddingLeft: 10}}>
                     <Col xs={4} lg={3} style={{paddingTop: 12}}>
                       {item.product?.cover_photo && (
                         <img src={item.product.cover_photo} alt={"img-" + index} />
@@ -102,10 +100,10 @@ const Cart = (props) => {
                       <Text onClick={() => removeItem(item.product?.id)} style={{ cursor: 'pointer' }}>X</Text>
                     </Col>
                   </Row>
-                  {index !== cartData.length -1 && (
+                  {index !== props.cart.length -1 && (
                     <Divider mt={2} mb={2} />
                   )}
-                </>
+                </div>
               )
             })}
           </div>
@@ -139,4 +137,10 @@ const Cart = (props) => {
   )
 }
 
-export default Cart;
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart
+  }
+}
+
+export default connect(mapStateToProps)(Cart);
