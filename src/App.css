@@ -231,4 +231,11 @@ img {
   .content-container {
     max-height: 86%;
   }
+  .title, .header {
+    width: 100%;
+  }
+  
+  .panel2, .tallPanel {
+    min-height: 350px;
+  }
 }

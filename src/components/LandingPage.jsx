@@ -38,7 +38,7 @@ const LandingPage = (props) => {
       
       <Divider style={{marginBottom: 20, marginTop: 20}} />
       
-      <Row style={{marginBottom: 50}}>
+      <Row style={{marginBottom: 20}}>
         <Col>
           <div className="onHoverPanel panel1 happy">
             <h1 className="title" style={{color: 'white'}}>Happy</h1>
@@ -48,12 +48,12 @@ const LandingPage = (props) => {
             <h1 className="title" style={{color: 'white'}}>Calm</h1>
           </div>
         </Col>
-        <Col>
+        <Col style={{marginTop: 20}}>
           <div className="onHoverPanel panel2 energetic">
             <h1 className="title" style={{color: 'white'}}>Energetic</h1>
           </div>
         </Col>
-        <Col>
+        <Col style={{marginTop: 20}}>
           <div className="onHoverPanel panel1 sleepy">
             <h1 className="title" style={{color: 'white'}}>Sleepy</h1>
           </div>
@@ -83,14 +83,14 @@ const LandingPage = (props) => {
                   <h1 className="header">{Object.keys(categories)[1]}</h1>
                 </div>
               </Col>
-              <Col lg={6} sm={12}>
+              <Col lg={6} sm={12} style={{marginTop: 20}}>
                 <div className="onHoverPanel shortPanel">
                   <h1 className="header">{Object.keys(categories)[2]}</h1>
                 </div>
               </Col>
             </Row>
           </Col>
-          <Col lg={5} sm={12}>
+          <Col lg={5} sm={12} style={{marginTop: 20}}>
             <div className="onHoverPanel tallPanel">
               <h1 className="header">{Object.keys(categories)[3]}</h1>
             </div>
