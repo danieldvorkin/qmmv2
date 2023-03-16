@@ -8,8 +8,9 @@ import App from "./App.js";
 import Home from "./pages/Home";
 
 import Category from './pages/Category';
-import Product from './pages/Product';
 import Shop from './pages/Shop';
+import ProductShow from './pages/ProductShow';
+import Checkout from './pages/Checkout';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -19,10 +20,11 @@ root.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
-          <Route path="products/:slug" element={<Product />} />
+          <Route path="products/:slug" element={<ProductShow />} />
           <Route path="category/:slug" element={<Category />} />
           <Route path="search/:query" element={<Home />} />
           <Route path="shop" element={<Shop />} />
+          <Route path="checkout" element={<Checkout/>} />
         </Route>
       </Routes>
     </BrowserRouter>

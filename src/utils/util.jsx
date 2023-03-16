@@ -19,3 +19,7 @@ export const getCategory = async (slug) => {
 export const featuredItems = async () => {
   return await axios.get(URL + "/items/featured_items").then((resp) => resp.data);
 }
+
+export const getItem = async(slug) => {
+  return await axios.get(URL + "/items/" + slug).then((resp) => resp.data);
+}

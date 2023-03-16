@@ -9,6 +9,8 @@ import store from './store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import loading from './loading.svg';
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();

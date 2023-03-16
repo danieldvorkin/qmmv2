@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../logov2.svg';
-import store from '../store';
 import { getCategories } from '../utils/util';
 
 const MainNavbar = (props) => {
@@ -21,10 +20,6 @@ const MainNavbar = (props) => {
   const handleWindowSizeChange = () => {
     setWidth(window.innerWidth);
   }
-
-  useEffect(() => {
-    console.log("Props: ", props)
-  }, [props]);
 
   useEffect(() => {
     getCategories().then((resp) => setCategories(resp));
@@ -47,7 +42,9 @@ const MainNavbar = (props) => {
       </LinkContainer>
       
       {isMobile && (
-        <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick} />
+        <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
+            <Badge colorScheme="red">{props.cart.length}</Badge>
+          </Button>
       )}
       
       <Navbar.Toggle aria-controls="basic-navbar-nav" />

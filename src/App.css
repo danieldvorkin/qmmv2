@@ -1,6 +1,7 @@
 @import "@blueprintjs/core/lib/css/blueprint.css";
 @import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
+
 body {
   font-family: 'Abril Fatface', cursive;
   font-family: 'Climate Crisis', cursive;
@@ -229,6 +230,13 @@ img {
   min-height: 550px;
 }
 
+.addToCart .chakra-badge {
+  position: relative;
+  top: -1px;
+  right: 3px;
+  border-radius: 25px;
+}
+
 /* Portrait */
 @media only screen 
   and (min-device-width: 768px) 
@@ -249,8 +257,6 @@ img {
       min-height: 460px;
     }
 }
-
-
 
 @media only screen and (max-width: 600px) {
   .addToCart {

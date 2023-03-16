@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Drawer,
   DrawerBody,
@@ -21,6 +21,7 @@ import CurrencyFormat from "react-currency-format";
 import { useDispatch } from "react-redux";
 import { remove, updateQty } from "../manageCart";
 import { connect } from "react-redux";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Cart = (props) => {
   const dispatch = useDispatch();
@@ -130,7 +131,9 @@ const Cart = (props) => {
           <Button variant='outline' mr={3} onClick={props.onClose}>
             Keep Shopping
           </Button>
-          <Button colorScheme='blue'>Checkout</Button>
+          <LinkContainer to="checkout">
+            <Button colorScheme='blue' onClick={props.onClose}>Checkout</Button>
+          </LinkContainer>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

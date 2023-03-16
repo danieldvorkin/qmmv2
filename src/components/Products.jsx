@@ -2,7 +2,7 @@ import { Button } from "@blueprintjs/core";
 import { Text } from "@chakra-ui/react";
 import React from "react";
 import { Badge, Col, Row } from "react-bootstrap";
-import Product from "../pages/Product";
+import Product from "./Product";
 
 const Products = (props) => {
   let { products, selectedFilter, resetFilter } = props;
@@ -26,7 +26,7 @@ const Products = (props) => {
             {products && products.map((product) => {
               return (
                 <Col xl={4} md={4} xs={12} key={product.id}>
-                  <Product product={product} />
+                  <Product product={product} category={selectedFilter} />
                 </Col>
               )
             })}

@@ -1,11 +1,10 @@
 import { Divider } from '@chakra-ui/react';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import LandingPage from '../components/LandingPage';
 import { getCategories, search } from '../utils/util';
-import Product from './Product';
+import Product from '../components/Product';
 
 const Home = () => {
   let { query } = useParams();
@@ -30,7 +29,7 @@ const Home = () => {
             {results?.length > 0 && results.map((product) => {
               return (
                 <Col lg={4} sm={6}>
-                  <Product product={product} />
+                  <Product product={product} category={product.category} />
                 </Col>
               )
             })}
