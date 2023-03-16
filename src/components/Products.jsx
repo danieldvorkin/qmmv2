@@ -25,7 +25,7 @@ const Products = (props) => {
           <Row>
             {products && products.map((product) => {
               return (
-                <Col xl={4} md={4} xs={6} key={product.id}>
+                <Col xl={4} md={4} xs={12} key={product.id}>
                   <Product product={product} />
                 </Col>
               )

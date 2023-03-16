@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardBody, Heading, Stack, Text, Image, Button, ButtonGroup, CardFooter, CardHeader } from '@chakra-ui/react';
-import { Carousel } from "react-bootstrap";
+import { Badge, Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
 import { useDispatch } from "react-redux";
@@ -10,12 +10,25 @@ const Product = (props) => {
   const { product } = props;
   const firstVariant = product.variants[0];
   const dispatch = useDispatch();
+
+  const getBadgeColor = (typeOf) => {
+    let colors = {
+      "Vapeware": "success",
+      "Strains": "info",
+      "Edibles": "warning",
+      "Extracts": "danger"
+    }
+
+    return colors[typeOf];
+  }
  
   return (
-    <Card maxW='sm' style={{ margin: 5, minHeight: 600, maxHeight: 600 }}>
-      <CardBody>
-        <CardHeader>
-          <Text>{product.category?.name}</Text>
+    <Card maxW='sm' className="productCard">
+      <CardBody style={{padding: 5}}>
+        <CardHeader style={{padding: 0}}>
+          <Badge pill bg={getBadgeColor(product.category?.type_of)} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
+            {`${product.category?.type_of}`}
+          </Badge>
         </CardHeader>
         <Carousel variant="dark">
           <Carousel.Item>
@@ -36,14 +49,17 @@ const Product = (props) => {
           })}
         </Carousel>
 
-        <Stack mt='6' spacing='3'>
-          <Heading size='md'>
+        <Stack mt='2' ml="2" mr="2" spacing='1'>
+          <Heading size='sm' style={{minHeight: 40}}>
             <Link to={"/products/" + product.slug}>
               {product.name}
             </Link>
           </Heading>
-          <Text noOfLines={[2, 3, 4]}>
-            {product.description}
+
+          <Text noOfLines={[3, 3]}>
+            <strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc}{' | '}
+            <strong style={{fontSize: 10}}>CBD:{' '}</strong>{product.cbd}<br/>
+            {product.description || 'No Description Available'}
           </Text>
           <Text color='blue.600' fontSize='2xl'>
             <CurrencyFormat value={product.price || firstVariant?.price || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
@@ -52,8 +68,8 @@ const Product = (props) => {
       </CardBody>
 
       <CardFooter>
-        <ButtonGroup spacing='2'>
-          <Button variant='ghost' colorScheme='blue' onClick={() => dispatch(add({product: product}))}>
+        <ButtonGroup spacing='2' style={{width: '100%'}}>
+          <Button colorScheme='green' onClick={() => dispatch(add({product: product}))} style={{width: '100%'}}>
             Add to cart
           </Button>
         </ButtonGroup>

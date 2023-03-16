@@ -224,6 +224,32 @@ img {
   overflow-x: hidden;
 }
 
+.productCard {
+  margin: 5px;
+  min-height: 550px;
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px) 
+  and (orientation: portrait) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+    .productCard {
+      min-height: 460px;
+    }
+}
+
+@media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px) 
+  and (orientation: landscape) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+    .productCard {
+      min-height: 460px;
+    }
+}
+
 @media only screen and (max-width: 600px) {
   .addToCart {
     margin-left: 180px;
@@ -233,9 +259,12 @@ img {
   }
   .title, .header {
     width: 100%;
-  }
-  
+  } 
   .panel2, .tallPanel {
     min-height: 350px;
+  }
+  .productCard {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 }
