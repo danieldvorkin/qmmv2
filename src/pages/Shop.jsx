@@ -53,7 +53,11 @@ const Shop = (props) => {
   }
 
   const getCurrentTotal = () => {
-    return props.cart.map((i) => i.quantity * (i.product.price || i.product.variants[0].price)).reduce((total, curr) => total = total + curr);
+    if(props.cart.length > 0)
+      return props.cart.map((i) => i.quantity * (i.product.price || i.product.variants[0].price)).reduce((total, curr) => total = total + curr);
+    else {
+      return 0;
+    }
   }
   
   return(
