@@ -2,7 +2,7 @@ import './App.css';
 import MainNavbar from './components/navbar';
 import { Outlet } from "react-router-dom";
 import Cart from './components/cart';
-import { ChakraProvider, Text, useDisclosure } from '@chakra-ui/react';
+import { ChakraProvider, useDisclosure } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store'
@@ -10,7 +10,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import loading from './loading.svg';
 import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
+import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();

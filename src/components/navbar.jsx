@@ -57,7 +57,7 @@ const MainNavbar = (props) => {
           <Link className="nav-link" to="/shop">
             Shop
           </Link>    
-          { Object.keys(categories).length > 0 && Object.keys(categories).map((category) => {
+          {/* { Object.keys(categories).length > 0 && Object.keys(categories).map((category) => {
             const list = categories[category];
             return (
               <NavDropdown title={category} key={"dropdown-" + category} id={"dropdown-" + category}>
@@ -70,7 +70,7 @@ const MainNavbar = (props) => {
                 })}
               </NavDropdown>
             )
-          })}
+          })} */}
         </Nav>
       </Navbar.Collapse>
       
@@ -80,7 +80,7 @@ const MainNavbar = (props) => {
             <Badge colorScheme="red">{props.cart.length}</Badge>
           </Button>
         )}
-        <Button className="bp4-minimal" text="Account" />
+        <Button className="bp4-minimal" text="My Orders" />
         <input className="bp4-input" placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} />
         {search.length > 0 && (
           <Button className="bp4-minimal" icon="cross" onClick={() => setSearch("")} />

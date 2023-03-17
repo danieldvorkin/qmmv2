@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Divider, Text } from "@chakra-ui/react";
+import { AlertIcon, Card, CardBody, CardHeader, Divider, Text, Alert } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { connect, useDispatch } from "react-redux";
@@ -73,7 +73,12 @@ const Checkout = (props) => {
 
   return (
     <Container>
-      <Row style={{marginTop: 25}}>
+      <Alert status='info'>
+        <AlertIcon />
+        <Text fontSize='lg'>This order qualifies for a discount</Text>
+      </Alert>
+      
+      <Row style={{marginTop: 10}}>
         {isMobile ? (
           <MobileCheckout cart={props.cart} removeItem={removeItem} qtyChange={qtyChange} getCartTotal={getCartTotal} />
         ) : (
@@ -82,9 +87,9 @@ const Checkout = (props) => {
       </Row>
 
       <br/><Divider/><br/>
-      
+
       <Row>
-        <Col>
+        <Col pr={3} pl={3}>
           <Card>
             <CardHeader><Text fontSize='2xl' as='b'>Featured Items</Text></CardHeader>
             <CardBody>
