@@ -80,7 +80,9 @@ const MainNavbar = (props) => {
             <Badge colorScheme="red">{props.cart.length}</Badge>
           </Button>
         )}
-        <Button className="bp4-minimal" text="My Orders" />
+        <LinkContainer to="/my_orders">
+          <Button className="bp4-minimal" text="My Orders" />
+        </LinkContainer>        
         <input className="bp4-input" placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} />
         {search.length > 0 && (
           <Button className="bp4-minimal" icon="cross" onClick={() => setSearch("")} />

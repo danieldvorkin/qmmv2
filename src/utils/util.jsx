@@ -23,3 +23,7 @@ export const featuredItems = async () => {
 export const getItem = async(slug) => {
   return await axios.get(URL + "/items/" + slug).then((resp) => resp.data);
 }
+
+export const getMyOrders = async(email) => {
+  return await axios.get(URL + "/orders/my_orders?email=" + email).then((resp) => resp.data);
+}
