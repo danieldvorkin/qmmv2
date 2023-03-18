@@ -23,6 +23,12 @@ import { remove, updateQty } from "../manageCart";
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 
+const discountSettings = {
+  '50': 0, '100': 0, '150': 0.05,
+  '200': 0.10, '300': 0.15, '400': 0.20,
+  '600': 0.25, '800': 0.30
+}
+
 const Cart = (props) => {
   const dispatch = useDispatch();
 
@@ -43,6 +49,30 @@ const Cart = (props) => {
 
   const qtyChange = (item, input) => {
     dispatch(updateQty({ product_id: item.product.id, qty: parseInt(input) }))
+  }
+
+  const getDiscountTotal = () => {
+    let cartTotal = getCartTotal();
+
+    if(cartTotal >= 100 && cartTotal < 150){
+      return cartTotal * discountSettings['150'];
+    } else if(cartTotal >= 150 && cartTotal < 200){
+      return cartTotal * discountSettings['200'];
+    } else if(cartTotal >= 200 && cartTotal < 300){
+      return cartTotal * discountSettings['300'];
+    } else if(cartTotal >= 300 && cartTotal < 400){
+      return cartTotal * discountSettings['400'];
+    } else if(cartTotal >= 400 && cartTotal < 600){
+      return cartTotal * discountSettings['600'];
+    } else if(cartTotal >= 600 && cartTotal < 1000){
+      return cartTotal * discountSettings['800'];
+    }
+
+    return 0;
+  }
+
+  const getGrandTotal = () => {
+    return getCartTotal() - getDiscountTotal();
   }
 
   return (
@@ -111,16 +141,22 @@ const Cart = (props) => {
 
           <div className="bottomSection">
             <Row>
-              <Col>Subtotal: <CurrencyFormat value={getCartTotal()} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Col>
+              <Col>
+                Subtotal: 
+                <CurrencyFormat value={getCartTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+              </Col>
             </Row>
             
             <Row>
-              <Col>Discounts: $0</Col>
+              <Col>
+                Discounts:
+                <CurrencyFormat value={getDiscountTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+              </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Grand Total:</strong>
-                <CurrencyFormat value={getCartTotal()} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                <CurrencyFormat value={getGrandTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
               </Col>
             </Row>
           </div>

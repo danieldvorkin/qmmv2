@@ -128,6 +128,14 @@ img {
   width: 32.5%;
   font-weight: 500;
 }
+.smaller-header {
+  font-size: 17px;
+  color: rgb(45, 43, 44);
+  margin-bottom: 15px;
+  z-index: 2;
+  width: 32.5%;
+  font-weight: 500;
+}
 
 .panel1 {
   min-height: 350px;
@@ -163,6 +171,10 @@ img {
 
 .creative {
   background-image: url('https://thehousecannabis.ca/static/15595b8544a5e94738c15fb683cb7944/c6cd1/creative_resize_5c09c42e2e.avif');
+}
+
+.navbar {
+  height: 80px;
 }
 
 .navbar-collapse {
@@ -291,6 +303,10 @@ img {
   color: black !important;
 }
 
+.landingPageCol, .landingPageCol2 {
+  margin-top: 10px;
+}
+
 @media only screen and (max-width: 600px) {
   .addToCart {
     margin-left: 180px;
@@ -307,6 +323,22 @@ img {
   .productCard {
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+
+  #basic-navbar, .navbar-collapse {
+    position: relative;
+    top: -8px;
+    background-color: white !important;
+  }
+  .navbar-collapse {
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+  .landingPageCol {
+    margin-top: 10px;
+  }
+  .landingPageCol2 {
+    margin-top: 10px;
   }
 }
 

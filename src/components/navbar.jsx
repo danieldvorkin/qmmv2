@@ -7,7 +7,7 @@ import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
-import logo from '../logov2.svg';
+import logo from '../new_logo.svg';
 import { getCategories } from '../utils/util';
 
 const MainNavbar = (props) => {
@@ -37,7 +37,7 @@ const MainNavbar = (props) => {
     <Navbar bg="light" expand="lg" sticky="top">
       <LinkContainer to="/">
         <Navbar.Brand href="#">
-          <img alt="img" style={{ height: 70 }} src={logo} />
+          <img alt="img" style={{ height: 70, paddingLeft: 5 }} src={logo} />
         </Navbar.Brand>
       </LinkContainer>
       
@@ -85,7 +85,10 @@ const MainNavbar = (props) => {
         </LinkContainer>        
         <input className="bp4-input" placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} />
         {search.length > 0 && (
-          <Button className="bp4-minimal" icon="cross" onClick={() => setSearch("")} />
+          <Button className="bp4-minimal" icon="cross" onClick={() => {
+            navigate("/shop");
+            setSearch("");
+          }} />
         )}         
       </Navbar.Collapse>
 

@@ -6,7 +6,7 @@ import { PatternFormat } from 'react-number-format';
 
 
 const WebCheckout = (props) => {
-  const { cart, removeItem, qtyChange, getCartTotal } = props;
+  const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal } = props;
   const [order, setOrder] = useState({ cart: cart });
 
   const submitOrder = () => {
@@ -124,16 +124,22 @@ const WebCheckout = (props) => {
 
             <div style={{textAlign: 'right'}}>
               <Row>
-                <Col>Subtotal: <CurrencyFormat value={getCartTotal()} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Col>
+                <Col>
+                  Subtotal: 
+                  <CurrencyFormat value={getCartTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                </Col>
               </Row>
               
               <Row>
-                <Col>Discounts: $0</Col>
+                <Col>
+                  Discounts: 
+                  <CurrencyFormat value={getDiscountTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                </Col>
               </Row>
               <Row>
                 <Col>
                   <strong>Grand Total:</strong>
-                  <CurrencyFormat value={getCartTotal()} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <CurrencyFormat value={getGrandTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </Col>
               </Row>
 

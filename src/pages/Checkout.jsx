@@ -9,6 +9,11 @@ import Slider from 'react-slick'
 import Product from "../components/Product";
 import { featuredItems } from "../utils/util";
 
+const discountSettings = {
+  '50': 0, '100': 0, '150': 0.05,
+  '200': 0.10, '300': 0.15, '400': 0.20,
+  '600': 0.25, '800': 0.30
+}
 
 const Checkout = (props) => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -71,6 +76,30 @@ const Checkout = (props) => {
     return subtotal;
   }
 
+  const getDiscountTotal = () => {
+    let cartTotal = getCartTotal();
+
+    if(cartTotal >= 100 && cartTotal < 150){
+      return cartTotal * discountSettings['150'];
+    } else if(cartTotal >= 150 && cartTotal < 200){
+      return cartTotal * discountSettings['200'];
+    } else if(cartTotal >= 200 && cartTotal < 300){
+      return cartTotal * discountSettings['300'];
+    } else if(cartTotal >= 300 && cartTotal < 400){
+      return cartTotal * discountSettings['400'];
+    } else if(cartTotal >= 400 && cartTotal < 600){
+      return cartTotal * discountSettings['600'];
+    } else if(cartTotal >= 600 && cartTotal < 1000){
+      return cartTotal * discountSettings['800'];
+    }
+
+    return 0;
+  }
+
+  const getGrandTotal = () => {
+    return getCartTotal() - getDiscountTotal();
+  }
+
   return (
     <Container>
       <Alert status='info'>
@@ -82,7 +111,7 @@ const Checkout = (props) => {
         {isMobile ? (
           <MobileCheckout cart={props.cart} removeItem={removeItem} qtyChange={qtyChange} getCartTotal={getCartTotal} />
         ) : (
-          <WebCheckout cart={props.cart} removeItem={removeItem} qtyChange={qtyChange} getCartTotal={getCartTotal} />
+          <WebCheckout cart={props.cart} removeItem={removeItem} qtyChange={qtyChange} getCartTotal={getCartTotal} getDiscountTotal={getDiscountTotal} getGrandTotal={getGrandTotal} />
         )}
       </Row>
 

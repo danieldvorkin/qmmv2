@@ -27,7 +27,7 @@ const Product = (props) => {
     <Card maxW='sm' className="productCard">
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
-          <Badge pill bg={getBadgeColor(product.category?.type_of || category?.type_of)} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
+          <Badge bg={getBadgeColor(product.category?.type_of || category?.type_of)} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
             {`${product.category?.type_of || category?.type_of}`}
           </Badge>
         </CardHeader>

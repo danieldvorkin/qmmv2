@@ -10,6 +10,7 @@ import { Col, Row } from "react-bootstrap";
 import { Divider } from "@blueprintjs/core";
 import CategoryDetail from "../components/CategoryDetail";
 import Product from "../components/Product";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Category = () => {
   let { slug } = useParams();
@@ -25,11 +26,15 @@ const Category = () => {
     <div className="container">
       <Breadcrumb separator={"/"}>
         <BreadcrumbItem>
-          <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+          <LinkContainer to="/">
+            <BreadcrumbLink href='#'>Home</BreadcrumbLink>
+          </LinkContainer>
         </BreadcrumbItem>
 
         <BreadcrumbItem isCurrentPage>
-          <BreadcrumbLink href={'/category/' + category.slug}>{category.name}</BreadcrumbLink>
+          <LinkContainer to={'/category/' + category.slug}>
+            <BreadcrumbLink href="#">{category.name}</BreadcrumbLink>
+          </LinkContainer>
         </BreadcrumbItem>
       </Breadcrumb>
       

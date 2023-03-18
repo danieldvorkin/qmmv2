@@ -12,10 +12,10 @@ const Products = (props) => {
       {!products ? (
         <Text>No Products Available</Text>
       ) : (
-        <>
+        <div>
           {selectedFilter?.name?.length > 0 && (
-            <Text style={{fontSize: 20}}>
-              <Badge pill bg="info">
+            <Text style={{fontSize: 20, marginLeft: 10}}>
+              <Badge bg="info">
                 {` ${selectedFilter?.name}`}
                 <Button className="bp4-minimal" style={{ backgroundColor: 'transparent' }} icon="cross" onClick={resetFilter} />
               </Badge>
@@ -31,7 +31,7 @@ const Products = (props) => {
               )
             })}
           </Row>
-        </>
+        </div>
       )}
     </>
   )
