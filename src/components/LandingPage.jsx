@@ -48,12 +48,12 @@ const LandingPage = (props) => {
             <h1 className="title" style={{color: 'white'}}>Calm</h1>
           </div>
         </Col>
-        <Col className="landingPageCol">
+        <Col className="landingPageCol3">
           <div className="onHoverPanel panel2 energetic">
             <h1 className="title" style={{color: 'white'}}>Energetic</h1>
           </div>
         </Col>
-        <Col className="landingPageCol">
+        <Col className="landingPageCol3">
           <div className="onHoverPanel panel1 sleepy">
             <h1 className="title" style={{color: 'white'}}>Sleepy</h1>
           </div>
@@ -83,15 +83,15 @@ const LandingPage = (props) => {
                   <h1 className="header">{Object.keys(categories)[1]}</h1>
                 </div>
               </Col>
-              <Col lg={6} sm={12} className="landingPageCol2">
+              <Col lg={6} sm={12} className="landingPageCol3">
                 <div className="onHoverPanel shortPanel">
                   <h1 className="header">{Object.keys(categories)[2]}</h1>
                 </div>
               </Col>
             </Row>
           </Col>
-          <Col lg={5} sm={12} className="landingPageCol2">
-            <div className="onHoverPanel tallPanel">
+          <Col lg={5} sm={12} className="landingPageCol3">
+            <div className="onHoverPanel tallPanel2">
               <h1 className="header">{Object.keys(categories)[3]}</h1>
             </div>
           </Col>

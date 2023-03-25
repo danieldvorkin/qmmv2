@@ -1,10 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AppToaster } from "./toast";
+import { AppToaster, ErrorToaster } from "./toast";
 
 export const cartSlice = createSlice({
   name: 'cart',
   initialState: {
     cart: [],
+    isLoggedIn: false,
+    user: null,
+    token: null
   },
   reducers: {
     add: (state, params) => {
@@ -36,10 +39,27 @@ export const cartSlice = createSlice({
       
       if(existingProduct)
         existingProduct.quantity = params.payload.qty
+    },
+    login: (state, response) => {
+      if(response.payload.data.success){
+        state.isLoggedIn = true
+        state.user = response.payload.data.user
+        state.token = response.payload.data.token
+        AppToaster.show({ message: "You have successfully logged in."})
+      }
+    },
+    loginError: (state, errors) => {
+      ErrorToaster.show({ message: "Login attempt failed" });
+    },
+    logout: (state, params) => {
+      state.isLoggedIn = false
+      state.user = null
+      state.token = null
     }
   },
 })
 
-export const { add, remove, updateQty } = cartSlice.actions
+
+export const { add, remove, updateQty, login, loginError, logout } = cartSlice.actions
 
 export default cartSlice.reducer

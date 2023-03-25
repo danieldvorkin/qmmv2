@@ -10,12 +10,14 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import loading from './loading.svg';
 import "slick-carousel/slick/slick.css"
+import Footer from "./components/Footer";
 import "slick-carousel/slick/slick-theme.css";
+import AdminNavbar from './components/AdminNavbar';
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
-  let persistor = persistStore(store)
+  let persistor = persistStore(store);
   
   const loader = () => {
     return (
@@ -29,11 +31,26 @@ function App() {
     <ChakraProvider>
       <Provider store={store}>
         <PersistGate loading={loader()} persistor={persistor}>
-          <div className={location !== "root" ? '' : "container"}>
-            <MainNavbar cartClick={onOpen} />
-            <Outlet />
-          </div>
-          <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+          {location.pathname.includes("admin") || location.pathname.includes("login") ? (
+            <>
+              <AdminNavbar />
+              <div className="container">
+                <Outlet />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={location !== "root" ? '' : "container"}>
+                <MainNavbar cartClick={onOpen} />
+                <div style={{minHeight: 645, marginBottom: 50}}>
+                  <Outlet />
+                </div>
+                
+                <Footer />
+              </div>
+              <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+            </>
+          )}
         </PersistGate>
       </Provider> 
     </ChakraProvider>

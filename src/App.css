@@ -137,6 +137,14 @@ img {
   font-weight: 500;
 }
 
+.smaller-header2 {
+  font-size: 17px;
+  color: rgb(45, 43, 44);
+  z-index: 2;
+  width: 100%;
+  font-weight: 500;
+}
+
 .panel1 {
   min-height: 350px;
 }
@@ -151,6 +159,9 @@ img {
 
 .tallPanel {
   min-height: 720px;
+}
+.tallPanel2 {
+  min-height: 710px;
 }
 
 .happy {
@@ -339,6 +350,12 @@ img {
   }
   .landingPageCol2 {
     margin-top: 10px;
+  }
+  .landingPageCol3 {
+    margin-top: 10px;
+  }
+  .tallPanel2 {
+    min-height: 350px;
   }
 }
 

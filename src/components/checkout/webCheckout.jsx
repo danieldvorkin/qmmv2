@@ -1,17 +1,13 @@
 import { Button, Card, CardBody, CardHeader, Divider, FormControl, FormLabel, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import { PatternFormat } from 'react-number-format';
+import { LinkContainer } from "react-router-bootstrap";
 
 
 const WebCheckout = (props) => {
-  const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal } = props;
-  const [order, setOrder] = useState({ cart: cart });
-
-  const submitOrder = () => {
-    console.log("Order: ", order);
-  }
+  const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, setOrder } = props;
 
   return (
     <>
@@ -20,13 +16,21 @@ const WebCheckout = (props) => {
           <CardHeader><Text fontSize='2xl' as='b'>Delivery Information</Text></CardHeader>
           <CardBody>
             <Row style={{marginBottom: 10}}>
-              <Col>
+              <Col sm={12}>
+                <FormControl>
+                  <FormLabel>Email</FormLabel>
+                  <Input type='text' name="email" value={order?.email} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
+                </FormControl>
+              </Col>
+            </Row>
+            <Row style={{marginBottom: 10}}>
+              <Col sm={12}>
                 <FormControl>
                   <FormLabel>Full Name</FormLabel>
                   <Input type='text' name="full_name" value={order?.full_name} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
-              <Col>
+              <Col sm={12}>
                 <FormControl>
                   <FormLabel>Phone Number</FormLabel>
                   <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={order?.phone} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
@@ -34,7 +38,7 @@ const WebCheckout = (props) => {
               </Col>
             </Row>
             <Row style={{marginBottom: 10}}>
-              <Col>
+              <Col sm={12}>
                 <FormControl>
                   <FormLabel>Address 1</FormLabel>
                   <Input type='text' name="address1" value={order?.address1} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
@@ -42,13 +46,13 @@ const WebCheckout = (props) => {
               </Col>
             </Row>
             <Row style={{marginBottom: 10}}>
-              <Col>
+              <Col sm={12}>
                 <FormControl>
                   <FormLabel>Address 2</FormLabel>
                   <Input type='text' name="address2" value={order?.address2} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
-              <Col>
+              <Col sm={12}>
                 <FormControl>
                   <FormLabel>City</FormLabel>
                   <Input type='text' name="city" value={order?.city} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
@@ -146,8 +150,8 @@ const WebCheckout = (props) => {
               <br/><Divider /><br/>
 
               <Row>
-                <Col><Button colorScheme={"red"} style={{width: '100%'}}>Cancel Order</Button></Col>
-                <Col><Button colorScheme={"green"} style={{width: '100%'}} onClick={() => submitOrder()}>Checkout</Button></Col>
+                <Col><LinkContainer to="/shop"><Button colorScheme={"red"} style={{width: '100%'}}>Cancel</Button></LinkContainer></Col>
+                <Col><Button colorScheme={"green"} style={{width: '100%'}} onClick={submitOrder}>Checkout</Button></Col>
               </Row>
             </div>
 

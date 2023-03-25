@@ -7,3 +7,10 @@ export const AppToaster = Toaster.create({
     position: Position.TOP_RIGHT,
     intent: Intent.SUCCESS
 });
+
+export const ErrorToaster = Toaster.create({
+    className: "recipe-toaster",
+    icon: "tick",
+    position: Position.TOP_RIGHT,
+    intent: Intent.DANGER
+});

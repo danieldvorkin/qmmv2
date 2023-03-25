@@ -12,6 +12,10 @@ import Shop from './pages/Shop';
 import ProductShow from './pages/ProductShow';
 import Checkout from './pages/Checkout';
 import MyOrders from './pages/MyOrders';
+import Admin from './pages/Admin';
+import Login from './pages/Login';
+import AdminProducts from './pages/AdminProducts';
+import AdminOrders from './pages/AdminOrders';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -27,6 +31,10 @@ root.render(
           <Route path="shop" element={<Shop />} />
           <Route path="checkout" element={<Checkout/>} />
           <Route path="my_orders" element={<MyOrders/>} />
+          <Route path="admin" element={<Admin/>} />
+          <Route path="login" element={<Login />} />
+          <Route path="admin/products" element={<AdminProducts />} />
+          <Route path="admin/orders" element={<AdminOrders />} />
         </Route>
       </Routes>
     </BrowserRouter>

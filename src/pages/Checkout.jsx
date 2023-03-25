@@ -20,6 +20,7 @@ const Checkout = (props) => {
   const isMobile = width <= 768;
   const dispatch = useDispatch();
   const [featuredItemsList, setFeaturedItemsList] = useState([]);
+  const [order, setOrder] = useState({ cart: props.cart });
 
   const settings = {
     dots: false, infinite: true, 
@@ -100,19 +101,22 @@ const Checkout = (props) => {
     return getCartTotal() - getDiscountTotal();
   }
 
+  const submitOrder = () => {
+    order.total = getGrandTotal();
+    console.log("Order: ", order)
+  }
+
   return (
     <Container>
-      <Alert status='info'>
-        <AlertIcon />
-        <Text fontSize='lg'>This order qualifies for a discount</Text>
-      </Alert>
+      {getDiscountTotal() > 0 && (
+        <Alert status='info'>
+          <AlertIcon />
+          <Text fontSize='lg'>This order qualifies for a discount</Text>
+        </Alert>
+      )}
       
       <Row style={{marginTop: 10}}>
-        {isMobile ? (
-          <MobileCheckout cart={props.cart} removeItem={removeItem} qtyChange={qtyChange} getCartTotal={getCartTotal} />
-        ) : (
-          <WebCheckout cart={props.cart} removeItem={removeItem} qtyChange={qtyChange} getCartTotal={getCartTotal} getDiscountTotal={getDiscountTotal} getGrandTotal={getGrandTotal} />
-        )}
+        <WebCheckout cart={props.cart} removeItem={removeItem} qtyChange={qtyChange} getCartTotal={getCartTotal} getDiscountTotal={getDiscountTotal} getGrandTotal={getGrandTotal} submitOrder={submitOrder} order={order} setOrder={setOrder}/>
       </Row>
 
       <br/><Divider/><br/>

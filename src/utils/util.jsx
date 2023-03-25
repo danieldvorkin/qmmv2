@@ -27,3 +27,11 @@ export const getItem = async(slug) => {
 export const getMyOrders = async(email) => {
   return await axios.get(URL + "/orders/my_orders?email=" + email).then((resp) => resp.data);
 }
+
+export const loginUser = async (email, password) => {
+  return await axios.post(URL + "/login", { email: email, password: password });
+}
+
+export const getOrders = async (page, status) => {
+  return await axios.get(URL + "/orders?page=" + page + "&status=" + status).then((resp) => resp.data);
+}

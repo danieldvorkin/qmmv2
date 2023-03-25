@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
 import { useDispatch } from "react-redux";
 import { add } from "../manageCart";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Product = (props) => {
   const { product, category } = props;
@@ -32,19 +33,23 @@ const Product = (props) => {
           </Badge>
         </CardHeader>
         <Carousel variant="dark">
-          <Carousel.Item>
-            <Image
-              src={product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
-              borderRadius='lg'
-            />
+          <Carousel.Item style={{cursor: 'pointer'}}>
+            <LinkContainer to={"/products/" + product.slug}>
+              <Image
+                src={product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
+                borderRadius='lg'
+              />
+            </LinkContainer>
           </Carousel.Item>
           {product?.images?.map((img) => {
             return (
               <Carousel.Item key={img}>
-                <Image
-                  src={img}
-                  borderRadius='lg'
-                />
+                <LinkContainer to={"/products/" + product.slug}>
+                  <Image
+                    src={img}
+                    borderRadius='lg'
+                  />
+                </LinkContainer>
               </Carousel.Item> 
             )
           })}

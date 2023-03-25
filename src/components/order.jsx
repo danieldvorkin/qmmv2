@@ -7,6 +7,8 @@ import HelpModal from "./helpModal";
 import { QuestionIcon } from '@chakra-ui/icons'
 import { FaShippingFast } from 'react-icons/fa';
 import { HiReceiptRefund } from 'react-icons/hi';
+import { redirect } from "react-router-dom";
+import { getItem } from "../utils/util";
 
 const Order = (props) => {
   const { order } = props;
@@ -15,11 +17,11 @@ const Order = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const orderStatuses = {
-    "Order Pending": "red",
-    "Order Confirmed": "blue",
-    "Order Processing": "orange",
+    "Order Pending": "blue",
+    "Order Confirmed": "green",
+    "Order Processing": "red",
     "Order Shipped": "yellow",
-    "Order Delivered": "green"
+    "Order Delivered": "silver"
   }
 
   const handleWindowSizeChange = () => {
@@ -33,7 +35,39 @@ const Order = (props) => {
 
   const formatDate = () => Moment(order.submitted_at).format('LLL');
   const getStatus = () => orderStatuses[order.status];
-  
+
+  const getDeliveryFee = () => {
+    if(getItemTotals(order.items) > 50 && getItemTotals(order.items) < 100){
+      return 10
+    } else if(getItemTotals(order.items) >= 100){
+      return 0
+    }
+  }
+
+  const getItemPrice = (item, variantQty) => {
+    let variant = item.variants.find((variant) => variant.quantity === variantQty);
+    return variant ? variant.price : item.variants[0].price * variantQty;
+  }
+
+  const getItemTotals = (items) => 
+    items.map((item) => {
+      return getItemPrice(item.item, item.quantity)
+    }).reduce((total, curr) => total += curr);
+
+  const getGrandTotal = () => {
+    if(order.total){
+      return (order.total + getDeliveryFee()).toFixed(2)
+    } else if(order.custom_price){
+      return (order.custom_price + getDeliveryFee()).toFixed(2)
+    } else {
+     return (getItemTotals(order.items) + getDeliveryFee()).toFixed(2)
+    }
+  }
+
+  const getDiscountFee = () => {
+    return getItemTotals(order.items).toFixed(2) - getGrandTotal() > 0 ? getItemTotals(order.items).toFixed(2) - getGrandTotal() : 0;
+  }
+
   return (
     <div style={{minHeight: 100}}>
       <Row style={{paddingTop: 15}}>
@@ -73,15 +107,15 @@ const Order = (props) => {
               <Row>
                 <Col style={{textAlign: 'left'}}>
                   <Text as="b">Subtotal</Text><br/>
-                  <Text as="b">Discounts</Text><br/>
                   <Text as="b">Delivery</Text><br/>
+                  <Text as="b">Discount</Text><br/>
                   <Text as="b">Grand Total</Text>
                 </Col>
                 <Col style={{textAlign: 'right'}}>
-                  <CurrencyFormat value={10} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
-                  <CurrencyFormat value={10} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
-                  <CurrencyFormat value={10} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
-                  <CurrencyFormat value={10} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <CurrencyFormat value={getItemTotals(order.items)} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
+                  <CurrencyFormat value={getDeliveryFee()} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
+                  <CurrencyFormat value={getDiscountFee()} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
+                  <CurrencyFormat value={getGrandTotal()} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </Col>
               </Row>
             </Col>
@@ -109,11 +143,11 @@ const Order = (props) => {
                     <Text>
                       <strong>{item.item?.name}</strong>
                       <Text style={{float: 'right'}}>
-                        <CurrencyFormat value={(item.item?.price || 1) * item.quantity} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                        <strong>Total - </strong>
+                        <CurrencyFormat value={item && getItemPrice(item.item, item.quantity).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                       </Text>
                     </Text>
                     <div>
-                      <strong>{item.item?.price}</strong>
                       <Text style={{float: 'right'}}>Qty:{' ' + item.quantity}</Text>
                     </div>
                   </Col>
