@@ -33,8 +33,8 @@ root.render(
           <Route path="my_orders" element={<MyOrders/>} />
           <Route path="admin" element={<Admin/>} />
           <Route path="login" element={<Login />} />
-          <Route path="admin/products" element={<AdminProducts />} />
-          <Route path="admin/orders" element={<AdminOrders />} />
+          <Route path="admin/products" exact element={<AdminProducts />} />
+          <Route path="admin/orders" exact element={<AdminOrders />} />
         </Route>
       </Routes>
     </BrowserRouter>

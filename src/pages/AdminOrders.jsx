@@ -3,18 +3,24 @@ import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import DataTable from 'react-data-table-component';
+import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getOrders } from "../utils/util";
 
-const AdminOrders = () => {
+const AdminOrders = (props) => {
   const [orders, setOrders] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if(!props.isLoggedIn){
+      navigate("/login?mustbesignedin=true")
+    }
+
     setSelectedStatus(searchParams.get("status") || "All");
 
     getOrders(page, searchParams.get("status") || "All").then((resp) => {
@@ -49,22 +55,14 @@ const AdminOrders = () => {
             <LinkContainer to={{ pathname: "/admin/orders" }}>
               <Button colorScheme={(selectedStatus === "All") ? 'green' : 'gray'} size='xs'>All</Button>
             </LinkContainer>
-            <LinkContainer to={{ pathname: "/admin/orders", search: "?status=Pending" }}>
-              <Button colorScheme={selectedStatus === "Pending" ? 'green' : 'gray'} size='xs'>Pending</Button>
-            </LinkContainer>
-            <LinkContainer to={{ pathname: "/admin/orders", search: "?status=Confirmed" }}>
-              <Button colorScheme={selectedStatus === "Confirmed" ? 'green' : 'gray'} size='xs'>Confirmed</Button>
-            </LinkContainer>
-            <LinkContainer to={{ pathname: "/admin/orders", search: "?status=Processing" }}>
-              <Button colorScheme={selectedStatus === "Processing" ? 'green' : 'gray'} size='xs'>Processing</Button>
-            </LinkContainer>
-            <LinkContainer to={{ pathname: "/admin/orders", search: "?status=Shipped" }}>
-              <Button colorScheme={selectedStatus === "Shipped" ? 'green' : 'gray'} size='xs'>Shipped</Button>
-            </LinkContainer>
-            <LinkContainer to={{ pathname: "/admin/orders", search: "?status=Delivered" }}>
-              <Button colorScheme={selectedStatus === "Delivered" ? 'green' : 'gray'} size='xs'>Delivered</Button>
-            </LinkContainer>
-
+            {Object.keys(STATUSES).map((status) => {
+              return (
+                <LinkContainer to={{ pathname: "/admin/orders", search: "?status=" + status.slice(6) }}>
+                  <Button colorScheme={selectedStatus === status.slice(6) ? STATUSES[status] : 'gray'} size='xs'>{status.slice(6)}</Button>
+                </LinkContainer>
+              )
+            })}
+          
             <div className="justify-content-end">
               <Input size="xs" placeholder="Search up an order..." />
             </div>
@@ -86,4 +84,11 @@ const AdminOrders = () => {
   )
 }
 
-export default AdminOrders;
+const mapStateToProps = (state) => {
+  return {
+    isLoggedIn: state.isLoggedIn,
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(AdminOrders);
