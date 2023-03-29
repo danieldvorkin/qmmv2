@@ -318,6 +318,16 @@ img {
   margin-top: 10px;
 }
 
+.view-report {
+  display: inline-flex;
+}
+
+.view-report svg {
+  position: relative;
+  top: 5px;
+  left: 6px;
+}
+
 @media only screen and (max-width: 600px) {
   .addToCart {
     margin-left: 180px;
