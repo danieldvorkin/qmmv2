@@ -39,3 +39,7 @@ export const getOrders = async (page, status) => {
 export const submitOrder = async (order) => {
   return await axios.post(URL + "/orders/create", order).then((resp) => resp.data);
 }
+
+export const getOrder = async (orderId) => {
+  return await axios.get(URL + '/orders/' + orderId).then((resp) => resp.data);
+}

@@ -335,6 +335,16 @@ img {
   font-size: 10px;
 }
 
+.onIconHoverSuccess:hover {
+  transition: 0.5s;
+  color: green;
+} 
+
+.onIconHoverDanger:hover {
+  transition: 0.5s;
+  color: red;
+} 
+
 .progress-bar {
   background-color: #6b9080;
 }

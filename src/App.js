@@ -34,7 +34,7 @@ function App() {
           {location.pathname.includes("admin") || location.pathname.includes("login") ? (
             <>
               <AdminNavbar />
-              <div className="container">
+              <div className={location.pathname.includes("admin/orders/") ? '' : "container"}>
                 <Outlet />
               </div>
             </>

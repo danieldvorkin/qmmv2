@@ -16,6 +16,7 @@ import Admin from './pages/Admin';
 import Login from './pages/Login';
 import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
+import AdminOrder from './pages/AdminOrder';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -35,6 +36,7 @@ root.render(
           <Route path="login" element={<Login />} />
           <Route path="admin/products" exact element={<AdminProducts />} />
           <Route path="admin/orders" exact element={<AdminOrders />} />
+          <Route path="admin/orders/:id" exact element={<AdminOrder />} />
         </Route>
       </Routes>
     </BrowserRouter>

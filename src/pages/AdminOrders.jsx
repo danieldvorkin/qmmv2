@@ -5,7 +5,7 @@ import CurrencyFormat from "react-currency-format";
 import DataTable from 'react-data-table-component';
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { getOrders } from "../utils/util";
 
 const AdminOrders = (props) => {
@@ -38,7 +38,7 @@ const AdminOrders = (props) => {
   }
 
   const columns = [
-    { name: 'ID', sortable: false, selector: row => `0000${row.id}` },
+    { name: 'ID', sortable: false, selector: row => <Link to={"/admin/orders/" + row.id}>0000{row.id}</Link> },
     { name: 'User Email', sortable: false, selector: row => row.user?.email },
     { name: 'Phone #', sortable: false, selector: row => row.contact_phone },
     { name: 'Status', sortable: true, selector: row => <Badge colorScheme={STATUSES[row.status]}>{row.status}</Badge> },
