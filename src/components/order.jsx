@@ -49,10 +49,14 @@ const Order = (props) => {
     return variant ? variant.price : item.variants[0].price * variantQty;
   }
 
-  const getItemTotals = (items) => 
-    items.map((item) => {
+  const getItemTotals = (items) => {
+    let itemPrices = items.map((item) => {
       return getItemPrice(item.item, item.quantity)
-    }).reduce((total, curr) => total += curr);
+    });
+
+    return itemPrices.length === 0 ? 0 : itemPrices.reduce((total, curr) => total += curr);
+  }
+    
 
   const getGrandTotal = () => {
     if(order.total){

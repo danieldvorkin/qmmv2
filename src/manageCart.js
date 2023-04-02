@@ -15,12 +15,12 @@ export const cartSlice = createSlice({
         let existingProduct = state.cart.find((item) => item.product?.id === params.payload.product.id);
 
         if(existingProduct){
-          existingProduct.quantity += 1;
+          existingProduct.quantity += params.payload.quantity;
         } else {
-          state.cart.push({quantity: 1, product: params.payload.product})
+          state.cart.push({quantity: params.payload.quantity, product: params.payload.product})
         }
       } else {
-        state.cart.push({quantity: 1, product: params.payload.product})
+        state.cart.push({quantity: params.payload.quantity, product: params.payload.product})
       }
       let subtotal = state.cart.map((item) => item.quantity * (item.product.price || item.product.variants[0].price)).reduce((total, curr) => total = total + curr)
       AppToaster.show({ message: "Product successfully added to cart. Your new total is: $" + subtotal})
@@ -55,11 +55,14 @@ export const cartSlice = createSlice({
       state.isLoggedIn = false
       state.user = null
       state.token = null
+    },
+    finalizeOrder: (state, params) => {
+      state.cart = []
     }
   },
 })
 
 
-export const { add, remove, updateQty, login, loginError, logout } = cartSlice.actions
+export const { add, remove, updateQty, login, loginError, logout, finalizeOrder } = cartSlice.actions
 
 export default cartSlice.reducer

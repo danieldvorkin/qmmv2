@@ -22,12 +22,7 @@ import { useDispatch } from "react-redux";
 import { remove, updateQty } from "../manageCart";
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
-
-const discountSettings = {
-  '50': 0, '100': 0, '150': 0.05,
-  '200': 0.10, '300': 0.15, '400': 0.20,
-  '600': 0.25, '800': 0.30
-}
+import { DISCOUNT_SETTINGS } from "../utils/helpers";
 
 const Cart = (props) => {
   const dispatch = useDispatch();
@@ -36,7 +31,7 @@ const Cart = (props) => {
     let subtotal = 0;
     
     if(props.cart.length > 0){
-      subtotal = props.cart.map((curr) => curr.quantity * ((curr.product?.price || curr.product?.variants.length > 0) ? (curr.product.price || curr.product.variants[0].price) : 0));
+      subtotal = props.cart.map((curr) => getItemSubtotal(curr));
       return subtotal.reduce((total, current) => total = total + current);
     }
     
@@ -51,21 +46,33 @@ const Cart = (props) => {
     dispatch(updateQty({ product_id: item.product.id, qty: parseInt(input) }))
   }
 
+  const getVariant = (item) => {
+    const { product, quantity} = item;
+    return product.variants.find((item) => item.quantity === parseFloat(quantity));
+  }
+
+  const getItemSubtotal = (item) => {
+    let selectedVariant = getVariant(item);
+    return (selectedVariant ? selectedVariant.price : item.quantity * (item.product.price || item.product.variants[0].price));
+  }
+
   const getDiscountTotal = () => {
     let cartTotal = getCartTotal();
 
     if(cartTotal >= 100 && cartTotal < 150){
-      return cartTotal * discountSettings['150'];
+      return cartTotal * DISCOUNT_SETTINGS['150'];
     } else if(cartTotal >= 150 && cartTotal < 200){
-      return cartTotal * discountSettings['200'];
+      return cartTotal * DISCOUNT_SETTINGS['200'];
     } else if(cartTotal >= 200 && cartTotal < 300){
-      return cartTotal * discountSettings['300'];
+      return cartTotal * DISCOUNT_SETTINGS['300'];
     } else if(cartTotal >= 300 && cartTotal < 400){
-      return cartTotal * discountSettings['400'];
+      return cartTotal * DISCOUNT_SETTINGS['400'];
     } else if(cartTotal >= 400 && cartTotal < 600){
-      return cartTotal * discountSettings['600'];
-    } else if(cartTotal >= 600 && cartTotal < 1000){
-      return cartTotal * discountSettings['800'];
+      return cartTotal * DISCOUNT_SETTINGS['600'];
+    } else if(cartTotal >= 600 && cartTotal < 800){
+      return cartTotal * DISCOUNT_SETTINGS['800'];
+    } else if(cartTotal >= 800){
+      return cartTotal * DISCOUNT_SETTINGS['1000'];
     }
 
     return 0;
@@ -116,15 +123,11 @@ const Cart = (props) => {
                       <Text>
                         <strong>Breakdown:{' '}</strong>
                         {item.quantity}{' '}x{' '} 
-                        {(item.product?.price || item.product?.variants.length > 0) && (
-                          <CurrencyFormat value={item.product?.price || item.product?.variants[0].price} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-                        )}
+                        <CurrencyFormat value={getItemSubtotal(item)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                       </Text>
                       <Text>
                         <strong>Total Price:{' '}</strong>
-                        {(item.product?.price || item.product?.variants.length > 0) && (
-                          <CurrencyFormat value={item.quantity * (item.product?.price || item.product?.variants[0].price)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-                        )}
+                        <CurrencyFormat value={(getItemSubtotal(item))} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                       </Text>
                     </Col>
                     <Col xs={2} style={{ textAlign: 'right', paddingRight: 30, paddingTop: 17 }}>

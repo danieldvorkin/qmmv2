@@ -3,11 +3,12 @@
 import { Button } from '@blueprintjs/core';
 import { Badge } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown, ProgressBar } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../new_logo.svg';
+import { DISCOUNT_SETTINGS } from '../utils/helpers';
 import { getCategories } from '../utils/util';
 
 const MainNavbar = (props) => {
@@ -30,6 +31,74 @@ const MainNavbar = (props) => {
   const checkForEnter = (e) => {
     if(e.keyCode === 13){
       navigate("/search/" + search);
+    }
+  }
+
+  const getCurrentTotal = () => {
+    if(props.cart.length > 0)
+      return props.cart.map((i) => i.quantity * (i.product.price || i.product.variants[0].price)).reduce((total, curr) => total = total + curr);
+    else {
+      return 0;
+    }
+  }
+
+  const getCartTotal = () => {
+    let subtotal = 0;
+    
+    if(props.cart.length > 0){
+      subtotal = props.cart.map((curr) => getItemSubtotal(curr));
+      return subtotal.reduce((total, current) => total = total + current);
+    }
+    
+    return subtotal;
+  }
+
+  const getVariant = (item) => {
+    const { product, quantity} = item;
+    return product.variants.find((item) => item.quantity === parseFloat(quantity));
+  }
+
+  const getItemSubtotal = (item) => {
+    let selectedVariant = getVariant(item);
+    return (selectedVariant ? selectedVariant.price : item.quantity * (item.product.price || item.product.variants[0].price));
+  }
+
+  const getDiscountPercent = () => {
+    let cartTotal = getCartTotal();
+    console.log("Cart Total: ", cartTotal);
+
+    if(cartTotal >= 100 && cartTotal < 150){
+      return "Free Delivery";
+    } else if(cartTotal >= 150 && cartTotal < 200){
+      return `${100.0 * DISCOUNT_SETTINGS['200']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['300']}%`;
+    } else if(cartTotal >= 200 && cartTotal < 300){
+      return `${100.0 * DISCOUNT_SETTINGS['300']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['400']}%`;
+    } else if(cartTotal >= 300 && cartTotal < 400){
+      return `${100.0 * DISCOUNT_SETTINGS['400']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['600']}%`;
+    } else if(cartTotal >= 400 && cartTotal < 600){
+      return `${100.0 * DISCOUNT_SETTINGS['600']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['800']}%`;
+    } else if(cartTotal >= 600 && cartTotal < 800){
+      return `${100.0 * DISCOUNT_SETTINGS['800']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['1000']}%`;
+    } else if(cartTotal >= 800){
+      return `${100.0 * DISCOUNT_SETTINGS['1000']}% Discount`;
+    }
+
+    return "0% Discount";
+  }
+
+  const getDiscountDiff = () => {
+    let cartTotal = getCartTotal();
+
+    if(cartTotal >= 150 && cartTotal < 200){
+      return 200 - cartTotal;
+    } else if(cartTotal >= 200 && cartTotal < 300){
+      return 300 - cartTotal;
+    } else if(cartTotal >= 300 && cartTotal < 400){
+      return 400 - cartTotal;
+    } else if(cartTotal >= 400 && cartTotal < 600){
+      return 600 - cartTotal;
+    } else if(cartTotal >= 600 && cartTotal < 800){
+      return 800 - cartTotal;
     }
   }
 
@@ -56,21 +125,10 @@ const MainNavbar = (props) => {
           </Link>
           <Link className="nav-link" to="/shop">
             Shop
-          </Link>    
-          {/* { Object.keys(categories).length > 0 && Object.keys(categories).map((category) => {
-            const list = categories[category];
-            return (
-              <NavDropdown title={category} key={"dropdown-" + category} id={"dropdown-" + category}>
-                {list.map((item) => {
-                  return (
-                    <LinkContainer key={item.slug} to={"/category/" + item.slug}>
-                      <NavDropdown.Item>{item.name}</NavDropdown.Item>
-                    </LinkContainer>
-                  )
-                })}
-              </NavDropdown>
-            )
-          })} */}
+          </Link>
+          <Nav.Item>
+            <ProgressBar now={getCurrentTotal()} max={1000} label={getDiscountPercent()} className="navbar-progressbar" />  
+          </Nav.Item>
         </Nav>
       </Navbar.Collapse>
       

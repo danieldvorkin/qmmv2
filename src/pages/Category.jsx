@@ -46,15 +46,11 @@ const Category = () => {
       
       <Row>
         {category?.items?.map((item) => {
-          if(item.inventory > 0 && item.price !== null){
-            return (
-              <Col md={4} key={item.id}>
-                <Product product={item} category={category} />
-              </Col>
-            )
-          }
-
-          return '';
+          return (
+            <Col md={4} key={item.id}>
+              <Product product={item} category={category} />
+            </Col>
+          )
         })}
       </Row>
     </div>

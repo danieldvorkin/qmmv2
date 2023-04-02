@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getItem, featuredItems } from "../utils/util";
 import { Badge, Carousel, Col, Container, Image, Row } from "react-bootstrap";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Stack, Text } from "@chakra-ui/react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Select, Stack, Text } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { add } from "../manageCart";
 import Slider from "react-slick";
@@ -104,7 +104,7 @@ const ProductShow = () => {
               <Col lg={7}>
                 <Row>
                   <Col>
-                    <Text className="title" style={{marginBottom: 2}}>{product.name}</Text>
+                    <Text className="title" style={{marginBottom: 2, width: '90%'}}>{product.name}</Text>
                     <Text className="header" style={{marginBottom: 10}}>{product.category?.name}</Text>
                   </Col>
                 </Row>
@@ -163,6 +163,15 @@ const ProductShow = () => {
                 <Row>
                   <Col>
                     <ButtonGroup spacing='2' style={{width: '100%'}}>
+                      <Select>
+                        {product.variants.map((variant) => {
+                          if(parseInt(variant.quantity) > 0){
+                            return (
+                              <option value={variant.quantity}>{`${variant.quantity} - $${variant.price}`}</option>
+                            )
+                          }
+                        })}
+                      </Select>
                       <Button colorScheme='green' onClick={() => dispatch(add({product: product}))} style={{width: '100%'}}>
                         Add to cart
                       </Button>

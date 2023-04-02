@@ -328,6 +328,21 @@ img {
   left: 6px;
 }
 
+.navbar-progressbar {
+  width: 800px;
+  margin-left: 100px;
+  height: 100%;
+  font-size: 10px;
+}
+
+.progress-bar {
+  background-color: #6b9080;
+}
+
+.navbar-progressbar .progressbar {
+  padding: 0px 10px;
+}
+
 @media only screen and (max-width: 600px) {
   .addToCart {
     margin-left: 180px;

@@ -35,3 +35,7 @@ export const loginUser = async (email, password) => {
 export const getOrders = async (page, status) => {
   return await axios.get(URL + "/orders?page=" + page + "&status=" + status).then((resp) => resp.data);
 }
+
+export const submitOrder = async (order) => {
+  return await axios.post(URL + "/orders/create", order).then((resp) => resp.data);
+}

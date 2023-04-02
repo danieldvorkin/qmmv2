@@ -2,25 +2,24 @@ import { AlertIcon, Card, CardBody, CardHeader, Divider, Text, Alert } from "@ch
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { connect, useDispatch } from "react-redux";
-import MobileCheckout from "../components/checkout/mobileCheckout";
 import WebCheckout from "../components/checkout/webCheckout";
 import { remove, updateQty } from "../manageCart";
 import Slider from 'react-slick'
 import Product from "../components/Product";
 import { featuredItems } from "../utils/util";
+import { submitNewOrder } from "../actions";
 
 const discountSettings = {
-  '50': 0, '100': 0, '150': 0.05,
-  '200': 0.10, '300': 0.15, '400': 0.20,
-  '600': 0.25, '800': 0.30
+  '50': 0, '100': 0, '150': 0,
+  '200': 0.05, '300': 0.10, '400': 0.15,
+  '600': 0.20, '800': 0.25, '1000': 0.30
 }
 
 const Checkout = (props) => {
-  const [width, setWidth] = useState(window.innerWidth);
-  const isMobile = width <= 768;
   const dispatch = useDispatch();
   const [featuredItemsList, setFeaturedItemsList] = useState([]);
   const [order, setOrder] = useState({ cart: props.cart });
+  const [orderComplete, setOrderComplete] = useState(false);
 
   const settings = {
     dots: false, infinite: true, 
@@ -49,21 +48,13 @@ const Checkout = (props) => {
     fetchData();
   }, []);
 
-  const handleWindowSizeChange = () => {
-    setWidth(window.innerWidth);
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => window.removeEventListener('resize', handleWindowSizeChange);
-  }, []);
-
   const removeItem = (productID) => {
     dispatch(remove(productID))
   }
 
   const qtyChange = (item, input) => {
     dispatch(updateQty({ product_id: item.product.id, qty: parseInt(input) }))
+    setOrder({...order, cart: props.cart})
   }
 
   const getCartTotal = () => {
@@ -90,8 +81,10 @@ const Checkout = (props) => {
       return cartTotal * discountSettings['400'];
     } else if(cartTotal >= 400 && cartTotal < 600){
       return cartTotal * discountSettings['600'];
-    } else if(cartTotal >= 600 && cartTotal < 1000){
+    } else if(cartTotal >= 600 && cartTotal < 800){
       return cartTotal * discountSettings['800'];
+    } else if(cartTotal > 800){
+      return cartTotal * discountSettings['1000'];
     }
 
     return 0;
@@ -102,21 +95,38 @@ const Checkout = (props) => {
   }
 
   const submitOrder = () => {
-    order.total = getGrandTotal();
-    console.log("Order: ", order)
+    setOrder({...order, total: getGrandTotal()});
+    dispatch(submitNewOrder(order));
+    setOrderComplete(true);
   }
 
   return (
     <Container>
-      {getDiscountTotal() > 0 && (
+      {getDiscountTotal() > 0 && !orderComplete && (
         <Alert status='info'>
           <AlertIcon />
           <Text fontSize='lg'>This order qualifies for a discount</Text>
         </Alert>
       )}
+      {orderComplete && (
+        <Alert status='success'>
+          <AlertIcon />
+          <Text fontSize='lg'>Order has been submitted successfully</Text>
+        </Alert>
+      )}
       
       <Row style={{marginTop: 10}}>
-        <WebCheckout cart={props.cart} removeItem={removeItem} qtyChange={qtyChange} getCartTotal={getCartTotal} getDiscountTotal={getDiscountTotal} getGrandTotal={getGrandTotal} submitOrder={submitOrder} order={order} setOrder={setOrder}/>
+        <WebCheckout 
+          cart={props.cart} 
+          removeItem={removeItem} 
+          qtyChange={qtyChange} 
+          getCartTotal={getCartTotal} 
+          getDiscountTotal={getDiscountTotal} 
+          getGrandTotal={getGrandTotal} 
+          submitOrder={submitOrder} 
+          order={order} 
+          setOrder={setOrder}
+        />
       </Row>
 
       <br/><Divider/><br/>
