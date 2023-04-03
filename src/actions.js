@@ -1,7 +1,7 @@
 import { finalizeOrder, login, loginError } from "./manageCart";
 import { loginUser, submitOrder } from "./utils/util";
 
-export const URL = "https://queenmarymedical.com/api/v1";
+export const URL = "https://queenmarymedical.herokuapp.com/api/v1";
 
 export const loginService = (loginData) => async (dispatch) => {
   try {

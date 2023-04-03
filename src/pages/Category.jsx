@@ -11,15 +11,14 @@ import { Divider } from "@blueprintjs/core";
 import CategoryDetail from "../components/CategoryDetail";
 import Product from "../components/Product";
 import { LinkContainer } from "react-router-bootstrap";
+import { getCategory } from "../utils/util";
 
 const Category = () => {
   let { slug } = useParams();
   const [category, setCategory] = useState({});
 
   useEffect(() => {
-    axios.get("https://queenmarymedical.com/api/v1/categories/" + slug).then((resp) => {
-      setCategory(resp.data);
-    })
+    getCategory(slug).then((resp) => setCategory(resp));
   }, [slug]);
 
   return (

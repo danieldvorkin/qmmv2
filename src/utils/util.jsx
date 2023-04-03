@@ -1,6 +1,6 @@
 import axios from "axios"
 
-export const URL = "https://queenmarymedical.com/api/v1";
+export const URL = "https://queenmarymedical.herokuapp.com/api/v1";
 
 export const search = async (query) => {
   if(query?.length > 0){
@@ -13,7 +13,7 @@ export const getCategories = async () => {
 }
 
 export const getCategory = async (slug) => {
-  return await axios.get(URL + "/categories/" + slug).then((resp) => resp.data.items);
+  return await axios.get(URL + "/categories/" + slug).then((resp) => resp.data);
 }
 
 export const featuredItems = async () => {

@@ -116,7 +116,7 @@ const Shop = (props) => {
             <Divider />
             <Container fluid style={{marginTop: 10}}>
               <Container fluid style={{marginBottom: 10}}>
-                <ProgressBar min={0} max={1000} style={{height: 25, borderBottomLeftRadius: 0, borderBottomRightRadius: 0, fontSize: 12}}>
+                <ProgressBar min={0} max={1000} style={{height: 25, fontSize: 12}}>
                   <ProgressBar style={{fontSize: 10, backgroundColor: '#d8f3dc', color: 'black'}} key={1} now={50} label={"$50 Min."} />
                   <ProgressBar style={{fontSize: 10, backgroundColor: '#b7e4c7', color: 'black'}} key={2} now={50} label={"$10 Del."} />
                   <ProgressBar style={{fontSize: 10, backgroundColor: '#95d5b2', color: 'black'}} key={3} now={50} label={"Free Delivery"} />
@@ -125,7 +125,7 @@ const Shop = (props) => {
                   <ProgressBar style={{fontSize: 10, backgroundColor: '#40916c', color: 'white'}} key={6} now={100} label={"15% off"} />
                   <ProgressBar style={{fontSize: 10, backgroundColor: '#2d6a4f', color: 'white'}} key={7} now={200} label={"20% off"} />
                   <ProgressBar style={{fontSize: 10, backgroundColor: '#1b4332', color: 'white'}} key={8} now={200} label={"25% off"} />
-                  <ProgressBar style={{fontSize: 10, backgroundColor: '#081c15', color: 'white'}} key={9} now={200} label={"+$800 30% off"} />
+                  {/* <ProgressBar style={{fontSize: 10, backgroundColor: '#081c15', color: 'white'}} key={9} now={200} label={"+$800 30% off"} /> */}
                 </ProgressBar>
               </Container>
               {loader ? (
