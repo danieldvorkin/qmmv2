@@ -1,12 +1,10 @@
-import { Button, Card, CardBody, CardHeader, Divider, FormControl, FormLabel, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardHeader, Divider, FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import { PatternFormat } from 'react-number-format';
 import { LinkContainer } from "react-router-bootstrap";
-import { getItem } from "../../utils/util";
 import Breakdown from "../breakdown";
-
 
 const WebCheckout = (props) => {
   const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, setOrder, getItemSubtotal } = props;
@@ -40,21 +38,27 @@ const WebCheckout = (props) => {
               </Col>
             </Row>
             <Row style={{marginBottom: 10}}>
-              <Col sm={12}>
+              <Col sm={12} lg={6}>
                 <FormControl>
                   <FormLabel>Address 1</FormLabel>
                   <Input type='text' name="address1" value={order?.address1} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
-            </Row>
-            <Row style={{marginBottom: 10}}>
-              <Col sm={12}>
+              <Col sm={12} lg={6}>
                 <FormControl>
                   <FormLabel>Address 2</FormLabel>
                   <Input type='text' name="address2" value={order?.address2} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
-              <Col sm={12}>
+            </Row>
+            <Row style={{marginBottom: 10}}>
+              <Col sm={12} lg={6}>
+                <FormControl>
+                  <FormLabel>Postal Code</FormLabel>
+                  <Input type='text' name="postal_code" value={order?.postal_code} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
+                </FormControl>
+              </Col>
+              <Col sm={12} lg={6}>
                 <FormControl>
                   <FormLabel>City</FormLabel>
                   <Input type='text' name="city" value={order?.city} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
@@ -66,6 +70,14 @@ const WebCheckout = (props) => {
                 <FormControl>
                   <FormLabel>Delivery Instructions</FormLabel>
                   <Input type='text' name="delivery_instructions" value={order?.delivery_instructions} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
+                </FormControl>
+              </Col>
+            </Row>
+            <Row style={{marginBottom: 10}}>
+              <Col>
+                <FormControl>
+                  <FormLabel>Notes</FormLabel>
+                  <Input type='text' name="notes" value={order?.notes} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
             </Row>
@@ -95,20 +107,20 @@ const WebCheckout = (props) => {
               <Row>
                 <Col>
                   Subtotal: 
-                  <CurrencyFormat value={getCartTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <CurrencyFormat value={getCartTotal(cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </Col>
               </Row>
               
               <Row>
                 <Col>
                   Discounts: 
-                  <CurrencyFormat value={getDiscountTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <CurrencyFormat value={getDiscountTotal(cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </Col>
               </Row>
               <Row>
                 <Col>
                   <strong>Grand Total:</strong>
-                  <CurrencyFormat value={getGrandTotal().toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <CurrencyFormat value={getGrandTotal(cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </Col>
               </Row>
 

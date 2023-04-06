@@ -7,6 +7,7 @@ import CurrencyFormat from "react-currency-format";
 import { BiCheckCircle, BiTrash } from "react-icons/bi";
 import { connect } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { getItemSubtotal } from "../utils/helpers";
 import { getOrder } from "../utils/util";
 
 const AdminOrder = (props) => {
@@ -18,27 +19,6 @@ const AdminOrder = (props) => {
       getOrder(id).then((resp) => setOrder(resp));
     }
   }, [id]);
-
-  const getCartTotal = () => {
-    let subtotal = 0;
-
-    if(order.items?.length > 0){
-      subtotal = order.items.map((curr) => getItemSubtotal(curr));
-      return subtotal.reduce((total, current) => total = total + current);
-    }
-    
-    return subtotal;
-  }
-
-  const getVariant = (orderItem) => {
-    const { item, quantity} = orderItem;
-    return item.variants.find((item) => item.quantity === parseFloat(quantity));
-  }
-
-  const getItemSubtotal = (orderItem) => {
-    let selectedVariant = getVariant(orderItem);
-    return (selectedVariant ? selectedVariant.price : orderItem.quantity * (orderItem.item.price || orderItem.item.variants[0].price));
-  }
 
   return (
     <>
@@ -87,9 +67,9 @@ const AdminOrder = (props) => {
                 <Row>
                   <Col>
                     <Text size="10" color="grey">Address:</Text>
-                    <Text>{order.address?.name}</Text>
-                    <Text>{`${order.address?.address1} - ${order.address?.address2}`}</Text>
-                    <Text>{`${order.address?.city}, ${order.address?.province}, Canada`}</Text>
+                    <Text>To: {order.address?.name}</Text>
+                    <Text>{`${order.address?.address1} ${order.address?.address2 ? ' - ' : ''}${order.address?.address2}`}</Text>
+                    <Text>{`${order.address?.city}${order.address?.city ? ', ' : ' '}${order.address?.province}, Canada`}</Text>
                     <Text as="b">{order.address?.address_type}</Text>
                   </Col>
                 </Row>
@@ -124,10 +104,8 @@ const AdminOrder = (props) => {
                     <Thead>
                       <Tr>
                         <Th>Name</Th>
+                        <Th>Variant</Th>
                         <Th>Price</Th>
-                        <Th>Quantity</Th>
-                        <Th>Subtotal</Th>
-                        <Th>Variant Used</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -135,10 +113,8 @@ const AdminOrder = (props) => {
                         return (
                           <Tr>
                             <Td>{item.item.name}</Td>
-                            <Td><CurrencyFormat value={item.item.price?.toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
                             <Td>{item.quantity}</Td>
-                            <Td><CurrencyFormat value={(item.quantity * item.item.price)?.toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
-                            <Td>{item.item.variants.find((i) => i.quantity == item.quantity).length > 0 ? 'True' : 'False'}</Td>
+                            <Td><CurrencyFormat value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: 1 })} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
                           </Tr>
                         )
                       })}

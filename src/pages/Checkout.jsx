@@ -6,14 +6,11 @@ import WebCheckout from "../components/checkout/webCheckout";
 import { remove, updateQty } from "../manageCart";
 import Slider from 'react-slick'
 import Product from "../components/Product";
-import { featuredItems, getItem } from "../utils/util";
+import { featuredItems } from "../utils/util";
 import { submitNewOrder } from "../actions";
+import { getCartTotal, getDiscountTotal, getGrandTotal, getItemSubtotal } from "../utils/helpers";
 
-const discountSettings = {
-  '50': 0, '100': 0, '150': 0,
-  '200': 0.05, '300': 0.10, '400': 0.15,
-  '600': 0.20, '800': 0.25, '1000': 0.30
-}
+
 
 const Checkout = (props) => {
   const dispatch = useDispatch();
@@ -56,55 +53,9 @@ const Checkout = (props) => {
     dispatch(updateQty({ product_id: item.product.id, variant: item.variant, qty: parseInt(input) }))
   }
 
-  const getCartTotal = () => {
-    let subtotal = 0;
-    
-    if(props.cart.length > 0){
-      subtotal = props.cart.map((curr) => getItemSubtotal(curr));
-      return subtotal.reduce((total, current) => total = total + current);
-    }
-    
-    return subtotal;
-  }
-
-  const getItemSubtotal = (item) => {
-    let selectedVariant = getVariant(item);
-    return (selectedVariant ? item.quantity * selectedVariant.price : item.quantity * (item.product.price || item.product.variants[0].price));
-  }
-
-  const getVariant = (item) => {
-    const { product, variant } = item;
-    return product.variants.find((item) => item.quantity === parseFloat(variant));
-  }
-
-  const getDiscountTotal = () => {
-    let cartTotal = getCartTotal();
-
-    if(cartTotal >= 100 && cartTotal < 150){
-      return cartTotal * discountSettings['150'];
-    } else if(cartTotal >= 150 && cartTotal < 200){
-      return cartTotal * discountSettings['200'];
-    } else if(cartTotal >= 200 && cartTotal < 300){
-      return cartTotal * discountSettings['300'];
-    } else if(cartTotal >= 300 && cartTotal < 400){
-      return cartTotal * discountSettings['400'];
-    } else if(cartTotal >= 400 && cartTotal < 600){
-      return cartTotal * discountSettings['600'];
-    } else if(cartTotal >= 600 && cartTotal < 800){
-      return cartTotal * discountSettings['800'];
-    } else if(cartTotal > 800){
-      return cartTotal * discountSettings['1000'];
-    }
-
-    return 0;
-  }
-
-  const getGrandTotal = () => {
-    return getCartTotal() - getDiscountTotal();
-  }
 
   const submitOrder = () => {
-    setOrder({...order, total: getGrandTotal()});
+    setOrder({...order, total: getGrandTotal(props.cart)});
     dispatch(submitNewOrder(order));
     setOrderComplete(true);
   }

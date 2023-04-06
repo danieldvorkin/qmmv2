@@ -2,9 +2,9 @@ import axios from "axios"
 
 export const URL = "https://queenmarymedical.herokuapp.com/api/v1";
 
-export const search = async (query) => {
+export const search = async (query, page) => {
   if(query?.length > 0){
-    return await axios.get(URL + "/items/search?query=" + query).then((resp) => resp.data);
+    return await axios.get(URL + "/items/search?page=" + page + "&query=" + query).then((resp) => resp.data);
   }
 }
 
@@ -22,6 +22,10 @@ export const featuredItems = async () => {
 
 export const getItem = async(slug) => {
   return await axios.get(URL + "/items/" + slug).then((resp) => resp.data);
+}
+
+export const getItems = async(page, typeOf) => {
+  return await axios.get(URL + "/items?page=" + page +"&stypeof=" + typeOf).then((resp) => resp.data);
 }
 
 export const getMyOrders = async(email) => {
