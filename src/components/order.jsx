@@ -37,7 +37,7 @@ const Order = (props) => {
   const getStatus = () => orderStatuses[order.status];
 
   const getDeliveryFee = () => {
-    if(getItemTotals(order.items) > 50 && getItemTotals(order.items) < 100){
+    if(getItemTotals(order.items) > 50 && getItemTotals(order.items) < 150){
       return 10
     } else if(getItemTotals(order.items) >= 100){
       return 0
@@ -60,11 +60,11 @@ const Order = (props) => {
 
   const getGrandTotal = () => {
     if(order.total){
-      return (order.total + getDeliveryFee()).toFixed(2)
+      return (order.total).toFixed(2)
     } else if(order.custom_price){
-      return (order.custom_price + getDeliveryFee()).toFixed(2)
+      return (order.custom_price).toFixed(2)
     } else {
-     return (getItemTotals(order.items) + getDeliveryFee()).toFixed(2)
+     return (getItemTotals(order.items)).toFixed(2)
     }
   }
 
@@ -133,34 +133,36 @@ const Order = (props) => {
       </Row>
       
       <br/>
-      <Accordion allowToggle>
-        <AccordionItem key={"according-items"}>
-          <Text><AccordionButton>Order Breakdown<AccordionIcon /></AccordionButton></Text>
-          <AccordionPanel style={{paddingTop: 40}}>
-            {order?.items.map((item, index) => {
-              return (
-                <Row style={{paddingLeft: 10, paddingBottom: 10}}>
-                  <Col xs={4} lg={1}>
-                    <img src={item.item?.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"} alt={"img-" + index} style={{ minHeight: 50, maxHeight: 50, margin: '0 auto'}} />
-                  </Col>
-                  <Col>
-                    <Text>
-                      <strong>{item.item?.name}</strong>
-                      <Text style={{float: 'right'}}>
-                        <strong>Total - </strong>
-                        <CurrencyFormat value={item && getItemPrice(item.item, item.quantity).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+      {order.items?.length > 0 && (
+        <Accordion allowToggle>
+          <AccordionItem key={"according-items"}>
+            <Text><AccordionButton>Order Breakdown<AccordionIcon /></AccordionButton></Text>
+            <AccordionPanel style={{paddingTop: 40}}>
+              {order?.items.map((item, index) => {
+                return (
+                  <Row style={{paddingLeft: 10, paddingBottom: 10}}>
+                    <Col xs={4} lg={1}>
+                      <img src={item.item?.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"} alt={"img-" + index} style={{ minHeight: 50, maxHeight: 50, margin: '0 auto'}} />
+                    </Col>
+                    <Col>
+                      <Text>
+                        <strong>{item.item?.name}</strong>
+                        <Text style={{float: 'right'}}>
+                          <strong>Total - </strong>
+                          <CurrencyFormat value={item && getItemPrice(item.item, item.quantity).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                        </Text>
                       </Text>
-                    </Text>
-                    <div>
-                      <Text style={{float: 'right'}}>Qty:{' ' + item.quantity}</Text>
-                    </div>
-                  </Col>
-                </Row>
-              )  
-            })}
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+                      <div>
+                        <Text style={{float: 'right'}}>Qty:{' ' + item.quantity}</Text>
+                      </div>
+                    </Col>
+                  </Row>
+                )  
+              })}
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      )}
     </div>
   )
 }
