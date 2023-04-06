@@ -6,7 +6,7 @@ import WebCheckout from "../components/checkout/webCheckout";
 import { remove, updateQty } from "../manageCart";
 import Slider from 'react-slick'
 import Product from "../components/Product";
-import { featuredItems } from "../utils/util";
+import { featuredItems, getItem } from "../utils/util";
 import { submitNewOrder } from "../actions";
 
 const discountSettings = {
@@ -48,24 +48,33 @@ const Checkout = (props) => {
     fetchData();
   }, []);
 
-  const removeItem = (productID) => {
-    dispatch(remove(productID))
+  const removeItem = (id, variant, qty) => {
+    dispatch(remove({id: id, variant: variant, qty: qty}))
   }
 
   const qtyChange = (item, input) => {
-    dispatch(updateQty({ product_id: item.product.id, qty: parseInt(input) }))
-    setOrder({...order, cart: props.cart})
+    dispatch(updateQty({ product_id: item.product.id, variant: item.variant, qty: parseInt(input) }))
   }
 
   const getCartTotal = () => {
     let subtotal = 0;
     
     if(props.cart.length > 0){
-      subtotal = props.cart.map((curr) => curr.quantity * ((curr.product?.price || curr.product?.variants.length > 0) ? (curr.product.price || curr.product.variants[0].price) : 0));
+      subtotal = props.cart.map((curr) => getItemSubtotal(curr));
       return subtotal.reduce((total, current) => total = total + current);
     }
     
     return subtotal;
+  }
+
+  const getItemSubtotal = (item) => {
+    let selectedVariant = getVariant(item);
+    return (selectedVariant ? item.quantity * selectedVariant.price : item.quantity * (item.product.price || item.product.variants[0].price));
+  }
+
+  const getVariant = (item) => {
+    const { product, variant } = item;
+    return product.variants.find((item) => item.quantity === parseFloat(variant));
   }
 
   const getDiscountTotal = () => {
@@ -126,6 +135,7 @@ const Checkout = (props) => {
           submitOrder={submitOrder} 
           order={order} 
           setOrder={setOrder}
+          getItemSubtotal={getItemSubtotal}
         />
       </Row>
 

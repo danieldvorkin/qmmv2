@@ -12,22 +12,33 @@ export const cartSlice = createSlice({
   reducers: {
     add: (state, params) => {
       if(state.cart.length > 0){
-        let existingProduct = state.cart.find((item) => item.product?.id === params.payload.product.id);
+        let existingProduct = state.cart.find((item) => {
+          return item.product?.id === params.payload.product.id &&
+            item.variant == (params.payload.variant || params.payload.quantity)
+        });
 
         if(existingProduct){
-          existingProduct.quantity += params.payload.quantity;
+          existingProduct.quantity += 1
         } else {
-          state.cart.push({quantity: params.payload.quantity, product: params.payload.product})
+          state.cart.push({
+            quantity: 1,
+            variant: params.payload.quantity, 
+            product: params.payload.product
+          })
         }
       } else {
-        state.cart.push({quantity: params.payload.quantity, product: params.payload.product})
+        state.cart.push({
+          quantity: 1,
+          variant: params.payload.quantity, 
+          product: params.payload.product
+        })
       }
-      let subtotal = state.cart.map((item) => item.quantity * (item.product.price || item.product.variants[0].price)).reduce((total, curr) => total = total + curr)
-      AppToaster.show({ message: "Product successfully added to cart. Your new total is: $" + subtotal})
+
+      AppToaster.show({ message: "Product successfully added to cart."})
     },
     remove: (state, params) => {
       if(state.cart.length > 0){
-        let existingProduct = state.cart.findIndex((item) => item.product?.id === params.payload);
+        let existingProduct = state.cart.findIndex((item) => item.product?.id === params.payload.id && item.variant == params.payload.variant);
         
         if(existingProduct > -1){
           state.cart.splice(existingProduct, 1);
@@ -35,7 +46,7 @@ export const cartSlice = createSlice({
       }
     },
     updateQty: (state, params) => {
-      let existingProduct = state.cart.find((item) => item.product?.id === params.payload.product_id);
+      let existingProduct = state.cart.find((item) => item.product?.id === params.payload.product_id && item.variant == params.payload.variant);
       
       if(existingProduct)
         existingProduct.quantity = params.payload.qty

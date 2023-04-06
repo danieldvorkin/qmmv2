@@ -23,6 +23,8 @@ import { remove, updateQty } from "../manageCart";
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { DISCOUNT_SETTINGS } from "../utils/helpers";
+import Breakdown from "./breakdown";
+import { getItem } from "../utils/util";
 
 const Cart = (props) => {
   const dispatch = useDispatch();
@@ -38,22 +40,22 @@ const Cart = (props) => {
     return subtotal;
   }
 
-  const removeItem = (id) => {
-    dispatch(remove(id))
+  const removeItem = (id, variant, qty) => {
+    dispatch(remove({id: id, variant: variant, qty: qty}))
   }
 
   const qtyChange = (item, input) => {
-    dispatch(updateQty({ product_id: item.product.id, qty: parseInt(input) }))
+    dispatch(updateQty({ product_id: item.product.id, variant: item.variant, qty: parseInt(input) }))
   }
 
   const getVariant = (item) => {
-    const { product, quantity} = item;
-    return product.variants.find((item) => item.quantity === parseFloat(quantity));
+    const { product, variant } = item;
+    return product.variants.find((item) => item.quantity === parseFloat(variant));
   }
 
   const getItemSubtotal = (item) => {
     let selectedVariant = getVariant(item);
-    return (selectedVariant ? selectedVariant.price : item.quantity * (item.product.price || item.product.variants[0].price));
+    return (selectedVariant ? item.quantity * selectedVariant.price : item.quantity * (item.product.price || item.product.variants[0].price));
   }
 
   const getDiscountTotal = () => {
@@ -97,47 +99,14 @@ const Cart = (props) => {
           <div className="content-container">
             {props.cart?.length > 0 && props.cart.map((item, index) => {
               return(
-                <div key={"index-" + index}>
-                  <Row style={{paddingLeft: 10}}>
-                    <Col xs={4} lg={3} style={{paddingTop: 12}}>
-                      {item.product?.cover_photo && (
-                        <img src={item.product.cover_photo} alt={"img-" + index} />
-                      )}
-                    </Col>
-                    <Col>
-                      <Text>
-                        <strong>{item.product?.name}</strong>
-                      </Text>
-                      <div>
-                        <Text>Qty:{' '}</Text>
-                        <NumberInput value={item.quantity} onChange={(e) => qtyChange(item, e)} min={1}>
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </div>
-                      
-                      
-                      <Text>
-                        <strong>Breakdown:{' '}</strong>
-                        {item.quantity}{' '}x{' '} 
-                        <CurrencyFormat value={getItemSubtotal(item)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-                      </Text>
-                      <Text>
-                        <strong>Total Price:{' '}</strong>
-                        <CurrencyFormat value={(getItemSubtotal(item))} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-                      </Text>
-                    </Col>
-                    <Col xs={2} style={{ textAlign: 'right', paddingRight: 30, paddingTop: 17 }}>
-                      <Text onClick={() => removeItem(item.product?.id)} style={{ cursor: 'pointer' }}>X</Text>
-                    </Col>
-                  </Row>
-                  {index !== props.cart.length -1 && (
-                    <Divider mt={2} mb={2} />
-                  )}
-                </div>
+                <Breakdown
+                  index={index}
+                  item={item}
+                  qtyChange={qtyChange}
+                  removeItem={removeItem}
+                  getItemSubtotal={getItemSubtotal}
+                  cartLength={props.cart.length}
+                />
               )
             })}
           </div>

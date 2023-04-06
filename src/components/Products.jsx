@@ -15,7 +15,7 @@ const Products = (props) => {
         <div>
           {selectedFilter?.name?.length > 0 && (
             <Text style={{fontSize: 20, marginLeft: 10}}>
-              <Badge bg="info">
+              <Badge bg="info" style={{paddingRight: 5}}>
                 {` ${selectedFilter?.name}`}
                 <Button className="bp4-minimal" style={{ backgroundColor: 'transparent' }} icon="cross" onClick={resetFilter} />
               </Badge>

@@ -27,7 +27,7 @@ const Shop = (props) => {
     getCategories().then((resp) => setCategories(resp));
 
     if(slug?.length > 0){
-      getCategory(slug).then((resp) => setProducts(resp));
+      getCategory(slug).then((resp) => setProducts(resp.items));
     } else {
       featuredItems().then((resp) => setProducts(resp));
     }
@@ -49,7 +49,7 @@ const Shop = (props) => {
       setFilterObject(filterHash[0]);
 
       if(filterSlug?.length > 0){
-        getCategory(filterSlug).then((resp) => setProducts(resp));
+        getCategory(filterSlug).then((resp) => setProducts(resp.items));
       } else {
         featuredItems().then((resp) => setProducts(resp));
       }

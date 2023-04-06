@@ -4,10 +4,12 @@ import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import { PatternFormat } from 'react-number-format';
 import { LinkContainer } from "react-router-bootstrap";
+import { getItem } from "../../utils/util";
+import Breakdown from "../breakdown";
 
 
 const WebCheckout = (props) => {
-  const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, setOrder } = props;
+  const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, setOrder, getItemSubtotal } = props;
 
   return (
     <>
@@ -77,51 +79,14 @@ const WebCheckout = (props) => {
           <CardBody>
             {cart?.length > 0 && cart.map((item, index) => {
               return(
-                <div key={"index-" + index}>
-                  <Row style={{paddingLeft: 10}}>
-                    <Col xs={4} lg={3} style={{paddingTop: 12}}>
-                      {item.product?.cover_photo && (
-                        <img src={item.product.cover_photo} alt={"img-" + index} />
-                      )}
-                    </Col>
-                    <Col>
-                      <Text>
-                        <strong>{item.product?.name}</strong>
-                      </Text>
-                      <div>
-                        <Text>Qty:{' '}</Text>
-                        <NumberInput value={item.quantity} onChange={(e) => qtyChange(item, e)} min={1}>
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </div>
-                      
-                      
-                      <Text>
-                        <strong>Breakdown:{' '}</strong>
-                        {item.quantity}{' '}x{' '} 
-                        {(item.product?.price || item.product?.variants.length > 0) && (
-                          <CurrencyFormat value={item.product?.price || item.product?.variants[0].price} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-                        )}
-                      </Text>
-                      <Text>
-                        <strong>Total Price:{' '}</strong>
-                        {(item.product?.price || item.product?.variants.length > 0) && (
-                          <CurrencyFormat value={item.quantity * (item.product?.price || item.product?.variants[0].price)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-                        )}
-                      </Text>
-                    </Col>
-                    <Col xs={2} style={{ textAlign: 'right', paddingRight: 30, paddingTop: 17 }}>
-                      <Text onClick={() => removeItem(item.product?.id)} style={{ cursor: 'pointer' }}>X</Text>
-                    </Col>
-                  </Row>
-                  {index !== cart.length -1 && (
-                    <Divider mt={2} mb={2} />
-                  )}
-                </div>
+                <Breakdown
+                  index={index}
+                  item={item}
+                  qtyChange={qtyChange}
+                  removeItem={removeItem}
+                  getItemSubtotal={getItemSubtotal}
+                  cartLength={props.cart?.length}
+                />
               )
             })}
             <br/><Divider /><br/>

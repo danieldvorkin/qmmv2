@@ -135,9 +135,9 @@ const AdminOrder = (props) => {
                         return (
                           <Tr>
                             <Td>{item.item.name}</Td>
-                            <Td><CurrencyFormat value={item.item.price.toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
+                            <Td><CurrencyFormat value={item.item.price?.toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
                             <Td>{item.quantity}</Td>
-                            <Td><CurrencyFormat value={(item.quantity * item.item.price).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
+                            <Td><CurrencyFormat value={(item.quantity * item.item.price)?.toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
                             <Td>{item.item.variants.find((i) => i.quantity == item.quantity).length > 0 ? 'True' : 'False'}</Td>
                           </Tr>
                         )

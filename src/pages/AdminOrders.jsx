@@ -1,4 +1,5 @@
 import { Badge, Button, ButtonGroup, Card, CardBody, CardHeader, Input } from "@chakra-ui/react";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
@@ -40,6 +41,7 @@ const AdminOrders = (props) => {
   const columns = [
     { name: 'ID', sortable: false, selector: row => <Link to={"/admin/orders/" + row.id}>0000{row.id}</Link> },
     { name: 'User Email', sortable: false, selector: row => row.user?.email },
+    { name: 'Submitted At', sortable: true, selector: row => moment(row.submitted_at).format('LLL')},
     { name: 'Phone #', sortable: false, selector: row => row.contact_phone },
     { name: 'Status', sortable: true, selector: row => <Badge colorScheme={STATUSES[row.status]}>{row.status}</Badge> },
     { name: 'Total $', sortable: false, selector: row => { 

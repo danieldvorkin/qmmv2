@@ -33,7 +33,7 @@ const Product = (props) => {
             {`${product.category?.type_of || category?.type_of}`}
           </Badge>
         </CardHeader>
-        
+
         <Carousel variant="dark">
           <Carousel.Item style={{cursor: 'pointer'}}>
             <LinkContainer to={"/products/" + product.slug}>
@@ -76,10 +76,10 @@ const Product = (props) => {
         </Stack>
       </CardBody>
 
-      <CardFooter style={{display: 'block', margin: '10 auto'}}>
+      <CardFooter style={{display: 'block', margin: '10 auto', paddingLeft: 10}}>
         {category?.type_of === "Strains" || product.category?.type_of === "Strains" ? (
           <ButtonGroup>
-            {product.variants?.slice(1)?.map((variant) => {
+            {product.variants?.map((variant) => {
               if(parseInt(variant.quantity) > 0){
                 return (
                   <Button style={{fontSize: 12, padding: 10}} onClick={() => dispatch(add({product: product, quantity: variant.quantity}))}>
@@ -90,21 +90,23 @@ const Product = (props) => {
             })}
           </ButtonGroup>
         ): (
-          <Select placeholder='Select option' onChange={(e) => setQuantity(e.target.selectedOptions[0].value)}>
-            {product.variants?.map((variant) => {
-              return (
-                <option value={`${variant.quantity}`}>{`${variant.quantity}-$${variant.price}`}</option>
-              )
-            })}
-            
-          </Select>
+          <>
+            <Select placeholder='Select option' onChange={(e) => setQuantity(e.target.selectedOptions[0].value)}>
+              {product.variants?.map((variant) => {
+                return (
+                  <option value={`${variant.quantity}`}>{`${variant.quantity}-$${variant.price}`}</option>
+                )
+              })}
+              
+            </Select>
+
+            <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
+              <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>
+                Add to cart
+              </Button>
+            </ButtonGroup>
+          </>
         )}
-        
-        <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
-          <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>
-            Add to cart
-          </Button>
-        </ButtonGroup>
       </CardFooter>
     </Card>
   )
