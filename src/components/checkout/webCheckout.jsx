@@ -13,12 +13,15 @@ const WebCheckout = (props) => {
     <>
       <Col lg={8}>
         <Card>
-          <CardHeader><Text fontSize='2xl' as='b'>Delivery Information</Text></CardHeader>
+          <CardHeader>
+            <Text fontSize='2xl' as='b'>Delivery Information</Text>
+            <Text size="sm">* means mandatory</Text>
+          </CardHeader>
           <CardBody>
             <Row style={{marginBottom: 10}}>
               <Col sm={12}>
                 <FormControl>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Email *</FormLabel>
                   <Input type='text' name="email" value={order?.email} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
@@ -26,13 +29,13 @@ const WebCheckout = (props) => {
             <Row style={{marginBottom: 10}}>
               <Col sm={12}>
                 <FormControl>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>Name *</FormLabel>
                   <Input type='text' name="full_name" value={order?.full_name} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
               <Col sm={12}>
                 <FormControl>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Phone Number *</FormLabel>
                   <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={order?.phone} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
@@ -40,13 +43,13 @@ const WebCheckout = (props) => {
             <Row style={{marginBottom: 10}}>
               <Col sm={12} lg={6}>
                 <FormControl>
-                  <FormLabel>Address 1</FormLabel>
+                  <FormLabel>Address 1 <Text as="i">(optional)</Text></FormLabel>
                   <Input type='text' name="address1" value={order?.address1} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
               <Col sm={12} lg={6}>
                 <FormControl>
-                  <FormLabel>Address 2</FormLabel>
+                  <FormLabel>Address 2 <Text as="i">(optional)</Text></FormLabel>
                   <Input type='text' name="address2" value={order?.address2} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
@@ -54,13 +57,13 @@ const WebCheckout = (props) => {
             <Row style={{marginBottom: 10}}>
               <Col sm={12} lg={6}>
                 <FormControl>
-                  <FormLabel>Postal Code</FormLabel>
+                  <FormLabel>Postal Code <Text as="i">(optional)</Text></FormLabel>
                   <Input type='text' name="postal_code" value={order?.postal_code} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
               <Col sm={12} lg={6}>
                 <FormControl>
-                  <FormLabel>City</FormLabel>
+                  <FormLabel>City <Text as="i">(optional)</Text></FormLabel>
                   <Input type='text' name="city" value={order?.city} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>

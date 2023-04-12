@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../new_logo.svg';
-import { DISCOUNT_SETTINGS } from '../utils/helpers';
+import { DISCOUNT_SETTINGS, getCartTotal } from '../utils/helpers';
 import { getCategories } from '../utils/util';
 
 const MainNavbar = (props) => {
@@ -34,37 +34,8 @@ const MainNavbar = (props) => {
     }
   }
 
-  const getCurrentTotal = () => {
-    if(props.cart.length > 0)
-      return props.cart.map((i) => i.quantity * (i.product.price || i.product.variants[0].price)).reduce((total, curr) => total = total + curr);
-    else {
-      return 0;
-    }
-  }
-
-  const getCartTotal = () => {
-    let subtotal = 0;
-    
-    if(props.cart.length > 0){
-      subtotal = props.cart.map((curr) => getItemSubtotal(curr));
-      return subtotal.reduce((total, current) => total = total + current);
-    }
-    
-    return subtotal;
-  }
-
-  const getVariant = (item) => {
-    const { product, quantity} = item;
-    return product.variants.find((item) => item.quantity === parseFloat(quantity));
-  }
-
-  const getItemSubtotal = (item) => {
-    let selectedVariant = getVariant(item);
-    return (selectedVariant ? selectedVariant.price : item.quantity * (item.product.price || item.product.variants[0].price));
-  }
-
   const getDiscountPercent = () => {
-    let cartTotal = getCartTotal();
+    let cartTotal = getCartTotal(props.cart);
     console.log("Cart Total: ", cartTotal);
 
     if(cartTotal >= 100 && cartTotal < 150){
@@ -87,7 +58,7 @@ const MainNavbar = (props) => {
   }
 
   const getDiscountDiff = () => {
-    let cartTotal = getCartTotal();
+    let cartTotal = getCartTotal(props.cart);
 
     if(cartTotal >= 150 && cartTotal < 200){
       return 200 - cartTotal;
@@ -127,7 +98,19 @@ const MainNavbar = (props) => {
             Shop
           </Link>
           <Nav.Item>
-            <ProgressBar now={getCurrentTotal()} max={1000} label={getDiscountPercent()} className="navbar-progressbar" />  
+            <ProgressBar now={getCartTotal(props.cart)} max={1000} label={getDiscountPercent()} style={{ borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }} className="navbar-progressbar" />
+            <ProgressBar min={0} max={1000} style={{ fontSize: 12, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} className="navbar-progressbar">
+              <ProgressBar style={{fontSize: 10, backgroundColor: 'silver', color: 'white'}} key={8} now={50} label={"$50 Min"} />
+              <ProgressBar style={{fontSize: 10, backgroundColor: '#d8f3dc', color: 'black'}} key={1} now={50} label={"$10 Del"} />
+              <ProgressBar style={{fontSize: 10, backgroundColor: '#b7e4c7', color: 'black'}} key={2} now={50} label={"Free Del"} />
+              <ProgressBar style={{fontSize: 10, backgroundColor: '#95d5b2', color: 'black'}} key={3} now={50} label={"5% off"} />
+              <ProgressBar style={{fontSize: 10, backgroundColor: '#74c69d', color: 'black'}} key={4} now={100} label={"10% off"} />
+              <ProgressBar style={{fontSize: 10, backgroundColor: '#52b788', color: 'white'}} key={5} now={100} label={"15% off"} />
+              <ProgressBar style={{fontSize: 10, backgroundColor: '#40916c', color: 'white'}} key={6} now={200} label={"20% off"} />
+              <ProgressBar style={{fontSize: 10, backgroundColor: '#2d6a4f', color: 'white'}} key={7} now={200} label={"25% off"} />
+              <ProgressBar style={{fontSize: 10, backgroundColor: '#1b4332', color: 'white'}} key={8} now={200} label={"30% off"} />
+              
+            </ProgressBar>
           </Nav.Item>
         </Nav>
       </Navbar.Collapse>

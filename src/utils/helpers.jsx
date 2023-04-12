@@ -16,8 +16,7 @@ export const getCartTotal = (items) => {
 }
 
 export const getItemSubtotal = (item) => {
-  let selectedVariant = getVariant(item);
-  return (selectedVariant ? item.quantity * selectedVariant.price : item.quantity * (item.product.price || item.product.variants[0].price));
+  return item.product.price * item.quantity;
 }
 
 export const getVariant = (item) => {
@@ -27,7 +26,7 @@ export const getVariant = (item) => {
 
 export const getDiscountTotal = (items) => {
   let cartTotal = getCartTotal(items);
-
+  
   if(cartTotal >= 100 && cartTotal < 150){
     return cartTotal * DISCOUNT_SETTINGS['150'];
   } else if(cartTotal >= 150 && cartTotal < 200){
@@ -40,7 +39,7 @@ export const getDiscountTotal = (items) => {
     return cartTotal * DISCOUNT_SETTINGS['600'];
   } else if(cartTotal >= 600 && cartTotal < 800){
     return cartTotal * DISCOUNT_SETTINGS['800'];
-  } else if(cartTotal > 800){
+  } else if(cartTotal > 799){
     return cartTotal * DISCOUNT_SETTINGS['1000'];
   }
 

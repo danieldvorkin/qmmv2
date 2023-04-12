@@ -28,7 +28,7 @@ const Cart = (props) => {
   }
 
   const qtyChange = (item, input) => {
-    dispatch(updateQty({ product_id: item.product.id, variant: item.variant, qty: parseInt(input) }))
+    dispatch(updateQty({ product_id: item.product.id, qty: parseFloat(input) }))
   }
 
   return (

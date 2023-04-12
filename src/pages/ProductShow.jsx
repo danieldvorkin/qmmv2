@@ -35,6 +35,7 @@ const ProductShow = () => {
   const dispatch = useDispatch();
   const [productFeaturedItems, setProductFeaturedItems] = useState([]);
   const [loader, setLoader] = useState(true);
+  const [selectedQty, setSelectedQty] = useState(1);
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -162,20 +163,27 @@ const ProductShow = () => {
                 <br/>
                 <Row>
                   <Col>
-                    <ButtonGroup spacing='2' style={{width: '100%'}}>
-                      <Select>
-                        {product.variants.map((variant) => {
-                          if(parseInt(variant.quantity) > 0){
-                            return (
-                              <option value={variant.quantity}>{`${variant.quantity} - $${variant.price}`}</option>
-                            )
-                          }
+                    {product?.category?.type_of === "Strains" ? (
+                      <ButtonGroup>
+                        {[1, 3.5, 7, 14, 28].map((variant) => {
+                          return (
+                            <Button style={{fontSize: 12, padding: 10}} onClick={() => dispatch(add({product: product, quantity: variant}))}>
+                              {variant}g<br/>${variant * product.price}
+                            </Button>
+                          )
                         })}
-                      </Select>
-                      <Button colorScheme='green' onClick={() => dispatch(add({product: product}))} style={{width: '100%'}}>
-                        Add to cart
-                      </Button>
-                    </ButtonGroup>
+                      </ButtonGroup>
+                    ) : (
+                      <ButtonGroup spacing='2' style={{width: '100%'}}>
+                        <Button style={{ width: 130 }} onClick={() => (selectedQty - 1) > 0 ? setSelectedQty(selectedQty - 1) : null}>-</Button>
+                        <input type="number" min={0} className="chakra-input-custom chakra-input-custom-2" value={selectedQty} onChange={(e) => parseFloat(e.target.value) > 0.0 ? setSelectedQty(parseFloat(e.target.value)) : null} />
+                        <Button style={{ width: 130 }} onClick={() => setSelectedQty(selectedQty + 1)}>+</Button>
+                      </ButtonGroup>
+                    )}
+
+                    <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: selectedQty}))} style={{ width: '100%', marginTop: 10 }}>
+                      Add to cart
+                    </Button>
                   </Col>
                 </Row>
               </Col>

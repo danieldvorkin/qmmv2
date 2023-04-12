@@ -13,23 +13,20 @@ export const cartSlice = createSlice({
     add: (state, params) => {
       if(state.cart.length > 0){
         let existingProduct = state.cart.find((item) => {
-          return item.product?.id === params.payload.product.id &&
-            item.variant == (params.payload.variant || params.payload.quantity)
+          return item.product?.id === params.payload.product.id
         });
 
         if(existingProduct){
-          existingProduct.quantity += 1
+          existingProduct.quantity += params.payload.quantity
         } else {
           state.cart.push({
-            quantity: 1,
-            variant: params.payload.quantity, 
+            quantity: params.payload.quantity,
             product: params.payload.product
           })
         }
       } else {
         state.cart.push({
-          quantity: 1,
-          variant: params.payload.quantity, 
+          quantity: params.payload.quantity,
           product: params.payload.product
         })
       }
@@ -38,7 +35,7 @@ export const cartSlice = createSlice({
     },
     remove: (state, params) => {
       if(state.cart.length > 0){
-        let existingProduct = state.cart.findIndex((item) => item.product?.id === params.payload.id && item.variant == params.payload.variant);
+        let existingProduct = state.cart.findIndex((item) => item.product?.id === params.payload.id);
         
         if(existingProduct > -1){
           state.cart.splice(existingProduct, 1);
@@ -46,7 +43,7 @@ export const cartSlice = createSlice({
       }
     },
     updateQty: (state, params) => {
-      let existingProduct = state.cart.find((item) => item.product?.id === params.payload.product_id && item.variant == params.payload.variant);
+      let existingProduct = state.cart.find((item) => item.product?.id === params.payload.product_id);
       
       if(existingProduct)
         existingProduct.quantity = params.payload.qty

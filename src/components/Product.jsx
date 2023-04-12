@@ -10,9 +10,8 @@ import { LinkContainer } from "react-router-bootstrap";
 const Product = (props) => {
   const { product, category } = props;
   const [quantity, setQuantity] = useState(1);
-  
-  const firstVariant = product.variants[0];
   const dispatch = useDispatch();
+  const [numOfLines, setNumOfLines] = useState(3);
 
   const getBadgeColor = (typeOf) => {
     let colors = {
@@ -64,19 +63,16 @@ const Product = (props) => {
             </Link>
           </Heading>
 
-          <Text noOfLines={[3, 3]}>
+          <Text noOfLines={numOfLines}>
             <strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}
             <strong style={{fontSize: 10}}>CBD:{' '}</strong>{product.cbd || ''}{' | '}
             <strong style={{fontSize: 10}}>BRAND:{' '}</strong>{product.brand || ''}<br/>
-            {product.description || 'No Description Available'}
-          </Text>
-          <Text color='blue.600' fontSize='2xl'>
-            <CurrencyFormat value={product.price || firstVariant?.price || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+            <span onClick={() => setNumOfLines(numOfLines === 3 ? 10 : 3)}>{product.description || 'No Description Available'}</span>
           </Text>
         </Stack>
       </CardBody>
 
-      <CardFooter style={{display: 'block', margin: '10 auto', paddingLeft: 10}}>
+      <CardFooter style={{display: 'block', margin: '10 auto', paddingLeft: 10, textAlign: 'center'}}>
         {category?.type_of === "Strains" || product.category?.type_of === "Strains" ? (
           <ButtonGroup>
             {product.variants?.map((variant) => {
@@ -91,14 +87,11 @@ const Product = (props) => {
           </ButtonGroup>
         ): (
           <>
-            <Select placeholder='Select option' onChange={(e) => setQuantity(e.target.selectedOptions[0].value)}>
-              {product.variants?.map((variant) => {
-                return (
-                  <option value={`${variant.quantity}`}>{`${variant.quantity}-$${variant.price}`}</option>
-                )
-              })}
-              
-            </Select>
+            <ButtonGroup spacing='2' style={{width: '100%'}}>
+              <Button style={{ width: 130 }} onClick={() => (quantity - 1) > 0 ? setQuantity(quantity - 1) : null}>-</Button>
+              <input type="number" min={0} className="chakra-input-custom chakra-input-custom-2" value={quantity} onChange={(e) => parseFloat(e.target.value) > 0.0 ? setQuantity(parseFloat(e.target.value)) : null} />
+              <Button style={{ width: 130 }} onClick={() => setQuantity(quantity + 1)}>+</Button>
+            </ButtonGroup>
 
             <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
               <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>

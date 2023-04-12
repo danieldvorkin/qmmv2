@@ -36,10 +36,6 @@ const Category = () => {
           </LinkContainer>
         </BreadcrumbItem>
       </Breadcrumb>
-      
-      <Divider/>
-
-      <CategoryDetail category={category} im gay={true} />
 
       <Divider />
       

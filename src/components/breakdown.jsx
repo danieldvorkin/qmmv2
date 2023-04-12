@@ -1,4 +1,4 @@
-import { Divider, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from "@chakra-ui/react";
+import { Button, ButtonGroup, Divider, Text } from "@chakra-ui/react";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
@@ -20,26 +20,16 @@ const Breakdown = (props) => {
         <Col>
           <Text>
             <strong>{item.product?.name}</strong>
-            <p>Variant: {item.variant}</p>
           </Text>
           <div>
-            <Text>Qty:{' '}</Text>
-            <NumberInput value={item.quantity} onChange={(e) => qtyChange(item, e)} min={1}>
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            <ButtonGroup spacing='1' style={{width: '100%'}}>
+              <Button onClick={() => (item.quantity - 1) > 0 ? qtyChange(item, item.quantity - 1) : null}>-</Button>
+              <input type="number" min={0} step="any" className="chakra-input-custom chakra-input-custom-2" value={item.quantity} onChange={(e) => qtyChange(item, parseFloat(e.target.value))} />
+              <Button onClick={() => qtyChange(item, item.quantity + 1)}>+</Button>
+            </ButtonGroup>
           </div>
           
-          
-          <Text>
-            <strong>Breakdown:{' '}</strong>
-            {item.quantity}{' '}x{' '} 
-            <CurrencyFormat value={getItemSubtotal(item) || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-          </Text>
-          <Text>
+          <Text style={{ marginTop: 10 }}>
             <strong>Total Price:{' '}</strong>
             <CurrencyFormat value={(getItemSubtotal(item)) || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
           </Text>
