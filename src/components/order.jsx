@@ -7,6 +7,7 @@ import HelpModal from "./helpModal";
 import { QuestionIcon } from '@chakra-ui/icons'
 import { FaShippingFast } from 'react-icons/fa';
 import { HiReceiptRefund } from 'react-icons/hi';
+import { Link } from "react-router-dom";
 
 const Order = (props) => {
   const { order } = props;
@@ -31,7 +32,7 @@ const Order = (props) => {
     return () => window.removeEventListener('resize', handleWindowSizeChange);
   }, []);
 
-  const formatDate = () => Moment(order.submitted_at).format('LLL');
+  const formatDate = () => Moment(order.created_at).format('LLL');
   const getStatus = () => orderStatuses[order.status];
 
   const getDeliveryFee = () => {
@@ -75,7 +76,7 @@ const Order = (props) => {
       <Row style={{paddingTop: 15}}>
         <Col lg={6} sm={12}>
           <Text className="header" as='b'>
-            Order #: {order.id}
+            <Link to={"/order/review/" + order.id}>Order #: {order.id}</Link>
           </Text>
           
           <br/>

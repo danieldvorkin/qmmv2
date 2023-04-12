@@ -9,14 +9,16 @@ import Product from "../components/Product";
 import { featuredItems } from "../utils/util";
 import { submitNewOrder } from "../actions";
 import { getCartTotal, getDiscountTotal, getGrandTotal, getItemSubtotal } from "../utils/helpers";
-
-
+import { createSearchParams, useNavigate } from "react-router-dom";
+import loading from '../loading.svg';
 
 const Checkout = (props) => {
   const dispatch = useDispatch();
   const [featuredItemsList, setFeaturedItemsList] = useState([]);
   const [order, setOrder] = useState({ cart: props.cart });
   const [orderComplete, setOrderComplete] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const navigate = useNavigate();
 
   const settings = {
     dots: false, infinite: true, 
@@ -55,9 +57,13 @@ const Checkout = (props) => {
 
 
   const submitOrder = () => {
+    setProcessing(true);
     setOrder({...order, total: getGrandTotal(props.cart)});
-    dispatch(submitNewOrder(order));
-    setOrderComplete(true);
+    
+    dispatch(submitNewOrder(order)).then((resp) => {
+      setOrderComplete(true);
+      navigate('/order/review/' + resp.order?.id);
+    });
   }
 
   return (
@@ -75,37 +81,47 @@ const Checkout = (props) => {
         </Alert>
       )}
       
-      <Row style={{marginTop: 10}}>
-        <WebCheckout 
-          cart={props.cart} 
-          removeItem={removeItem} 
-          qtyChange={qtyChange} 
-          getCartTotal={getCartTotal} 
-          getDiscountTotal={getDiscountTotal} 
-          getGrandTotal={getGrandTotal} 
-          submitOrder={submitOrder} 
-          order={order} 
-          setOrder={setOrder}
-          getItemSubtotal={getItemSubtotal}
-        />
-      </Row>
+      {!processing ? (
+        <>
+          <Row style={{marginTop: 10}}>
+            <WebCheckout 
+              cart={props.cart} 
+              removeItem={removeItem} 
+              qtyChange={qtyChange} 
+              getCartTotal={getCartTotal} 
+              getDiscountTotal={getDiscountTotal} 
+              getGrandTotal={getGrandTotal} 
+              submitOrder={submitOrder} 
+              order={order} 
+              setOrder={setOrder}
+              getItemSubtotal={getItemSubtotal}
+            />
+          </Row>
 
-      <br/><Divider/><br/>
+          <br/><Divider/><br/>
 
-      <Row>
-        <Col pr={3} pl={3}>
-          <Card>
-            <CardHeader><Text fontSize='2xl' as='b'>Featured Items</Text></CardHeader>
-            <CardBody>
-              <Slider {...settings}>
-                {featuredItemsList.map((item) => {
-                  return <Product product={item} category={item.category} />
-                })}
-              </Slider>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
+          <Row>
+            <Col pr={3} pl={3}>
+              <Card>
+                <CardHeader><Text fontSize='2xl' as='b'>Featured Items</Text></CardHeader>
+                <CardBody>
+                  <Slider {...settings}>
+                    {featuredItemsList.map((item) => {
+                      return <Product product={item} category={item.category} />
+                    })}
+                  </Slider>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </>
+      ) : (
+        <>
+          <img style={{ margin: '0 auto' }} src={loading} alt={"loading"}/>
+          <Text style={{textAlign: 'center', position: 'relative', top: '-170px'}}>Order is being processed...</Text>
+        </>
+        
+      )}
     </Container>
   )
 }

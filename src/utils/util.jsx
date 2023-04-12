@@ -47,3 +47,7 @@ export const submitOrder = async (order) => {
 export const getOrder = async (orderId) => {
   return await axios.get(URL + '/orders/' + orderId).then((resp) => resp.data);
 }
+
+export const getOrdersById = async (userId) => {
+  return await axios.get(URL + '/orders?user_id=' + userId).then((resp) => resp.data);
+}

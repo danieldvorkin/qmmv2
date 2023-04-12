@@ -57,7 +57,9 @@ const Cart = (props) => {
               )
             })}
           </div>
+        </DrawerBody>
 
+        <DrawerFooter>
           <div className="bottomSection">
             <Row>
               <Col>
@@ -79,10 +81,6 @@ const Cart = (props) => {
               </Col>
             </Row>
           </div>
-          
-        </DrawerBody>
-
-        <DrawerFooter>
           <Button variant='outline' mr={3} onClick={props.onClose}>
             Keep Shopping
           </Button>

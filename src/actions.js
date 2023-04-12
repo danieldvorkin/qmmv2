@@ -16,4 +16,6 @@ export const loginService = (loginData) => async (dispatch) => {
 export const submitNewOrder = (order) => async (dispatch) => {
   const response = await submitOrder(order)
   dispatch(finalizeOrder(response));
+
+  return response;
 }

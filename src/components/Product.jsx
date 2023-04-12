@@ -78,7 +78,7 @@ const Product = (props) => {
             {[1, 3.5, 7, 14, 28].map((variant) => {
               return (
                 <Button style={{fontSize: 12, padding: 10}} onClick={() => dispatch(add({product: product, quantity: variant}))}>
-                  {variant}g<br/>${(variant * product.price).toFixed(2)}
+                  {variant}g<br/>${(variant * product.price)}
                 </Button>
               )
             })}
@@ -93,7 +93,7 @@ const Product = (props) => {
 
             <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
               <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>
-                Add to cart
+                Add to cart - <Text>${product.price}</Text>
               </Button>
             </ButtonGroup>
           </>

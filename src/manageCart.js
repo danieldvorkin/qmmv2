@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { useNavigate } from 'react-router-dom';
 import { AppToaster, ErrorToaster } from "./toast";
 
 export const cartSlice = createSlice({
@@ -65,7 +66,7 @@ export const cartSlice = createSlice({
       state.token = null
     },
     finalizeOrder: (state, params) => {
-      state.cart = []
+      state.cart = [];
     }
   },
 })

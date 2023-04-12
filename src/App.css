@@ -212,12 +212,9 @@ img {
 }
 
 .bottomSection {
-  border-top: 1px solid silver;
-  padding-top: 5px;
   position: absolute;
-  bottom: 107px;
+  bottom: 65px;
   text-align: right;
-  width: 97%;
 }
 
 .chakra-slide .chakra-modal__body {

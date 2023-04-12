@@ -17,6 +17,7 @@ import Login from './pages/Login';
 import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
 import AdminOrder from './pages/AdminOrder';
+import OrderReview from './pages/OrderReview';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -31,7 +32,9 @@ root.render(
           <Route path="search/:query" element={<Home />} />
           <Route path="shop" element={<Shop />} />
           <Route path="checkout" element={<Checkout/>} />
-          <Route path="my_orders" element={<MyOrders/>} />
+          <Route path="order/review/:id" element={<OrderReview />} />
+          <Route path="my_orders" exact element={<MyOrders/>} />
+          <Route path="my_orders/:id" exact element={<MyOrders/>} />
           <Route path="admin" element={<Admin/>} />
           <Route path="login" element={<Login />} />
           <Route path="admin/products" exact element={<AdminProducts />} />
