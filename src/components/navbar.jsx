@@ -61,15 +61,15 @@ const MainNavbar = (props) => {
     let cartTotal = getCartTotal(props.cart);
 
     if(cartTotal >= 150 && cartTotal < 200){
-      return 200 - cartTotal;
+      return (200 - cartTotal).toFixed(2);
     } else if(cartTotal >= 200 && cartTotal < 300){
-      return 300 - cartTotal;
+      return (300 - cartTotal).toFixed(2);
     } else if(cartTotal >= 300 && cartTotal < 400){
-      return 400 - cartTotal;
+      return (400 - cartTotal).toFixed(2);
     } else if(cartTotal >= 400 && cartTotal < 600){
-      return 600 - cartTotal;
+      return (600 - cartTotal).toFixed(2);
     } else if(cartTotal >= 600 && cartTotal < 800){
-      return 800 - cartTotal;
+      return (800 - cartTotal).toFixed(2);
     }
   }
 

@@ -7,8 +7,6 @@ import HelpModal from "./helpModal";
 import { QuestionIcon } from '@chakra-ui/icons'
 import { FaShippingFast } from 'react-icons/fa';
 import { HiReceiptRefund } from 'react-icons/hi';
-import { redirect } from "react-router-dom";
-import { getItem } from "../utils/util";
 
 const Order = (props) => {
   const { order } = props;

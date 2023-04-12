@@ -75,14 +75,12 @@ const Product = (props) => {
       <CardFooter style={{display: 'block', margin: '10 auto', paddingLeft: 10, textAlign: 'center'}}>
         {category?.type_of === "Strains" || product.category?.type_of === "Strains" ? (
           <ButtonGroup>
-            {product.variants?.map((variant) => {
-              if(parseInt(variant.quantity) > 0){
-                return (
-                  <Button style={{fontSize: 12, padding: 10}} onClick={() => dispatch(add({product: product, quantity: variant.quantity}))}>
-                    {variant.quantity}g<br/>${variant.price}
-                  </Button>
-                )
-              }
+            {[1, 3.5, 7, 14, 28].map((variant) => {
+              return (
+                <Button style={{fontSize: 12, padding: 10}} onClick={() => dispatch(add({product: product, quantity: variant}))}>
+                  {variant}g<br/>${(variant * product.price).toFixed(2)}
+                </Button>
+              )
             })}
           </ButtonGroup>
         ): (

@@ -1,7 +1,7 @@
 import { Button } from "@blueprintjs/core";
 import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { Col, Container, ProgressBar, Row } from "react-bootstrap";
+import { ButtonGroup, Col, Container, Dropdown, DropdownButton, ProgressBar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Products from "../components/Products";
@@ -71,48 +71,27 @@ const Shop = (props) => {
         <Row>
           <Col lg="12">
             <h1 className="header">Menu</h1>
-            <Divider/>
-            {Object.keys(categories).length > 0 && (
-              <Accordion allowToggle>
-                {Object.keys(categories).map((key) => {
+            {Object.keys(categories).map((key) => 
+              <DropdownButton
+                as={ButtonGroup}
+                id={"filter"}
+                size="sm"
+                key={`dropdown-${key}`}
+                variant="outline-secondary"
+                title={key}
+                style={{marginRight: 5}}
+              >
+                {categories[key].map((category) => {
                   return (
-                    <AccordionItem key={"according-" + key}>
-                      <Text><AccordionButton>{key}<AccordionIcon /></AccordionButton></Text>
-                      <AccordionPanel>
-                        <ul key={key} style={{listStyle: 'none'}}>
-                          {categories[key].map((category) => {
-                            return (
-                              <li key={category.id}>
-                                <Link key={category.id} to={"/shop?filter=" + category?.slug} onClick={() => { setFilterSlug(category?.slug) }}>{category?.name}</Link>
-                                {filterSlug === category.slug && (
-                                  <Button className="bp4-minimal" icon="cross" onClick={() => resetFilter() } />
-                                )}
-                              </li>
-                            )
-                          })}
-                        </ul>
-                      </AccordionPanel>
-                    </AccordionItem>
+                    <Dropdown.Item eventKey={category.slug} onClick={() => { setFilterSlug(category?.slug) }}>{category.name}</Dropdown.Item>
                   )
                 })}
-                <AccordionItem key={"according-thc"}>
-                  <Text><AccordionButton>> THC %<AccordionIcon /></AccordionButton></Text>
-                  <AccordionPanel style={{paddingTop: 40}}>
-                    <CustomSlider setValue={(e) => setThcSliderValue(e)} sliderValue={thcSliderValue} />
-                  </AccordionPanel>
-                </AccordionItem>
                 
-                <AccordionItem key={"according-cbd"}>
-                  <Text><AccordionButton>> CBD %<AccordionIcon /></AccordionButton></Text>
-                  <AccordionPanel style={{paddingTop: 40}}>
-                    <CustomSlider setValue={(e) => setCbdSliderValue(e)} sliderValue={cbdSliderValue} />
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion>
+              </DropdownButton>
             )}
           </Col>
           <Col lg="12">
-            <Container fluid style={{marginTop: 10}}>
+            <Container fluid style={{marginTop: 20}}>
               {loader ? (
                 <div style={{ width: '100%' }}>
                   <img style={{ margin: '0 auto' }} src={loading} alt={"loading"}/>
