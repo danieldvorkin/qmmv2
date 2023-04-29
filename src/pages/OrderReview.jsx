@@ -33,7 +33,8 @@ const OrderReview = () => {
         <Container>
           <div className="justify-content-start">
             <Navbar.Text>
-              <Link to={"/my_orders/" + order?.user?.id}><ChevronLeftIcon/>My Orders</Link>
+              {/* <Link to={"/my_orders/" + order?.user?.id}><ChevronLeftIcon/>My Orders</Link> */}
+              <Link to={"/my_orders"}><ChevronLeftIcon/>My Orders</Link>
             </Navbar.Text>
           </div>
 

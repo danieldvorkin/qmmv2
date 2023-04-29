@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { useNavigate } from 'react-router-dom';
 import { AppToaster, ErrorToaster } from "./toast";
 
 export const cartSlice = createSlice({
