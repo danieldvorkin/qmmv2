@@ -35,8 +35,10 @@ const AdminProducts = (props) => {
   }, [props, searchParams.get("typeof")]);
 
   useEffect(() => {
-    search(searchQuery).then((resp) => setProducts(resp));
-  }, [searchQuery])
+    search(searchQuery, page).then((resp) => {
+      setProducts(resp.items);
+    });
+  }, [searchQuery, page])
 
   const columns = [
     { name: 'Name', sortable: false, selector: row => <Link to={"/admin/products/" + row.slug}>{row.name}</Link> },
@@ -52,14 +54,11 @@ const AdminProducts = (props) => {
     setPage(newPage);
 
     if(searchQuery){
-      search(searchQuery, page).then((resp) => setProducts(resp));
-    } else {
       getItems(newPage, searchParams.get("typeof") || "All").then((resp) => {
         setProducts(resp.items);
         setTotal(resp.total_count);
       });
     }
-    
   }
   
   return (
@@ -79,7 +78,10 @@ const AdminProducts = (props) => {
             })}
            */}
             <div className="justify-content-end">
-              <Input size="xs" placeholder="Search up a product..." onChange={(e) => setSearchQuery(e.target.value)} />
+              <Input size="xs" placeholder="Search up a product..." onChange={(e) => {
+                setPage(1);
+                setSearchQuery(e.target.value);
+              }} />
             </div>
           </ButtonGroup>
         </CardHeader>

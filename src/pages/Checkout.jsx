@@ -118,7 +118,7 @@ const Checkout = (props) => {
       ) : (
         <>
           <img style={{ margin: '0 auto' }} src={loading} alt={"loading"}/>
-          <Text style={{textAlign: 'center', position: 'relative', top: '-170px'}}>Order is being processed...</Text>
+          <Text style={{textAlign: 'center', position: 'relative', top: '-150px'}}>Order is being processed...</Text>
         </>
         
       )}

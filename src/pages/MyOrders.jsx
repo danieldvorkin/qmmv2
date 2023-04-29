@@ -65,7 +65,7 @@ const MyOrders = () => {
       )}
       {!loader && orders.length > 0 && orders.map((order) => {
         return(
-          <Order order={{ ...order, items: order.line_items }}/>
+          <Order order={{ ...order }}/>
         )
       })}
       <Divider/>

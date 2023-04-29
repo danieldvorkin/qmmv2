@@ -4,7 +4,6 @@ import { Button, Card, CardBody, CardHeader, Modal, ModalBody, ModalCloseButton,
 import moment from "moment";
 import { ButtonGroup, Col, Container, Navbar, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
-import { BiCheckCircle, BiTrash } from "react-icons/bi";
 import { Link, useParams } from "react-router-dom";
 import { getItemSubtotal } from "../utils/helpers";
 import { getOrder } from "../utils/util";
