@@ -1,7 +1,7 @@
 
 
 import { Button } from '@blueprintjs/core';
-import { Badge } from '@chakra-ui/react';
+import { Badge, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Nav, Navbar, ProgressBar } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -51,7 +51,7 @@ const MainNavbar = (props) => {
       return `${100.0 * DISCOUNT_SETTINGS['1000']}% Discount`;
     }
 
-    return "0% Discount";
+    return "$50 Min";
   }
 
   const getDiscountDiff = () => {
@@ -95,8 +95,11 @@ const MainNavbar = (props) => {
             Shop
           </Link>
           <Nav.Item>
-            <ProgressBar key="base" now={getCartTotal(props.cart)} max={1000} label={getDiscountPercent()} style={{ borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }} className="navbar-progressbar" />
-            <ProgressBar key="metric" min={0} max={1000} style={{ fontSize: 12, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} className="navbar-progressbar">
+            {getCartTotal(props.cart) === 0 && (
+              <Text style={{color: 'black'}}>0% Discount</Text>
+            )}
+            <ProgressBar key="base" now={getCartTotal(props.cart) <= 50 ? 50 : getCartTotal(props.cart)} max={1000} label={getDiscountPercent()} className="navbar-progressbar" style={{}} />
+            {/* <ProgressBar key="metric" min={0} max={1000} style={{ fontSize: 12, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} className="navbar-progressbar">
               <ProgressBar style={{fontSize: 10, backgroundColor: 'silver', color: 'white'}} key={1} now={50} label={"$50 Min"} />
               <ProgressBar style={{fontSize: 10, backgroundColor: '#d8f3dc', color: 'black'}} key={2} now={50} label={"$10 Del"} />
               <ProgressBar style={{fontSize: 10, backgroundColor: '#b7e4c7', color: 'black'}} key={3} now={50} label={"Free Del"} />
@@ -107,7 +110,7 @@ const MainNavbar = (props) => {
               <ProgressBar style={{fontSize: 10, backgroundColor: '#2d6a4f', color: 'white'}} key={8} now={200} label={"25% off"} />
               <ProgressBar style={{fontSize: 10, backgroundColor: '#1b4332', color: 'white'}} key={9} now={200} label={"30% off"} />
               
-            </ProgressBar>
+            </ProgressBar> */}
           </Nav.Item>
         </Nav>
       </Navbar.Collapse>

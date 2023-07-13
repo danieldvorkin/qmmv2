@@ -88,11 +88,14 @@ const Shop = (props) => {
                 key={`dropdown-${key}`}
                 variant="outline-secondary"
                 title={key}
-                style={{marginRight: 5}}
+                style={{marginRight: 5, border: 'none !important'}}
               >
-                {categories[key].map((category) => {
+                {categories[key].sort((a, b) => a.sort - b.sort).map((category) => {
                   return (
-                    <Dropdown.Item eventKey={category.slug} onClick={() => { setFilterSlug(category?.slug) }}>{category.name}</Dropdown.Item>
+                    <Dropdown.Item 
+                      eventKey={category.slug} 
+                      onClick={() => { setFilterSlug(category?.slug) }}
+                      style={{ border: 'none' }}>{category.name}</Dropdown.Item>
                   )
                 })}
                 

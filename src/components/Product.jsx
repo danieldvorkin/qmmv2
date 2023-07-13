@@ -14,22 +14,23 @@ const Product = (props) => {
   const [numOfLines, setNumOfLines] = useState(3);
 
   const getBadgeColor = (typeOf) => {
-    let colors = {
-      "Vapeware": "success",
-      "Strains": "info",
-      "Edibles": "warning",
-      "Extracts": "danger"
+    let strainColors = {
+      "Indica": "#682D63",
+      "Sativa": "#F26419",
+      "Hybrid": "#138A36",
+      "Indica Hybrid": "#4092B5",
+      "Sativa Hybrid": "#F6AE2D",
     }
 
-    return colors[typeOf];
+    return strainColors[typeOf];
   }
   
   return (
     <Card maxW='sm' className="productCard">
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
-          <Badge bg={getBadgeColor(product.category?.type_of || category?.type_of)} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
-            {`${product.category?.type_of || category?.type_of}`}
+          <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12 }}>
+            {`${product?.strain_type}`}
           </Badge>
         </CardHeader>
 
@@ -61,6 +62,9 @@ const Product = (props) => {
             <Link to={"/products/" + product.slug}>
               {product.name}
             </Link>
+            <div style={{float: 'right'}}>
+              ${product.price}
+            </div>
           </Heading>
 
           <Text noOfLines={numOfLines}>
@@ -75,7 +79,7 @@ const Product = (props) => {
       <CardFooter style={{display: 'block', margin: '10 auto', paddingLeft: 10, textAlign: 'center'}}>
         {category?.type_of === "Strains" || product.category?.type_of === "Strains" ? (
           <ButtonGroup>
-            {[1, 3.5, 7, 14, 28].map((variant) => {
+            {[1, 7, 14, 28].map((variant) => {
               return (
                 <Button style={{fontSize: 12, padding: 10}} onClick={() => dispatch(add({product: product, quantity: variant}))}>
                   {variant}g<br/>${(variant * product.price)}
@@ -93,7 +97,7 @@ const Product = (props) => {
 
             <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
               <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>
-                Add to cart - <Text>${product.price}</Text>
+                <Text>${quantity * product.price}</Text>
               </Button>
             </ButtonGroup>
           </>
