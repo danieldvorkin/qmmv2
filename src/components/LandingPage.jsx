@@ -41,25 +41,25 @@ const LandingPage = (props) => {
       <Row style={{marginBottom: 20}}>
         <Col>
           <div className="onHoverPanel panel1 happy">
-            <h1 className="title" style={{color: 'white'}}>Happy</h1>
+            <h1 className="title" style={{color: 'white'}}>Sativa</h1>
           </div>
           <br/>
           <div className="onHoverPanel panel1 calm">
-            <h1 className="title" style={{color: 'white'}}>Calm</h1>
+            <h1 className="title" style={{color: 'white'}}>Sative Hybrid</h1>
           </div>
         </Col>
         <Col className="landingPageCol3">
           <div className="onHoverPanel panel2 energetic">
-            <h1 className="title" style={{color: 'white'}}>Energetic</h1>
+            <h1 className="title" style={{color: 'white'}}>Hybrid</h1>
           </div>
         </Col>
         <Col className="landingPageCol3">
-          <div className="onHoverPanel panel1 sleepy">
-            <h1 className="title" style={{color: 'white'}}>Sleepy</h1>
+          <div className="onHoverPanel panel1 creative">
+            <h1 className="title" style={{color: 'white'}}>Indica Hybrid</h1>
           </div>
           <br/>
-          <div className="onHoverPanel panel1 creative">
-            <h1 className="title" style={{color: 'white'}}>Creative</h1>
+          <div className="onHoverPanel panel1 sleepy">
+            <h1 className="title" style={{color: 'white'}}>Indica</h1>
           </div>
         </Col>
       </Row>

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../new_logo.svg';
-import { DISCOUNT_SETTINGS, getCartTotal } from '../utils/helpers';
+import { DISCOUNT_SETTINGS, getCartTotal, getDiscountTotal, getGrandTotal } from '../utils/helpers';
 
 const MainNavbar = (props) => {
   const [search, setSearch] = useState("");
@@ -69,7 +69,7 @@ const MainNavbar = (props) => {
       return (800 - cartTotal).toFixed(2);
     }
   }
-
+  
   return (
     <Navbar bg="light" expand="lg" sticky="top">
       <LinkContainer to="/">
@@ -79,9 +79,11 @@ const MainNavbar = (props) => {
       </LinkContainer>
       
       {isMobile && (
-        <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
+        <>
+          <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
             <Badge colorScheme="red">{props.cart.length}</Badge>
           </Button>
+        </>
       )}
       
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -94,36 +96,32 @@ const MainNavbar = (props) => {
           <Link className="nav-link" to="/shop">
             Shop
           </Link>
-          <Nav.Item>
-            {getCartTotal(props.cart) === 0 && (
-              <Text style={{color: 'black'}}>0% Discount</Text>
-            )}
-            <ProgressBar key="base" now={getCartTotal(props.cart) <= 50 ? 50 : getCartTotal(props.cart)} max={1000} label={getDiscountPercent()} className="navbar-progressbar" style={{}} />
-            {/* <ProgressBar key="metric" min={0} max={1000} style={{ fontSize: 12, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} className="navbar-progressbar">
-              <ProgressBar style={{fontSize: 10, backgroundColor: 'silver', color: 'white'}} key={1} now={50} label={"$50 Min"} />
-              <ProgressBar style={{fontSize: 10, backgroundColor: '#d8f3dc', color: 'black'}} key={2} now={50} label={"$10 Del"} />
-              <ProgressBar style={{fontSize: 10, backgroundColor: '#b7e4c7', color: 'black'}} key={3} now={50} label={"Free Del"} />
-              <ProgressBar style={{fontSize: 10, backgroundColor: '#95d5b2', color: 'black'}} key={4} now={50} label={"5% off"} />
-              <ProgressBar style={{fontSize: 10, backgroundColor: '#74c69d', color: 'black'}} key={5} now={100} label={"10% off"} />
-              <ProgressBar style={{fontSize: 10, backgroundColor: '#52b788', color: 'white'}} key={6} now={100} label={"15% off"} />
-              <ProgressBar style={{fontSize: 10, backgroundColor: '#40916c', color: 'white'}} key={7} now={200} label={"20% off"} />
-              <ProgressBar style={{fontSize: 10, backgroundColor: '#2d6a4f', color: 'white'}} key={8} now={200} label={"25% off"} />
-              <ProgressBar style={{fontSize: 10, backgroundColor: '#1b4332', color: 'white'}} key={9} now={200} label={"30% off"} />
-              
-            </ProgressBar> */}
-          </Nav.Item>
+          <Text className="nav-link">Current Discount: ${getDiscountTotal(props.cart).toFixed(2)}</Text>
         </Nav>
       </Navbar.Collapse>
       
       <Navbar.Collapse className="justify-content-end">
         {!isMobile && (
           <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
-            <Badge colorScheme="red">{props.cart.length}</Badge>
+            <Badge colorScheme="red">${getGrandTotal(props.cart).toFixed(2)}</Badge>
           </Button>
         )}
         <LinkContainer to="/my_orders">
           <Button className="bp4-minimal" text="My Orders" />
-        </LinkContainer>        
+        </LinkContainer>
+
+        {props.isLoggedIn && props.user?.admin && (
+          <LinkContainer to="/admin">
+            <Button className="bp4-minimal" text="Admin" />
+          </LinkContainer>
+        )}
+
+        {!props.isLoggedIn && (
+          <LinkContainer to="/login">
+            <Button className="bp4-minimal" text="Login" />
+          </LinkContainer>
+        )}
+
         <input className="bp4-input" placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} />
         {search.length > 0 && (
           <Button className="bp4-minimal" icon="cross" onClick={() => {
@@ -139,7 +137,10 @@ const MainNavbar = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    cart: state.cart
+    cart: state.cart,
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    token: state.token
   }
 }
 
