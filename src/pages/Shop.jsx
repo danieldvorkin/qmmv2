@@ -25,20 +25,8 @@ const Shop = (props) => {
     setFilterSlug(slug);
 
     getCategories().then((resp) => setCategories(resp));
-
-    if(slug?.length > 0){
-      getCategory(slug).then((resp) => setProducts(resp.items));
-    } else {
-      featuredItems().then((resp) => setProducts(resp));
-    }
-
-    setTimeout(() => {
-      setLoader(false);  
-    }, 2000);
-  }, [])
-
-  useEffect(() => {
-    setLoader(true);
+    featuredItems().then((resp) => setProducts(resp));
+    
     if(Object.keys(categories).length > 0){
       let filterHash = Object.keys(categories).map((cat) => {
         const list = categories[cat];
@@ -47,22 +35,43 @@ const Shop = (props) => {
       }).flat();
       
       setFilterObject(filterHash[0]);
-
-      if(filterSlug?.length > 0){
-        getCategory(filterSlug).then((resp) => setProducts(resp.items));
-      } else {
-        featuredItems().then((resp) => setProducts(resp));
-      }
-      setTimeout(() => {
-        setLoader(false);  
-      }, 2000);
     }
-  }, [categories, filterSlug])
+
+    setTimeout(() => {
+      setLoader(false);  
+    }, 1000);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryParams])
+
+  useEffect(() => {
+    if(filterSlug?.length > 0){
+      setLoader(true);  
+      getCategory(filterSlug).then((resp) => setProducts(resp.items));
+
+      let filterHash = Object.keys(categories).map((cat) => {
+        const list = categories[cat];
+        
+        return list.filter((item) => filterSlug === item.slug);
+      }).flat();
+      
+      setFilterObject(filterHash[0]);
+    }
+    setTimeout(() => {
+      setLoader(false);
+    }, 1000)
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterSlug])
 
   const resetFilter = () => {
+    setLoader(true);
     setFilterSlug("");
     setFilterObject({});
     navigate("/shop");
+    featuredItems().then((resp) => setProducts(resp));
+    setTimeout(() => {
+      setLoader(false);  
+    }, 1000);
   }
   
   return(

@@ -24,11 +24,13 @@ const Products = (props) => {
           
           <Row>
             {products && products.map((product) => {
-              return (
-                <Col xl={4} md={4} xs={12} key={product.id}>
-                  <Product product={product} category={selectedFilter} />
-                </Col>
-              )
+              if(product?.price > 0) {
+                return (
+                  <Col xl={4} md={4} xs={12} key={product.id}>
+                    <Product product={product} category={selectedFilter} />
+                  </Col>
+                )
+              }
             })}
           </Row>
         </div>

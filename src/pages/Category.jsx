@@ -41,11 +41,13 @@ const Category = () => {
       
       <Row>
         {category?.items?.map((item) => {
-          return (
-            <Col md={4} key={item.id}>
-              <Product product={item} category={category} />
-            </Col>
-          )
+          if(item?.price > 0){
+            return (
+              <Col md={4} key={item.id}>
+                <Product product={item} category={category} />
+              </Col>
+            )
+          }
         })}
       </Row>
     </div>
