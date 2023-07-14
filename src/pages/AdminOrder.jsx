@@ -6,6 +6,7 @@ import { ButtonGroup, Col, Container, Navbar, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import { BiCheckCircle, BiTrash } from "react-icons/bi";
 import { connect } from "react-redux";
+import { LinkContainer } from "react-router-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { getItemSubtotal } from "../utils/helpers";
 import { getOrder } from "../utils/util";
@@ -22,7 +23,7 @@ const AdminOrder = (props) => {
 
   return (
     <>
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg="dark" variant="dark"  className="adminNavbar">
         <Container>
           <Navbar.Collapse className="justify-content-start">
             <Navbar.Text>
@@ -112,9 +113,14 @@ const AdminOrder = (props) => {
                       {order.items?.map((item) => {
                         return (
                           <Tr>
-                            <Td>{item.item.name}</Td>
+                            <Td>
+                              
+                              <LinkContainer to={{ pathname: "/admin/products/" + item.item.slug, search: "?order=" + order.id }} style={{cursor: 'pointer'}}>
+                                <Text>{item.item.name}</Text>
+                              </LinkContainer>
+                            </Td>
                             <Td>{item.quantity}</Td>
-                            <Td><CurrencyFormat value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: 1 })} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
+                            <Td><CurrencyFormat value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
                           </Tr>
                         )
                       })}

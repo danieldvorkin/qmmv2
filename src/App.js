@@ -27,6 +27,11 @@ function App() {
     )
   }
 
+  const adminNavbarWidth = () => {
+    let pathnames = location.pathname;
+    return (pathnames.includes("admin/orders/") || pathnames.includes("admin/products/")) ? '' : "container"
+  }
+
   return (
     <ChakraProvider>
       <Provider store={store}>
@@ -34,7 +39,7 @@ function App() {
           {location.pathname.includes("admin") || location.pathname.includes("login") ? (
             <>
               <AdminNavbar />
-              <div className={location.pathname.includes("admin/orders/") ? '' : "container"}>
+              <div className={adminNavbarWidth()}>
                 <Outlet />
               </div>
             </>

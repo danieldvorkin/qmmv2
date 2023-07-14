@@ -18,6 +18,7 @@ import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
 import AdminOrder from './pages/AdminOrder';
 import OrderReview from './pages/OrderReview';
+import AdminProduct from './pages/AdminProduct';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -40,6 +41,7 @@ root.render(
           <Route path="admin/products" exact element={<AdminProducts />} />
           <Route path="admin/orders" exact element={<AdminOrders />} />
           <Route path="admin/orders/:id" exact element={<AdminOrder />} />
+          <Route path="admin/products/:slug" exact element={<AdminProduct />} />
         </Route>
       </Routes>
     </BrowserRouter>

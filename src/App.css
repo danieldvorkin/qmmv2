@@ -383,6 +383,10 @@ img {
     top: -8px;
     background-color: white !important;
   }
+  .adminNavbar .navbar-collapse {
+    background-color:rgba(33,37,41, 1)!important;
+  }
+
   .navbar-collapse {
     padding-bottom: 10px;
     padding-top: 10px;
