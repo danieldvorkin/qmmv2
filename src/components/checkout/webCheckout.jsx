@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardHeader, Divider, FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardHeader, Divider, FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
@@ -9,6 +9,12 @@ import Breakdown from "../breakdown";
 const WebCheckout = (props) => {
   const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, setOrder, getItemSubtotal } = props;
 
+  const validateBeforeSubmission = () => {
+    return Boolean(order.full_name) &&
+      Boolean(order.email) &&
+      Boolean(order.phone)
+  }
+  
   return (
     <>
       <Col lg={8}>
@@ -21,13 +27,13 @@ const WebCheckout = (props) => {
               <Col sm={12}>
                 <FormControl>
                   <FormLabel>Your Name *</FormLabel>
-                  <Input type='text' name="full_name" value={order?.full_name} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
+                  <Input type='text' name="full_name" value={order?.full_name} isRequired={true} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
               <Col sm={12}>
                 <FormControl>
                   <FormLabel>Your Phone Number *</FormLabel>
-                  <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={order?.phone} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
+                  <PatternFormat className="chakra-input-custom" displayType="input" isRequired={true} format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={order?.phone} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
             </Row>
@@ -35,7 +41,7 @@ const WebCheckout = (props) => {
               <Col sm={12}>
                 <FormControl>
                   <FormLabel>Your Email *</FormLabel>
-                  <Input type='text' name="email" value={order?.email} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
+                  <Input type='text' name="email" value={order?.email} isRequired={true} onChange={(e) => setOrder({...order, [e.target.name]: e.target.value })} />
                 </FormControl>
               </Col>
             </Row>
@@ -145,7 +151,14 @@ const WebCheckout = (props) => {
 
               <Row>
                 <Col><LinkContainer to="/shop"><Button colorScheme={"red"} style={{width: '100%'}}>Cancel</Button></LinkContainer></Col>
-                <Col><Button colorScheme={"green"} style={{width: '100%'}} onClick={submitOrder}>Checkout</Button></Col>
+                <Col>
+                  {validateBeforeSubmission() ? (
+                    <Button colorScheme={"green"} style={{width: '100%'}} onClick={submitOrder}>Checkout</Button>
+                  ) : (
+                    <Text>Enter the required info to checkout</Text>
+                  )}
+                  
+                </Col>
               </Row>
             </div>
 

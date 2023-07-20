@@ -140,7 +140,7 @@ const ProductShow = () => {
                 <br/>
                 <Divider/>
                 <br/>
-                <Row>
+                {/* <Row>
                   <Col>
                     <Text className="header" style={{marginBottom: 5}}>Terpenes</Text>
                     {product?.terpenes?.length > 0 ? (    
@@ -160,15 +160,17 @@ const ProductShow = () => {
                     )}
                   </Col>
                 </Row>
-                <br/>
+                <br/> */}
                 <Row>
                   <Col>
+                    <Text>Select amount: </Text>
+                    <br/>
                     {product?.category?.type_of === "Strains" ? (
                       <ButtonGroup>
                         {[1, 3.5, 7, 14, 28].map((variant) => {
                           return (
-                            <Button style={{fontSize: 12, padding: 10}} onClick={() => dispatch(add({product: product, quantity: variant}))}>
-                              {variant}g<br/>${variant * product.price}
+                            <Button style={{ fontSize: 13, padding: '2px 0px', margin: "0px 4px", fontWeight: 'bold' }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
+                              {variant}
                             </Button>
                           )
                         })}
@@ -180,10 +182,13 @@ const ProductShow = () => {
                         <Button style={{ width: 130 }} onClick={() => setSelectedQty(selectedQty + 1)}>+</Button>
                       </ButtonGroup>
                     )}
-
-                    <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: selectedQty}))} style={{ width: '100%', marginTop: 10 }}>
-                      Add to cart
-                    </Button>
+                    <br/>
+                    {product?.category?.type_of !== 'Strains' && (
+                      <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: selectedQty}))} style={{ width: '100%', marginTop: 10 }}>
+                        Add to cart
+                      </Button>
+                    )}
+                    
                   </Col>
                 </Row>
               </Col>

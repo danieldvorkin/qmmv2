@@ -1,14 +1,81 @@
-import { Button, Divider } from "@chakra-ui/react";
-import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Badge, Carousel, Col, Container, Image, Row } from "react-bootstrap";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Select, Stack, Text } from "@chakra-ui/react";
+import { relativeTimeRounding } from "moment";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { featuredItems } from "../utils/util";
+import Slider from "react-slick";
+import Product from "./Product";
+
+const settings = {
+  dots: false, infinite: true, 
+  slidesToShow: 4, slidesToScroll: 1,
+
+  responsive: [{
+    breakpoint: 200,
+    settings: {
+      slidesToShow: 1,
+      slidesToScroll: 1
+    }
+  },
+  {
+    breakpoint: 600,
+    settings: {
+      slidesToShow: 1,
+      slidesToScroll: 1
+    }
+  },
+  {
+    breakpoint: 1424,
+    settings: {
+      slidesToShow: 1,
+      slidesToScroll: 1
+    }
+  }]
+}
 
 const LandingPage = (props) => {
-  const { categories } = props;
+  const [productFeaturedItems, setProductFeaturedItems] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const featuredItemResponse = await featuredItems();
+      setProductFeaturedItems(featuredItemResponse);
+    }
+    fetchData();
+  }, []);
 
   return (
     <Container fluid>
+      <div className="text-overlay landing-container">
+        <h1>Queen Mary</h1>
+        <Text>The Gold Standard in Cannabis</Text>
+        <Text>Est. 2016</Text>
+        <br/>
+        <div style={{textAlign: 'center'}}>
+          <Link to="/shop"><Button colorScheme={'green'} style={{ minWidth: 200}}>SHOP NOW</Button></Link>
+        </div>
+      </div>
+      
+      <Container>
+        <Text fontSize={'5xl'}>Featured Items</Text>
+      </Container>
       <Row>
+        <Col>
+          <Card>
+            <CardHeader><Text fontSize='2xl' as='b'>Featured Items</Text></CardHeader>
+            <CardBody>
+              <Slider {...settings}>
+                {productFeaturedItems?.map((item) => {
+                  return <Product product={item} category={item.category} />
+                })}
+              </Slider>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+      
+      {/* <Row>
         <Col lg={7} md={12} className="landingPageCol" style={{ marginRight: '-5px'}}>
           <div className="onHoverPanel img1" style={{ minHeight: 540 }}>
             <h1 className="title">Queen Mary Medical</h1>
@@ -45,7 +112,7 @@ const LandingPage = (props) => {
           </div>
           <br/>
           <div className="onHoverPanel panel1 calm">
-            <h1 className="title" style={{color: 'white'}}>Sative Hybrid</h1>
+            <h1 className="title" style={{color: 'white'}}>Sativa Hybrid</h1>
           </div>
         </Col>
         <Col className="landingPageCol3">
@@ -96,7 +163,7 @@ const LandingPage = (props) => {
             </div>
           </Col>
         </Row>
-      )}
+      )} */}
     </Container>
   )
 }

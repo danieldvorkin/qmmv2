@@ -26,7 +26,7 @@ const Products = (props) => {
             {products && products.map((product) => {
               if(product?.price > 0) {
                 return (
-                  <Col xl={4} md={4} xs={12} key={product.id}>
+                  <Col xl={3} lg={4} md={6} xs={12} key={product.id}>
                     <Product product={product} category={selectedFilter} />
                   </Col>
                 )

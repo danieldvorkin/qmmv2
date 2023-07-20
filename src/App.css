@@ -257,6 +257,11 @@ img {
   border-radius: 25px;
 }
 
+.showInCart { 
+  border: 2px solid #38a169 !important;
+  border-radius: 25px;
+}
+
 /* Portrait */
 @media only screen 
   and (min-device-width: 768px) 
@@ -356,6 +361,41 @@ img {
   padding: 0px 10px;
 }
 
+.full-bg {
+  margin: 0;
+  padding: 0;
+  height: 670px;
+  background-image: url('./homepage-bg.jpeg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%; /* Adjust the vertical position of the text */
+  left: 50%; /* Adjust the horizontal position of the text */
+  transform: translate(55%, -300%); /* Center the text both vertically and horizontally */
+  color: black;
+  text-align: left;
+  /* Add other styles as needed */
+}
+
+/* Style the heading "Queen Mary" */
+.landing-container h1 {
+  font-size: 65px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add a subtle text shadow */
+}
+
+/* Style the paragraph "The Gold Standard in Cannabis, Est. 2016" */
+.landing-container p {
+  font-size: 24px;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add a subtle text shadow */
+}
+
 @media only screen and (max-width: 600px) {
   .navbar-progressbar {
     margin-left: 0px;
@@ -363,6 +403,16 @@ img {
   }
   .addToCart {
     margin-left: 180px;
+  }
+
+  .text-overlay {
+    position: absolute;
+    top: 50%; /* Adjust the vertical position of the text */
+    left: 50%; /* Adjust the horizontal position of the text */
+    transform: translate(-5%, -250%); /* Center the text both vertically and horizontally */
+    color: black;
+    text-align: left;
+    /* Add other styles as needed */
   }
   .content-container {
     max-height: 86%;

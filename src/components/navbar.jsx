@@ -33,10 +33,13 @@ const MainNavbar = (props) => {
 
   const getDiscountPercent = () => {
     let cartTotal = getCartTotal(props.cart);
-    console.log("Cart Total: ", cartTotal);
-
-    if(cartTotal >= 100 && cartTotal < 150){
-      return "Free Delivery";
+    
+    if(cartTotal < 50){
+      return `$50 Min. Order | You are $${getDiscountDiff()} away`;
+    } else if(cartTotal >= 50 && cartTotal < 100){
+      return `+$10 Delivery | You are $${getDiscountDiff()} away from free delivery`;
+    } else if(cartTotal >= 100 && cartTotal < 150){
+      return `Free Delivery | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['200']}%`;
     } else if(cartTotal >= 150 && cartTotal < 200){
       return `${100.0 * DISCOUNT_SETTINGS['200']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['300']}%`;
     } else if(cartTotal >= 200 && cartTotal < 300){
@@ -51,13 +54,17 @@ const MainNavbar = (props) => {
       return `${100.0 * DISCOUNT_SETTINGS['1000']}% Discount`;
     }
 
-    return "$50 Min";
+    return '';
   }
 
   const getDiscountDiff = () => {
     let cartTotal = getCartTotal(props.cart);
 
-    if(cartTotal >= 150 && cartTotal < 200){
+    if(cartTotal < 50){
+      return (50 - cartTotal).toFixed(2);
+    } else if(cartTotal >= 100 && cartTotal < 150) {
+      return (150 - cartTotal).toFixed(2);
+    } else if(cartTotal >= 150 && cartTotal < 200){
       return (200 - cartTotal).toFixed(2);
     } else if(cartTotal >= 200 && cartTotal < 300){
       return (300 - cartTotal).toFixed(2);
@@ -67,6 +74,8 @@ const MainNavbar = (props) => {
       return (600 - cartTotal).toFixed(2);
     } else if(cartTotal >= 600 && cartTotal < 800){
       return (800 - cartTotal).toFixed(2);
+    } else {
+      return (100 - cartTotal).toFixed(2);
     }
   }
   
@@ -96,7 +105,7 @@ const MainNavbar = (props) => {
           <Link className="nav-link" to="/shop">
             Shop
           </Link>
-          <Text className="nav-link">Current Discount: ${getDiscountTotal(props.cart).toFixed(2)}</Text>
+          <Text className="nav-link">{getDiscountPercent(props.cart)}</Text>
         </Nav>
       </Navbar.Collapse>
       

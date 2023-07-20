@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { Card, CardBody, Heading, Stack, Text, Image, Button, ButtonGroup, CardFooter, CardHeader, Select } from '@chakra-ui/react';
 import { Badge, Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import CurrencyFormat from "react-currency-format";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { add } from "../manageCart";
 import { LinkContainer } from "react-router-bootstrap";
 
 const Product = (props) => {
-  const { product, category } = props;
+  const { product, category, cart } = props;
+  
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
-  const [numOfLines, setNumOfLines] = useState(3);
 
   const getBadgeColor = (typeOf) => {
     let strainColors = {
@@ -24,14 +23,37 @@ const Product = (props) => {
 
     return strainColors[typeOf];
   }
+
+  const showInCartBorder = () => {
+    if(cart && product){
+      return cart.filter((item) => item.product.id === product.id).length > 0 ? 'showInCart' : '';
+    }
+  }
+
+  const getCartQty = () => {
+    if(cart && product){
+      let item = cart.filter((i) => i.product.id === product.id)[0];
+      
+      if(item){
+        return `${item.quantity} in Cart`
+      }
+    }
+  }
   
   return (
-    <Card maxW='sm' className="productCard">
+    <Card maxW='sm' className={`productCard ${showInCartBorder()}`}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
           <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12 }}>
             {`${product?.strain_type}`}
           </Badge>
+          {showInCartBorder() === 'showInCart' && (
+            <div style={{float: 'right'}}>
+              <Badge bg={'success'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
+                {getCartQty()}
+              </Badge>
+            </div>
+          )}
         </CardHeader>
 
         <Carousel variant="dark">
@@ -62,49 +84,59 @@ const Product = (props) => {
             <Link to={"/products/" + product.slug}>
               {product.name}
             </Link>
-            <div style={{float: 'right'}}>
+            <div style={{float: 'right', fontSize: 35, position: 'relative', right: 10}}>
               ${product.price}
             </div>
           </Heading>
 
-          <Text noOfLines={numOfLines}>
-            <strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}
-            <strong style={{fontSize: 10}}>CBD:{' '}</strong>{product.cbd || ''}{' | '}
-            <strong style={{fontSize: 10}}>BRAND:{' '}</strong>{product.brand || ''}<br/>
-            <span onClick={() => setNumOfLines(numOfLines === 3 ? 10 : 3)}>{product.description || 'No Description Available'}</span>
-          </Text>
+          {category?.type_of === "Strains" || product.category?.type_of === "Strains" ? (
+            <div style={{top: 0, position: 'relative', textAlign: 'center' }}>
+              <ButtonGroup>
+                {[1, 3.5, 7, 14, 28].map((variant) => {
+                  return (
+                    <Button style={{ minWidth: 50, fontSize: 13, padding: '5px 5px', margin: "0px 2px", fontWeight: 'bold' }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
+                      {variant}
+                    </Button>
+                  )
+                })}
+              </ButtonGroup>
+            </div>
+          ): (
+            <>
+              <ButtonGroup spacing='2' style={{width: '100%'}}>
+                <Button style={{ width: 130 }} onClick={() => (quantity - 1) > 0 ? setQuantity(quantity - 1) : null}>-</Button>
+                <input type="number" min={0} className="chakra-input-custom chakra-input-custom-2" value={quantity} onChange={(e) => parseFloat(e.target.value) > 0.0 ? setQuantity(parseFloat(e.target.value)) : null} />
+                <Button style={{ width: 130 }} onClick={() => setQuantity(quantity + 1)}>+</Button>
+              </ButtonGroup>
+
+              <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
+                <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>
+                  <Text>Add to Cart - ${quantity * product.price}</Text>
+                </Button>
+              </ButtonGroup>
+            </>
+          )}
         </Stack>
       </CardBody>
 
-      <CardFooter style={{display: 'block', margin: '10 auto', paddingLeft: 10, textAlign: 'center'}}>
-        {category?.type_of === "Strains" || product.category?.type_of === "Strains" ? (
-          <ButtonGroup>
-            {[1, 7, 14, 28].map((variant) => {
-              return (
-                <Button style={{fontSize: 12, padding: 10}} onClick={() => dispatch(add({product: product, quantity: variant}))}>
-                  {variant}g<br/>${(variant * product.price)}
-                </Button>
-              )
-            })}
-          </ButtonGroup>
-        ): (
-          <>
-            <ButtonGroup spacing='2' style={{width: '100%'}}>
-              <Button style={{ width: 130 }} onClick={() => (quantity - 1) > 0 ? setQuantity(quantity - 1) : null}>-</Button>
-              <input type="number" min={0} className="chakra-input-custom chakra-input-custom-2" value={quantity} onChange={(e) => parseFloat(e.target.value) > 0.0 ? setQuantity(parseFloat(e.target.value)) : null} />
-              <Button style={{ width: 130 }} onClick={() => setQuantity(quantity + 1)}>+</Button>
-            </ButtonGroup>
-
-            <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
-              <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>
-                <Text>${quantity * product.price}</Text>
-              </Button>
-            </ButtonGroup>
-          </>
-        )}
+      <CardFooter style={{display: 'block', margin: '10 auto', paddingLeft: 18, textAlign: 'center'}}>
+        <Text noOfLines={4}>
+          <strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}
+          <strong style={{fontSize: 10}}>CBD:{' '}</strong>{product.cbd || ''}{' | '}
+          <strong style={{fontSize: 10}}>BRAND:{' '}</strong>{product.brand || ''}<br/>
+          <Link to={"/products/" + product.slug} style={{ textDecoration: 'none'}}>
+            <span>{product.description || 'No Description Available'}</span>
+          </Link>
+        </Text>
       </CardFooter>
     </Card>
   )
 }
 
-export default Product;
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart
+  }
+}
+
+export default connect(mapStateToProps)(Product);

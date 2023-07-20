@@ -32,6 +32,11 @@ function App() {
     return (pathnames.includes("admin/orders/") || pathnames.includes("admin/products/")) ? '' : "container"
   }
 
+  const onLandingPage = () => {
+    let pathnames = location.pathname;
+    return pathnames === "/";
+  }
+
   return (
     <ChakraProvider>
       <Provider store={store}>
@@ -45,11 +50,19 @@ function App() {
             </>
           ) : (
             <>
-              <div className={location !== "root" ? '' : "container"}>
+              <div>
                 <MainNavbar cartClick={onOpen} />
-                <div style={{minHeight: 645, marginBottom: 50}}>
-                  <Outlet />
-                </div>
+                {onLandingPage() ? (
+                  <>
+                    <div className={'full-bg'}></div>
+                    <Outlet/>
+                  </>
+                ) : (
+                  <div style={{ minHeight: 700 }}>
+                    <Outlet />
+                  </div>
+                )}
+                
                 
                 <Footer />
               </div>
