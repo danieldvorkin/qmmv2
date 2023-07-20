@@ -91,11 +91,12 @@ const Product = (props) => {
 
           {category?.type_of === "Strains" || product.category?.type_of === "Strains" ? (
             <div style={{top: 0, position: 'relative', textAlign: 'center' }}>
+              {/* <Text style={{marginBottom: 5, fontWeight: 'bold', textAlign: 'left'}}>Select Qty</Text> */}
               <ButtonGroup>
                 {[1, 3.5, 7, 14, 28].map((variant) => {
                   return (
                     <Button style={{ minWidth: 50, fontSize: 13, padding: '5px 5px', margin: "0px 2px", fontWeight: 'bold' }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
-                      {variant}
+                      {variant}g
                     </Button>
                   )
                 })}
@@ -119,11 +120,18 @@ const Product = (props) => {
         </Stack>
       </CardBody>
 
-      <CardFooter style={{display: 'block', margin: '10 auto', paddingLeft: 18, textAlign: 'center'}}>
+      <CardFooter style={{display: 'block', margin: '0px auto 14px', paddingLeft: 18, textAlign: 'center'}}>
         <Text noOfLines={4}>
-          <strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}
-          <strong style={{fontSize: 10}}>CBD:{' '}</strong>{product.cbd || ''}{' | '}
-          <strong style={{fontSize: 10}}>BRAND:{' '}</strong>{product.brand || ''}<br/>
+          {product?.thc && (
+            <><strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}</>
+          )}
+          {product?.cbd && (
+            <><strong style={{fontSize: 10}}>CBD:{' '}</strong>{product.cbd || ''}{' | '}</>
+          )}
+          {product?.brand && (
+            <><strong style={{fontSize: 10}}>BRAND:{' '}</strong>{product.brand || ''}<br/></>
+          )}
+        
           <Link to={"/products/" + product.slug} style={{ textDecoration: 'none'}}>
             <span>{product.description || 'No Description Available'}</span>
           </Link>
