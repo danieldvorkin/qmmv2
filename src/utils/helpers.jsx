@@ -1,7 +1,37 @@
-export const DISCOUNT_SETTINGS = {
+  export const DISCOUNT_SETTINGS = {
   '50': 0, '100': 0, '150': 0,
   '200': 0.05, '300': 0.10, '400': 0.15,
   '600': 0.20, '800': 0.25, '1000': 0.30
+}
+
+export const getOrderTotal = (items) => {
+  if(items && items.length > 0){
+    return items.map((item) => parseFloat(item.item.price) * parseFloat(item.quantity)).reduce((tot, cur) => tot = tot + cur);
+  }
+}
+
+export const getOrderDiscount = (items) => {
+  if(items && items.length > 0) {
+    let orderTotal = getOrderTotal(items);
+    
+    if(orderTotal >= 100 && orderTotal < 150){
+      return orderTotal * DISCOUNT_SETTINGS['150'];
+    } else if(orderTotal >= 150 && orderTotal < 200){
+      return orderTotal * DISCOUNT_SETTINGS['200'];
+    } else if(orderTotal >= 200 && orderTotal < 300){
+      return orderTotal * DISCOUNT_SETTINGS['300'];
+    } else if(orderTotal >= 300 && orderTotal < 400){
+      return orderTotal * DISCOUNT_SETTINGS['400'];
+    } else if(orderTotal >= 400 && orderTotal < 600){
+      return orderTotal * DISCOUNT_SETTINGS['600'];
+    } else if(orderTotal >= 600 && orderTotal < 800){
+      return orderTotal * DISCOUNT_SETTINGS['800'];
+    } else if(orderTotal > 799){
+      return orderTotal * DISCOUNT_SETTINGS['1000'];
+    }  
+  }
+
+  return 0;
 }
 
 export const getCartTotal = (items) => {
@@ -16,7 +46,17 @@ export const getCartTotal = (items) => {
 }
 
 export const getItemSubtotal = (item) => {
-  return item.product.price * item.quantity;
+  if(item.product.price){
+    return item.product.price * item.quantity;
+  } else {
+    let variants = item.product.variants.filter((v) => v.quantity === item.quantity);
+
+    if(variants.length > 0){
+      return variants[0].price;
+    } else {
+      return 0;
+    }
+  }
 }
 
 export const getVariant = (item) => {

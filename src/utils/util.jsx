@@ -28,6 +28,10 @@ export const getItems = async(page, typeOf) => {
   return await axios.get(URL + "/items?page=" + page +"&stypeof=" + typeOf).then((resp) => resp.data);
 }
 
+export const getAllItems = async() => {
+  return await axios.get(URL + '/items/all').then((resp) => resp.data);
+}
+
 export const getMyOrders = async(email) => {
   return await axios.get(URL + "/orders/my_orders?email=" + email).then((resp) => resp.data);
 }
@@ -42,6 +46,14 @@ export const getOrders = async (page, status) => {
 
 export const submitOrder = async (order) => {
   return await axios.post(URL + "/orders/create", order).then((resp) => resp.data);
+}
+
+export const updateOrder = async (order, params) => {
+  return await axios.put(URL + "/orders/" + order.id + "/update", params).then((resp) => resp.data);
+}
+
+export const removeLineItem = async (order, params) => {
+  return await axios.post(URL + "/orders/" + order.id + "/remove_item", params).then((resp) => resp.data);
 }
 
 export const getOrder = async (orderId) => {

@@ -20,6 +20,7 @@ const AdminProducts = (props) => {
   const [total, setTotal] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState(null);
 
   useEffect(() => {
     if(!props.isLoggedIn){
@@ -71,12 +72,12 @@ const AdminProducts = (props) => {
             </LinkContainer>
             {/* {Object.keys(STATUSES).map((status) => {
               return (
-                <LinkContainer to={{ pathname: "/admin/products", search: "?typeof=" + typeof.slice(6) }}>
-                  <Button colorScheme={selectedStatus === typeof.slice(6) ? STATUSES[status] : 'gray'} size='xs'>{typeof.slice(6)}</Button>
+                <LinkContainer to={{ pathname: "/admin/products", search: "?typeof=" + typeOf.slice(6) }}>
+                  <Button colorScheme={selectedStatus === typeOf.slice(6) ? STATUSES[status] : 'gray'} size='xs'>{typeOf.slice(6)}</Button>
                 </LinkContainer>
               )
-            })}
-           */}
+            })} */}
+          
             <div className="justify-content-end">
               <Input size="xs" placeholder="Search up a product..." onChange={(e) => {
                 setPage(1);

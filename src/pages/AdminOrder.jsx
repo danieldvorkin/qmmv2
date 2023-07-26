@@ -1,25 +1,97 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { Card, CardBody, CardHeader, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { ButtonGroup, Button, Card, CardBody, CardHeader, Input, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure, Flex } from "@chakra-ui/react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { ButtonGroup, Col, Container, Navbar, Row } from "react-bootstrap";
+import { Col, Container, Navbar, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import { BiCheckCircle, BiTrash } from "react-icons/bi";
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useParams } from "react-router-dom";
-import { getItemSubtotal } from "../utils/helpers";
-import { getOrder } from "../utils/util";
+import { getItemSubtotal, getOrderDiscount, getOrderTotal } from "../utils/helpers";
+import { getAllItems, getOrder, removeLineItem, updateOrder } from "../utils/util";
+import Autosuggest from 'react-autosuggest';
 
 const AdminOrder = (props) => {
   const { id } = useParams();
   const [order, setOrder] = useState({});
+  const [editmode, setEditmode] = useState(false);
+  const finalRef = React.useRef(null);
+  
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [products, setProducts] = useState([]);
+
+  const [value, setValue] = useState('');
+  const [newQuantity, setNewQuantity] = useState(1);
+  const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
     if(id){
       getOrder(id).then((resp) => setOrder(resp));
     }
-  }, [id]);
+
+    if(isOpen){
+      getAllItems().then((resp) => setProducts(resp));
+    }
+  }, [id, isOpen]);
+
+  const getSuggestions = value => {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue?.length;
+
+    return inputLength === 0 ? [] : products.filter(lang =>
+      lang.name.toLowerCase().slice(0, inputLength) === inputValue
+    );
+  };
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value))
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([])
+  };
+
+  const getSuggestionValue = suggestion => suggestion.name;
+
+  const renderSuggestion = suggestion => (
+    <div>
+      {suggestion.name}
+    </div>
+  );
+
+  const onProductSearchChange = (e, { newValue }) => {
+    setValue(newValue);
+  }
+
+  const inputProps = {
+    placeholder: 'Type a product name',
+    value,
+    onChange: onProductSearchChange
+  };
+
+
+  const addProductToOrder = () => {
+    let selectedProduct = products.filter((p) => p.name === value)[0];
+    let params = {
+      item_name: selectedProduct.name.trim(),
+      quantity: newQuantity
+    }
+
+    updateOrder(order, params).then((resp) => {
+      setOrder(resp)
+      onClose();
+    })
+  }
+
+  const removeItem = (item) => {
+    console.log("Item: ", item);
+    let params = { item_name: item.item.name };
+
+    removeLineItem(order, params).then((resp) => {
+      setOrder(resp);
+    })
+  }
 
   return (
     <>
@@ -96,31 +168,72 @@ const AdminOrder = (props) => {
             <Card>
               <CardHeader>
                 <Text fontSize='3xl' as='b'>Order Items</Text>
+                <div style={{float: 'right'}}>
+                  <ButtonGroup>
+                    <Button colorScheme={'purple'} onClick={() => onOpen()}>Add Product</Button>
+                    {editmode ? (      
+                      <Button colorScheme={'green'} onClick={() => setEditmode(false)}>Confirm Order</Button>
+                    ) : (
+                      <Button colorScheme={'orange'} onClick={() => setEditmode(true)}>Edit Order</Button>
+                    )}
+                  </ButtonGroup>
+                </div>
                 <hr/>
               </CardHeader>
               <CardBody>
                 <TableContainer>
                   <Table variant='simple'>
-                    <TableCaption>Status: {order.status}</TableCaption>
+                    <TableCaption>
+                      Status: {order.status}
+                      <br/>
+                      Order SubTotal: {getOrderTotal(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+                      <br/>
+                      Discount: {getOrderDiscount(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+                      <br/>
+                      Grand Total: {(getOrderTotal(order.items) - getOrderDiscount(order.items)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+                    </TableCaption>
                     <Thead>
                       <Tr>
                         <Th>Name</Th>
-                        <Th>Variant</Th>
+                        <Th>Quantity</Th>
                         <Th>Price</Th>
+                        {editmode && (
+                          <Th>Remove</Th>
+                        )}
                       </Tr>
                     </Thead>
                     <Tbody>
                       {order.items?.map((item) => {
                         return (
                           <Tr>
-                            <Td>
-                              
+                            <Td style={{maxWidth: 300, minWidth: 300 }}>
                               <LinkContainer to={{ pathname: "/admin/products/" + item.item.slug, search: "?order=" + order.id }} style={{cursor: 'pointer'}}>
                                 <Text>{item.item.name}</Text>
                               </LinkContainer>
                             </Td>
-                            <Td>{item.quantity}</Td>
-                            <Td><CurrencyFormat value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
+                            <Td style={{maxWidth: 200, minWidth: 200 }}>
+                              {editmode ? (
+                                <Input placeholder='quantity' size='sm' value={item.quantity}/>
+                              ) : (
+                                item.quantity
+                              )}
+                            </Td>
+                            <Td style={{maxWidth: 200, minWidth: 200 }}>
+                              {editmode ? (
+                                <Input placeholder='custom price' size="sm" value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} />
+                              ) : (
+                                <CurrencyFormat 
+                                  value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} 
+                                  displayType={'text'} 
+                                  thousandSeparator={true} 
+                                  prefix={'$'} />
+                              )}
+                            </Td>
+                            {editmode && (
+                              <Td>
+                                <Button colorScheme="red" onClick={() => removeItem(item)}><BiTrash /></Button>
+                              </Td>
+                            )}
                           </Tr>
                         )
                       })}
@@ -133,6 +246,35 @@ const AdminOrder = (props) => {
             <br/>
           </Col>
         </Row>
+
+        <Modal finalFocusRef={finalRef} size={'xl'} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Add to Order</ModalHeader>
+            <ModalCloseButton />
+            
+            <ModalBody>
+              <Flex>
+                <Autosuggest
+                  suggestions={suggestions}
+                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                  onSuggestionsClearRequested={onSuggestionsClearRequested}
+                  getSuggestionValue={getSuggestionValue}
+                  renderSuggestion={renderSuggestion}
+                  inputProps={inputProps}
+                />
+                <Input type="number" value={newQuantity} onChange={(e) => setNewQuantity(e.target.value)} />
+              </Flex>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={onClose}>
+                Close
+              </Button>
+              <Button colorScheme={'green'} onClick={() => addProductToOrder()}>Add Product</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Container>
     </>
   )
