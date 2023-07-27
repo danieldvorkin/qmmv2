@@ -38,15 +38,22 @@ const AdminProducts = (props) => {
   }, [props, searchParams.get("typeof")]);
 
   useEffect(() => {
-    if(sort && sortDir){
+    console.log("page changed", page)
+    if(sort && sortDir && !Boolean(searchQuery)){
       getItemsBySort(page, sort, sortDir).then((resp) => {
         setProducts(resp.items)
         setTotal(resp.total_count);
       })
-    } else {
+    } else if(searchQuery) {
       search(searchQuery, page).then((resp) => {
         setProducts(resp.items);
+        setTotal(resp.total_count);
       });
+    } else {
+      getItems(page, searchParams.get("typeof") || "All").then((resp) => {
+      setProducts(resp.items);
+      setTotal(resp.total_count);
+    });
     }
   }, [searchQuery, page])
 
@@ -62,11 +69,6 @@ const AdminProducts = (props) => {
 
   const changePage = (newPage) => {
     setPage(newPage);
-
-    // getItems(newPage, searchParams.get("typeof") || "All").then((resp) => {
-    //   setProducts(resp.items);
-    //   setTotal(resp.total_count);
-    // });
   }
 
   const handleSort = (column, sortDirection) => {
@@ -74,10 +76,17 @@ const AdminProducts = (props) => {
       setSort(column.name?.toLowerCase());
       setSortDir(sortDirection);
 
-      getItemsBySort(page, column.name?.toLowerCase(), sortDirection).then((resp) => {
-        setProducts(resp.items)
-        setTotal(resp.total_count);
-      })
+      if(Boolean(searchQuery)){
+        search(searchQuery, page, column.name?.toLowerCase(), sortDirection).then((resp) => {
+          setProducts(resp.items)
+          setTotal(resp.total_count);
+        })
+      } else {
+        getItemsBySort(page, column.name?.toLowerCase(), sortDirection).then((resp) => {
+          setProducts(resp.items)
+          setTotal(resp.total_count);
+        })
+      }
     }
     
   }

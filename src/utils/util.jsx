@@ -2,9 +2,14 @@ import axios from "axios"
 
 export const URL = "https://queenmarymedical.herokuapp.com/api/v1";
 
-export const search = async (query, page) => {
+export const search = async (query, page, sort, dir) => {
   if(query?.length > 0){
-    return await axios.get(URL + "/items/search?page=" + page + "&query=" + query).then((resp) => resp.data);
+    let url = URL + "/items/search?page=" + page + "&query=" + query
+    
+    if(Boolean(sort) && Boolean(dir))
+      url += "&sort=" + sort + "&direction=" + dir
+    
+    return await axios.get(url).then((resp) => resp.data);
   }
 }
 
