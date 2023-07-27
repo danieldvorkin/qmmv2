@@ -27,7 +27,7 @@ const AdminProduct = (props) => {
         <Container>
           <Navbar.Collapse className="justify-content-start">
             <Navbar.Text>
-              <Link to={"/admin/orders" + (orderId ? "/" + orderId : '')}><ChevronLeftIcon/>Back to Order {orderId ? '' : 's'}</Link>
+              <Link to={`/admin/${orderId ? 'orders' : 'products'}` + (orderId ? "/" + orderId : '')}><ChevronLeftIcon/>Back to {orderId ? 'Order' : 'Products'}</Link>
             </Navbar.Text>
           </Navbar.Collapse>
 

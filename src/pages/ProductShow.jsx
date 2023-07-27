@@ -38,14 +38,16 @@ const ProductShow = () => {
   const [selectedQty, setSelectedQty] = useState(1);
 
   useEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
+    setLoader(true)
     async function fetchData() {
       const response = await getItem(slug);
       setProduct(response);
-
+      setLoader(false);
+      
       const featuredItemResponse = await featuredItems();
       setProductFeaturedItems(featuredItemResponse);
-      setLoader(false);
+      
     }
     fetchData();
   }, [slug]);

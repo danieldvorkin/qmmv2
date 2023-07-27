@@ -96,12 +96,8 @@ const AdminProducts = (props) => {
       <Card>
         <CardHeader>
           <ButtonGroup>
-            <LinkContainer to={{ pathname: "/admin/products" }}>
-              <Button colorScheme={(typeOf === "All") ? 'green' : 'gray'} size='xs'>All</Button>
-            </LinkContainer>
-
             <div className="justify-content-end">
-              <Input size="xs" placeholder="Search up a product..." onChange={(e) => {
+              <Input size="sm" placeholder="Search up a product..." onChange={(e) => {
                 setPage(1);
                 setSearchQuery(e.target.value);
               }} />
