@@ -6,7 +6,21 @@
 
 export const getOrderTotal = (items) => {
   if(items && items.length > 0){
-    return items.map((item) => parseFloat(item.item.price) * parseFloat(item.quantity)).reduce((tot, cur) => tot = tot + cur);
+    let totals = items.map((item) => {
+      if(Boolean(item.item.price)){
+        return parseFloat(item.item.price) * parseFloat(item.quantity)
+      } else {
+        let variant = item.item.variants.filter((v) => v.quantity === item.quantity)[0];
+
+        if(variant){
+          return parseFloat(variant.price) * parseFloat(item.quantity)
+        } else {
+          return 0
+        }
+      }
+    });
+
+    return totals.reduce((tot, cur) => tot = tot + cur);
   } else {
     return 0;
   }
