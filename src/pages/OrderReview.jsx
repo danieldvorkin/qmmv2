@@ -5,7 +5,7 @@ import moment from "moment";
 import { ButtonGroup, Col, Container, Navbar, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import { Link, useParams } from "react-router-dom";
-import { getItemSubtotal } from "../utils/helpers";
+import { getItemSubtotal, getOrderDiscount, getOrderTotal } from "../utils/helpers";
 import { getOrder } from "../utils/util";
 import { MdCancel } from "react-icons/md";
 import { SuccessToaster } from "../toast";
@@ -131,7 +131,15 @@ const OrderReview = () => {
               <CardBody>
                 <TableContainer>
                   <Table variant='simple'>
-                    <TableCaption>Status: {order.status}</TableCaption>
+                    <TableCaption>
+                      Status: {order.status}
+                      <br/>
+                      Order SubTotal: {getOrderTotal(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+                      <br/>
+                      Discount: {getOrderDiscount(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+                      <br/>
+                      Grand Total: {(getOrderTotal(order.items) - getOrderDiscount(order.items)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+                    </TableCaption>
                     <Thead>
                       <Tr>
                         <Th>Name</Th>

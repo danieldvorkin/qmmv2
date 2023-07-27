@@ -7,7 +7,7 @@ import DataTable from 'react-data-table-component';
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { getOrders } from "../utils/util";
+import { getOrders, searchOrders } from "../utils/util";
 
 const AdminOrders = (props) => {
   const [orders, setOrders] = useState([]);
@@ -16,6 +16,7 @@ const AdminOrders = (props) => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     if(!props.isLoggedIn){
@@ -24,13 +25,22 @@ const AdminOrders = (props) => {
 
     setSelectedStatus(searchParams.get("status") || "All");
 
-    getOrders(page, searchParams.get("status") || "All").then((resp) => {
-      setOrders(resp.orders);
-      setTotal(resp.total_count);
-    });
-  }, [page, searchParams.get("status")]);
+    if(Boolean(query)){
+      searchOrders(query, page, searchParams.get("status") || "All").then((resp) => {
+        setOrders(resp.orders);
+        setTotal(resp.total_count);
+      })
+    } else {
+      getOrders(page, searchParams.get("status") || "All").then((resp) => {
+        setOrders(resp.orders);
+        setTotal(resp.total_count);
+      });
+    }
+    
+  }, [page, searchParams.get("status"), query]);
 
   const STATUSES = {
+    "pending": "blue",
     "Order Pending": "blue",
     "Order Confirmed": "orange",
     "Order Processing": "red",
@@ -43,7 +53,7 @@ const AdminOrders = (props) => {
     { name: 'User Email', sortable: false, selector: row => row.user?.email },
     { name: 'Submitted At', sortable: true, selector: row => moment(row.submitted_at).format('LLL')},
     { name: 'Phone #', sortable: false, selector: row => row.contact_phone },
-    { name: 'Status', sortable: true, selector: row => <Badge colorScheme={STATUSES[row.status]}>{row.status}</Badge> },
+    { name: 'Status', sortable: true, selector: row => <Badge colorScheme={STATUSES[row.status]}>{row.status === 'pending' ? 'ORDER PENDING' : row.status}</Badge> },
     { name: 'Total $', sortable: false, selector: row => { 
       return <CurrencyFormat value={row.total} displayType={'text'} decimalScale={2} fixedDecimalScale={true} thousandSeparator={true} prefix={'$'} />
     }, value: row => row.total }
@@ -58,15 +68,17 @@ const AdminOrders = (props) => {
               <Button colorScheme={(selectedStatus === "All") ? 'green' : 'gray'} size='xs'>All</Button>
             </LinkContainer>
             {Object.keys(STATUSES).map((status) => {
-              return (
-                <LinkContainer to={{ pathname: "/admin/orders", search: "?status=" + status.slice(6) }}>
-                  <Button colorScheme={selectedStatus === status.slice(6) ? STATUSES[status] : 'gray'} size='xs'>{status.slice(6)}</Button>
-                </LinkContainer>
-              )
+              if(status !== 'pending'){
+                return (
+                  <LinkContainer to={{ pathname: "/admin/orders", search: "?status=" + status.slice(6) }}>
+                    <Button colorScheme={selectedStatus === status.slice(6) ? STATUSES[status] : 'gray'} size='xs'>{status.slice(6)}</Button>
+                  </LinkContainer>
+                )
+              }
             })}
           
             <div className="justify-content-end">
-              <Input size="xs" placeholder="Search up an order..." />
+              <Input size="xs" placeholder="Search up an order..." value={query} onChange={(e) => setQuery(e.target.value)}/>
             </div>
           </ButtonGroup>
         </CardHeader>

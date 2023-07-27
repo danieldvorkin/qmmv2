@@ -28,12 +28,20 @@ export const getItems = async(page, typeOf) => {
   return await axios.get(URL + "/items?page=" + page +"&stypeof=" + typeOf).then((resp) => resp.data);
 }
 
+export const getItemsBySort = async(page, sort, direction) => {
+  return await axios.get(URL + "/items?page=" + page + "&sort=" + sort + "&direction=" + direction).then((resp) => resp.data);
+}
+
 export const getAllItems = async() => {
   return await axios.get(URL + '/items/all').then((resp) => resp.data);
 }
 
 export const getMyOrders = async(email) => {
   return await axios.get(URL + "/orders/my_orders?email=" + email).then((resp) => resp.data);
+}
+
+export const searchOrders = async(query, page, status) => {
+  return await axios.get(URL + '/orders?page=' + page + "&status=" + status + "&query=" + query).then((resp) => resp.data);
 }
 
 export const loginUser = async (email, password) => {

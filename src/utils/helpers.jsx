@@ -7,6 +7,8 @@
 export const getOrderTotal = (items) => {
   if(items && items.length > 0){
     return items.map((item) => parseFloat(item.item.price) * parseFloat(item.quantity)).reduce((tot, cur) => tot = tot + cur);
+  } else {
+    return 0;
   }
 }
 

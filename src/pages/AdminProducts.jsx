@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
-import { getItems, search } from "../utils/util";
+import { getItems, getItemsBySort, search } from "../utils/util";
 
 const AdminProducts = (props) => {
   const navigate = useNavigate();
@@ -21,6 +21,8 @@ const AdminProducts = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
+  const [sort, setSort] = useState("");
+  const [sortDir, setSortDir] = useState("");
 
   useEffect(() => {
     if(!props.isLoggedIn){
@@ -36,15 +38,22 @@ const AdminProducts = (props) => {
   }, [props, searchParams.get("typeof")]);
 
   useEffect(() => {
-    search(searchQuery, page).then((resp) => {
-      setProducts(resp.items);
-    });
+    if(sort && sortDir){
+      getItemsBySort(page, sort, sortDir).then((resp) => {
+        setProducts(resp.items)
+        setTotal(resp.total_count);
+      })
+    } else {
+      search(searchQuery, page).then((resp) => {
+        setProducts(resp.items);
+      });
+    }
   }, [searchQuery, page])
 
   const columns = [
-    { name: 'Name', sortable: false, selector: row => <Link to={"/admin/products/" + row.slug}>{row.name}</Link> },
-    { name: 'Brand', sortable: false, selector: row => row.brand || '--' },
-    { name: 'Inventory', sortable: false, selector: row => row.inventory },
+    { name: 'Name', sortable: true, selector: row => <Link to={"/admin/products/" + row.slug}>{row.name}</Link> },
+    { name: 'Brand', sortable: true, selector: row => row.brand || '--' },
+    { name: 'Inventory', sortable: true, selector: row => row.inventory },
     { name: 'Category', sortable: false, selector: row => row.category?.name || row.categoryId },
     { name: 'On Sale', sortable: false, selector: row => row.on_sale ? 'Yes' : 'No' },
     { name: 'Strain Type', sortable: false, selector: row => row.strain_type || '--' },
@@ -54,12 +63,23 @@ const AdminProducts = (props) => {
   const changePage = (newPage) => {
     setPage(newPage);
 
-    if(searchQuery){
-      getItems(newPage, searchParams.get("typeof") || "All").then((resp) => {
-        setProducts(resp.items);
+    // getItems(newPage, searchParams.get("typeof") || "All").then((resp) => {
+    //   setProducts(resp.items);
+    //   setTotal(resp.total_count);
+    // });
+  }
+
+  const handleSort = (column, sortDirection) => {
+    if(column){
+      setSort(column.name?.toLowerCase());
+      setSortDir(sortDirection);
+
+      getItemsBySort(page, column.name?.toLowerCase(), sortDirection).then((resp) => {
+        setProducts(resp.items)
         setTotal(resp.total_count);
-      });
+      })
     }
+    
   }
   
   return (
@@ -70,14 +90,7 @@ const AdminProducts = (props) => {
             <LinkContainer to={{ pathname: "/admin/products" }}>
               <Button colorScheme={(typeOf === "All") ? 'green' : 'gray'} size='xs'>All</Button>
             </LinkContainer>
-            {/* {Object.keys(STATUSES).map((status) => {
-              return (
-                <LinkContainer to={{ pathname: "/admin/products", search: "?typeof=" + typeOf.slice(6) }}>
-                  <Button colorScheme={selectedStatus === typeOf.slice(6) ? STATUSES[status] : 'gray'} size='xs'>{typeOf.slice(6)}</Button>
-                </LinkContainer>
-              )
-            })} */}
-          
+
             <div className="justify-content-end">
               <Input size="xs" placeholder="Search up a product..." onChange={(e) => {
                 setPage(1);
@@ -95,6 +108,8 @@ const AdminProducts = (props) => {
             paginationTotalRows={total}
             paginationComponentOptions={{noRowsPerPage: true}} 
             onChangePage={(page) => changePage(page)}
+            onSort={handleSort}
+            sortServer
           />
         </CardBody>
       </Card>

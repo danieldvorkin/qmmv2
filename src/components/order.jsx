@@ -8,6 +8,7 @@ import { QuestionIcon } from '@chakra-ui/icons'
 import { FaShippingFast } from 'react-icons/fa';
 import { HiReceiptRefund } from 'react-icons/hi';
 import { Link } from "react-router-dom";
+import { getOrderDiscount, getOrderTotal } from "../utils/helpers";
 
 const Order = (props) => {
   const { order } = props;
@@ -117,8 +118,8 @@ const Order = (props) => {
                 <Col style={{textAlign: 'right'}}>
                   <CurrencyFormat value={getItemTotals(order.items)} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
                   <CurrencyFormat value={getDeliveryFee()} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
-                  <CurrencyFormat value={getDiscountFee()} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
-                  <CurrencyFormat value={getGrandTotal()} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <CurrencyFormat value={getOrderDiscount(order.items)} displayType={'text'} thousandSeparator={true} prefix={'$'} /><br/>
+                  <CurrencyFormat value={getOrderTotal(order.items) - getOrderDiscount(order.items)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </Col>
               </Row>
             </Col>
