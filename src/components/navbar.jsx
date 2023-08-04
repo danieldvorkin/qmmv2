@@ -105,14 +105,18 @@ const MainNavbar = (props) => {
           <Link className="nav-link" to="/shop">
             Shop
           </Link>
-          <Text className="nav-link">{getDiscountPercent(props.cart)}</Text>
+          <Text className="nav-link"><strong>{getDiscountPercent(props.cart)}</strong></Text>
         </Nav>
       </Navbar.Collapse>
       
       <Navbar.Collapse className="justify-content-end">
         {!isMobile && (
           <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
-            <Badge colorScheme="red">${getGrandTotal(props.cart).toFixed(2)}</Badge>
+            <Badge colorScheme="red"><p style={{textDecoration: getDiscountTotal(props.cart) > 0 ? 'line-through' : ''}}>${getCartTotal(props.cart).toFixed(2)}</p></Badge>
+            {getDiscountTotal(props.cart) > 0 && (
+              <Badge colorScheme="green">${getGrandTotal(props.cart).toFixed(2)}</Badge>
+            )}
+            
           </Button>
         )}
         <LinkContainer to="/my_orders">

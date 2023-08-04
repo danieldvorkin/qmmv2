@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { add } from "../manageCart";
 import { LinkContainer } from "react-router-bootstrap";
+import { getItemDiscount } from "../utils/helpers";
 
 const Product = (props) => {
   const { product, category, cart } = props;
@@ -35,7 +36,7 @@ const Product = (props) => {
       let item = cart.filter((i) => i.product.id === product.id)[0];
       
       if(item){
-        return `${item.quantity} in Cart`
+        return `${item.quantity}${item.variant_by_weight ? 'g' : ''} in Cart | ${getItemDiscount(item, cart)}`
       }
     }
   }
@@ -44,9 +45,6 @@ const Product = (props) => {
     <Card maxW='sm' className={`productCard ${showInCartBorder()}`}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
-          <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12 }}>
-            {`${product?.strain_type}`}
-          </Badge>
           {showInCartBorder() === 'showInCart' && (
             <div style={{float: 'right'}}>
               <Badge bg={'success'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
@@ -84,6 +82,10 @@ const Product = (props) => {
             <Link to={"/products/" + product.slug}>
               {product.name}
             </Link>
+            <br/>
+            <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12 }}>
+              {`${product?.strain_type}`}
+            </Badge>
             <div style={{float: 'right', fontSize: 35, position: 'relative', right: 10}}>
               ${product.price}
             </div>

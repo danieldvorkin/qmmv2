@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Divider, Text } from "@chakra-ui/react";
+import { Button, ButtonGroup, Divider, Text, Badge } from "@chakra-ui/react";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
@@ -6,8 +6,10 @@ import CurrencyFormat from "react-currency-format";
 
 const Breakdown = (props) => {
   const {
-    index, item, getItemSubtotal, removeItem, qtyChange, cartLength
+    index, item, getItemSubtotal, removeItem, qtyChange, cartLength, discountPercent
   } = props;
+
+  console.log("Discount Total: ", discountPercent)
 
   return(
     <div key={"index-" + index}>
@@ -31,7 +33,20 @@ const Breakdown = (props) => {
           
           <Text style={{ marginTop: 10 }}>
             <strong>Total Price:{' '}</strong>
-            <CurrencyFormat value={(getItemSubtotal(item)) || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+            {discountPercent ? (
+              <>
+                <Badge colorScheme="red">
+                  <span style={{textDecoration: 'line-through'}}>
+                    <CurrencyFormat value={(getItemSubtotal(item)) || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  </span>
+                </Badge>
+                <Badge colorScheme="green">
+                  <CurrencyFormat value={(getItemSubtotal(item) - (getItemSubtotal(item) * discountPercent)) || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                </Badge>
+              </>
+            ) : (
+              <CurrencyFormat value={(getItemSubtotal(item)) || 0} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+            )}            
           </Text>
         </Col>
         <Col xs={2} style={{ textAlign: 'right', paddingRight: 30, paddingTop: 17 }}>

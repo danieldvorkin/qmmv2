@@ -84,7 +84,7 @@ export const getDiscountTotal = (items) => {
   let cartTotal = getCartTotal(items);
   
   if(cartTotal >= 100 && cartTotal < 150){
-    return cartTotal * DISCOUNT_SETTINGS['150'];
+    return DISCOUNT_SETTINGS['150'];
   } else if(cartTotal >= 150 && cartTotal < 200){
     return cartTotal * DISCOUNT_SETTINGS['200'];
   } else if(cartTotal >= 200 && cartTotal < 300){
@@ -100,6 +100,35 @@ export const getDiscountTotal = (items) => {
   }
 
   return 0;
+}
+
+export const getDiscountPercent = (items) => {
+  let cartTotal = getCartTotal(items);
+  
+  if(cartTotal >= 100 && cartTotal < 150){
+    return DISCOUNT_SETTINGS['150'];
+  } else if(cartTotal >= 150 && cartTotal < 200){
+    return DISCOUNT_SETTINGS['200'];
+  } else if(cartTotal >= 200 && cartTotal < 300){
+    return DISCOUNT_SETTINGS['300'];
+  } else if(cartTotal >= 300 && cartTotal < 400){
+    return DISCOUNT_SETTINGS['400'];
+  } else if(cartTotal >= 400 && cartTotal < 600){
+    return DISCOUNT_SETTINGS['600'];
+  } else if(cartTotal >= 600 && cartTotal < 800){
+    return DISCOUNT_SETTINGS['800'];
+  } else if(cartTotal > 799){
+    return DISCOUNT_SETTINGS['1000'];
+  }
+
+  return null;
+}
+
+export const getItemDiscount = (item, items) => {
+  const discount = getDiscountPercent(items);
+  const newTotal = getItemSubtotal(item) - (getItemSubtotal(item) * discount);
+  
+  return `$${newTotal}`
 }
 
 export const getGrandTotal = (items) => {

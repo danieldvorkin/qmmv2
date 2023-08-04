@@ -78,6 +78,9 @@ const AdminProduct = (props) => {
                         </Form.Select>
                       </Form.Group>
                       <Form.Group className="mb-3" controlId="productThc">
+                        <Form.Check type="checkbox" label={"Variant by Weight"} placeholder="Enter " onChange={(e) => setProduct({...product, 'variant_by_weight': e.target.value })} value={product?.variant_by_weight} />
+                      </Form.Group>
+                      <Form.Group className="mb-3" controlId="productThc">
                         <Form.Label>THC</Form.Label>
                         <Form.Control type="text" placeholder="Enter THC" onChange={(e) => setProduct({...product, 'thc': e.target.value })} value={product?.thc} />
                       </Form.Group>

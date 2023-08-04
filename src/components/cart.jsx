@@ -18,7 +18,7 @@ import { remove, updateQty } from "../manageCart";
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import Breakdown from "./breakdown";
-import { getCartTotal, getDiscountTotal, getGrandTotal, getItemSubtotal } from "../utils/helpers";
+import { getCartTotal, getDiscountTotal, getGrandTotal, getItemSubtotal, getDiscountPercent } from "../utils/helpers";
 
 const Cart = (props) => {
   const dispatch = useDispatch();
@@ -53,6 +53,7 @@ const Cart = (props) => {
                   removeItem={removeItem}
                   getItemSubtotal={getItemSubtotal}
                   cartLength={props.cart.length}
+                  discountPercent={getDiscountPercent(props.cart)}
                 />
               )
             })}

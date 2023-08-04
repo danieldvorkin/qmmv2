@@ -47,6 +47,11 @@ const Checkout = (props) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setOrder({...order, total: getGrandTotal(props.cart)});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.cart])
+
   const removeItem = (id, variant, qty) => {
     dispatch(remove({id: id, variant: variant, qty: qty}))
   }
@@ -58,7 +63,6 @@ const Checkout = (props) => {
 
   const submitOrder = () => {
     setProcessing(true);
-    setOrder({...order, total: getGrandTotal(props.cart)});
     
     dispatch(submitNewOrder(order)).then((resp) => {
       setOrderComplete(true);
