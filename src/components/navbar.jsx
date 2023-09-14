@@ -81,17 +81,27 @@ const MainNavbar = (props) => {
   
   return (
     <Navbar bg="light" expand="lg" sticky="top">
-      <LinkContainer to="/">
-        <Navbar.Brand href="#">
-          <img alt="img" style={{ height: 70, paddingLeft: 5 }} src={logo} />
-        </Navbar.Brand>
-      </LinkContainer>
+      {!isMobile && (
+        <LinkContainer to="/">
+          <Navbar.Brand href="#">
+            <img alt="img" style={{ height: 70, paddingLeft: 5 }} src={logo} />
+          </Navbar.Brand>
+        </LinkContainer>
+      )}
       
       {isMobile && (
         <>
-          <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
-            <Badge colorScheme="red">{props.cart.length}</Badge>
-          </Button>
+          <Text className="nav-link" style={{fontSize: 10, width: '80%', paddingLeft: 15, paddingTop: 12}}>
+            <div style={{display: 'block', float: 'right'}}>
+              <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
+                <Badge colorScheme="red"><p style={{textDecoration: getDiscountTotal(props.cart) > 0 ? 'line-through' : ''}}>${getCartTotal(props.cart).toFixed(2)}</p></Badge>
+                {getDiscountTotal(props.cart) > 0 && (
+                  <Badge colorScheme="green">${getGrandTotal(props.cart).toFixed(2)}</Badge>
+                )}
+              </Button>
+            </div>
+            <strong>{getDiscountPercent(props.cart)}</strong>
+          </Text>
         </>
       )}
       
@@ -99,13 +109,12 @@ const MainNavbar = (props) => {
       
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-          <Link className="nav-link" to="/">
-            Home
-          </Link>
           <Link className="nav-link" to="/shop">
             Shop
           </Link>
-          <Text className="nav-link"><strong>{getDiscountPercent(props.cart)}</strong></Text>
+          {!isMobile && (
+            <Text className="nav-link"><strong>{getDiscountPercent(props.cart)}</strong></Text>
+          )}
         </Nav>
       </Navbar.Collapse>
       

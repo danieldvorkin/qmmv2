@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { getItemSubtotal, getOrderDiscount, getOrderTotal } from "../utils/helpers";
-import { getAllItems, getOrder, removeLineItem, updateOrder } from "../utils/util";
+import { featuredItems, getOrder, removeLineItem, updateOrder } from "../utils/util";
 import Autosuggest from 'react-autosuggest';
 
 const AdminOrder = (props) => {
@@ -31,7 +31,9 @@ const AdminOrder = (props) => {
     }
 
     if(isOpen){
-      getAllItems().then((resp) => setProducts(resp));
+      featuredItems().then((resp) => {
+        setProducts(resp)
+      });
     }
   }, [id, isOpen]);
 

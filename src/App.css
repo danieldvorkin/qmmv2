@@ -461,7 +461,7 @@ img {
     width: 350px !important;
   }
   .addToCart {
-    margin-left: 180px;
+    /* margin-left: 75px; */
   }
 
   .text-overlay {
