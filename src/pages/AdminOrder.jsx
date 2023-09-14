@@ -15,6 +15,7 @@ import Autosuggest from 'react-autosuggest';
 const AdminOrder = (props) => {
   const { id } = useParams();
   const [order, setOrder] = useState({});
+  const [orderItems, setOrderItems] = useState([]);
   const [editmode, setEditmode] = useState(false);
   const finalRef = React.useRef(null);
   
@@ -27,7 +28,10 @@ const AdminOrder = (props) => {
 
   useEffect(() => {
     if(id){
-      getOrder(id).then((resp) => setOrder(resp));
+      getOrder(id).then((resp) => {
+        setOrder(resp)
+        setOrderItems(resp.items)
+      });
     }
 
     if(isOpen){
@@ -92,7 +96,30 @@ const AdminOrder = (props) => {
 
     removeLineItem(order, params).then((resp) => {
       setOrder(resp);
+      setOrderItems(resp.items);
     })
+  }
+
+  const handleQtyChange = (item, event) => {
+    const { value } = event.target;
+    const itemIndex = orderItems.indexOf(item);
+
+    let modifiedItem = orderItems[itemIndex];
+    modifiedItem.quantity = value;
+
+    setOrderItems(orderItems);
+    setOrder({...order, items: orderItems});
+  }
+
+  const handlePriceChange = (item, event) => {
+    const { value } = event.target;
+    const itemIndex = orderItems.indexOf(item);
+
+    let modifiedItem = orderItems[itemIndex];
+    modifiedItem.item.price = value / modifiedItem.quantity;
+
+    setOrderItems(orderItems);
+    setOrder({...order, items: orderItems});
   }
 
   return (
@@ -205,7 +232,7 @@ const AdminOrder = (props) => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {order.items?.map((item) => {
+                      {orderItems.map((item) => {
                         return (
                           <Tr>
                             <Td style={{maxWidth: 300, minWidth: 300 }}>
@@ -215,14 +242,14 @@ const AdminOrder = (props) => {
                             </Td>
                             <Td style={{maxWidth: 200, minWidth: 200 }}>
                               {editmode ? (
-                                <Input placeholder='quantity' size='sm' value={item.quantity}/>
+                                <Input placeholder='quantity' size='sm' value={item.quantity} onChange={(e) => handleQtyChange(item, e)}/>
                               ) : (
                                 item.quantity
                               )}
                             </Td>
                             <Td style={{maxWidth: 200, minWidth: 200 }}>
                               {editmode ? (
-                                <Input placeholder='custom price' size="sm" value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} />
+                                <Input placeholder='custom price' size="sm" value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} onChange={(e) => handlePriceChange(item, e)}/>
                               ) : (
                                 <CurrencyFormat 
                                   value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} 
