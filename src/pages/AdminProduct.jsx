@@ -1,12 +1,12 @@
 import { ButtonGroup, Col, Container, Form, Navbar, Row } from "react-bootstrap";
-import { Card, CardBody, CardHeader, Image, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardHeader, Image, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { BiCheckCircle, BiTrash } from "react-icons/bi";
-import { getItem } from "../utils/util";
+import { getItem, updateProduct } from "../utils/util";
 import Product from "../components/Product";
 
 const AdminProduct = (props) => {
@@ -21,6 +21,12 @@ const AdminProduct = (props) => {
     }
   }, []);
 
+  const update = () => {
+    updateProduct(slug, product).then((resp) => {
+      debugger;
+    })
+  }
+
   return (
     <>
       <Navbar bg="dark" variant="dark" className="adminNavbar">
@@ -31,14 +37,14 @@ const AdminProduct = (props) => {
             </Navbar.Text>
           </Navbar.Collapse>
 
-          <Navbar.Collapse className="justify-content-end">
+          {/* <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
               <ButtonGroup>
                 <Link style={{margin: '0px 5px'}}><BiTrash className="onIconHoverDanger" size="25" /></Link>
                 <Link style={{margin: '0px 5px'}}><BiCheckCircle className="onIconHoverSuccess" size="25" /></Link>
               </ButtonGroup>
             </Navbar.Text>
-          </Navbar.Collapse>
+          </Navbar.Collapse> */}
         </Container>
       </Navbar>
 
@@ -95,6 +101,11 @@ const AdminProduct = (props) => {
                     </Form>
                   </Col>
                 </Row>
+                
+                <div style={{float: 'right'}}>
+                  <Button onClick={update}>Update</Button>
+                </div>
+                
               </CardBody>
             </Card>
           </Col>

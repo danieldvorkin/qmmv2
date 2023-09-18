@@ -184,10 +184,6 @@ img {
   background-image: url('https://thehousecannabis.ca/static/15595b8544a5e94738c15fb683cb7944/c6cd1/creative_resize_5c09c42e2e.avif');
 }
 
-.navbar {
-  height: 80px;
-}
-
 .navbar-collapse {
   padding: 0 20px;
 }
@@ -301,10 +297,10 @@ img {
   transition-property: var(--chakra-transition-property-common);
   transition-duration: var(--chakra-transition-duration-normal);
   font-size: var(--chakra-fontSizes-md);
-  -webkit-padding-start: var(--chakra-space-4);
-  padding-inline-start: var(--chakra-space-4);
-  -webkit-padding-end: var(--chakra-space-4);
-  padding-inline-end: var(--chakra-space-4);
+  -webkit-padding-start: var(--chakra-space-2);
+  padding-inline-start: var(--chakra-space-2);
+  -webkit-padding-end: var(--chakra-space-2);
+  padding-inline-end: var(--chakra-space-2);
   height: var(--chakra-sizes-10);
   border-radius: var(--chakra-radii-md);
   border: 1px solid;
@@ -489,7 +485,7 @@ img {
 
   #basic-navbar, .navbar-collapse {
     position: relative;
-    top: -8px;
+    top: 8px;
     background-color: white !important;
   }
   .adminNavbar .navbar-collapse {

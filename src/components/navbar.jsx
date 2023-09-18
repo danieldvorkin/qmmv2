@@ -91,7 +91,7 @@ const MainNavbar = (props) => {
       
       {isMobile && (
         <>
-          <Text className="nav-link" style={{fontSize: 10, width: '80%', paddingLeft: 15, paddingTop: 12}}>
+          <Text className="nav-link" style={{ fontSize: 10, width: '80%', paddingLeft: 15 }}>
             <div style={{display: 'block', float: 'right'}}>
               <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
                 <Badge colorScheme="red"><p style={{textDecoration: getDiscountTotal(props.cart) > 0 ? 'line-through' : ''}}>${getCartTotal(props.cart).toFixed(2)}</p></Badge>
@@ -115,36 +115,58 @@ const MainNavbar = (props) => {
           {!isMobile && (
             <Text className="nav-link"><strong>{getDiscountPercent(props.cart)}</strong></Text>
           )}
+          {isMobile && (
+          <>
+            <Link className="nav-link" to="/my_orders">
+              My Orders
+            </Link>
+
+            {props.isLoggedIn && props.user?.admin && (
+              <LinkContainer to="/admin">
+                <Button className="bp4-minimal" text="Admin" />
+              </LinkContainer>
+            )}
+
+            {!props.isLoggedIn && (
+              <LinkContainer to="/login">
+                <Button className="bp4-minimal" text="Login" />
+              </LinkContainer>
+            )}
+          </>
+        )}
         </Nav>
       </Navbar.Collapse>
       
-      <Navbar.Collapse className="justify-content-end">
+      <Navbar.Collapse className="justify-content-end" style={{top: isMobile ? '-10px' : 0}}>
         {!isMobile && (
-          <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
-            <Badge colorScheme="red"><p style={{textDecoration: getDiscountTotal(props.cart) > 0 ? 'line-through' : ''}}>${getCartTotal(props.cart).toFixed(2)}</p></Badge>
-            {getDiscountTotal(props.cart) > 0 && (
-              <Badge colorScheme="green">${getGrandTotal(props.cart).toFixed(2)}</Badge>
-            )}
+          <>
+            <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
+              <Badge colorScheme="red"><p style={{textDecoration: getDiscountTotal(props.cart) > 0 ? 'line-through' : ''}}>${getCartTotal(props.cart).toFixed(2)}</p></Badge>
+              {getDiscountTotal(props.cart) > 0 && (
+                <Badge colorScheme="green">${getGrandTotal(props.cart).toFixed(2)}</Badge>
+              )}
+              
+            </Button>
             
-          </Button>
-        )}
-        <LinkContainer to="/my_orders">
-          <Button className="bp4-minimal" text="My Orders" />
-        </LinkContainer>
+            <LinkContainer to="/my_orders">
+              <Button className="bp4-minimal" text="My Orders" />
+            </LinkContainer>
 
-        {props.isLoggedIn && props.user?.admin && (
-          <LinkContainer to="/admin">
-            <Button className="bp4-minimal" text="Admin" />
-          </LinkContainer>
-        )}
+            {props.isLoggedIn && props.user?.admin && (
+              <LinkContainer to="/admin">
+                <Button className="bp4-minimal" text="Admin" />
+              </LinkContainer>
+            )}
 
-        {!props.isLoggedIn && (
-          <LinkContainer to="/login">
-            <Button className="bp4-minimal" text="Login" />
-          </LinkContainer>
+            {!props.isLoggedIn && (
+              <LinkContainer to="/login">
+                <Button className="bp4-minimal" text="Login" />
+              </LinkContainer>
+            )}
+          </>
         )}
-
-        <input className="bp4-input" placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} />
+        
+        <input className="bp4-input" style={{width: isMobile ? '100%' : 200}} placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} />
         {search.length > 0 && (
           <Button className="bp4-minimal" icon="cross" onClick={() => {
             navigate("/shop");

@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <>
       <Divider style={{marginBottom: 20}} />
-      <Container style={{marginBottom: 30}}>
+      {/* <Container style={{marginBottom: 30}}>
         <HelpModal isOpen={isOpen} onClose={onClose} />
         <Row>
           <Col lg={4} xs={12} style={{marginBottom: 10}}>
@@ -25,8 +25,8 @@ const Footer = () => {
             <Text style={{cursor: 'pointer'}} onClick={onOpen}>need help with an order</Text>
           </Col>
         </Row>
-      </Container>
-      <Divider style={{marginBottom: 15}}/>
+      </Container> */}
+      {/* <Divider style={{marginBottom: 15}}/> */}
       <Text style={{paddingLeft: 15, paddingBottom: 10, color: 'grey'}}>Powered by QueenMaryDevelopers Inc{` ${year.getFullYear()}`}</Text>
     </>
   )
