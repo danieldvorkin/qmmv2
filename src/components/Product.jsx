@@ -99,7 +99,7 @@ const Product = (props) => {
               <ButtonGroup>
                 {[1, 3.5, 7, 14, 28].map((variant) => {
                   return (
-                    <Button style={{ minWidth: 50, fontSize: 13, padding: '5px 5px', margin: "0px 2px", fontWeight: 'bold' }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
+                    <Button style={{ minWidth: 50, fontSize: 13, padding: '5px 5px', margin: "0px 0px", fontWeight: 'bold' }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
                       {variant}g
                     </Button>
                   )
