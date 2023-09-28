@@ -27,11 +27,12 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
+          <Route index element={<Shop/>} />
+          <Route index path="shop" element={<Shop />} />
           <Route path="home" element={<Home />} />
           <Route path="products/:slug" element={<ProductShow />} />
           <Route path="category/:slug" element={<Category />} />
           <Route path="search/:query" element={<Home />} />
-          <Route index path="shop" element={<Shop />} />
           <Route path="checkout" element={<Checkout/>} />
           <Route path="order/review/:id" element={<OrderReview />} />
           <Route path="my_orders" exact element={<MyOrders/>} />

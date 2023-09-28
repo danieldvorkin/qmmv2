@@ -9,8 +9,6 @@ const Breakdown = (props) => {
     index, item, getItemSubtotal, removeItem, qtyChange, cartLength, discountPercent
   } = props;
 
-  console.log("Discount Total: ", discountPercent)
-
   return(
     <div key={"index-" + index}>
       <Row style={{paddingLeft: 10}}>

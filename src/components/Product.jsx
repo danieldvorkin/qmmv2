@@ -45,16 +45,18 @@ const Product = (props) => {
     <Card maxW='sm' className={`productCard ${showInCartBorder()}`}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
-          {showInCartBorder() === 'showInCart' && (
+          {showInCartBorder() === 'showInCart' ? (
             <div style={{float: 'right'}}>
               <Badge bg={'success'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
                 {getCartQty()}
               </Badge>
             </div>
+          ) : (
+            <div style={{height: 25}}></div>
           )}
         </CardHeader>
 
-        <Carousel variant="dark">
+        <Carousel variant="dark" indicators={false} controls={product?.images?.length > 1}>
           <Carousel.Item style={{cursor: 'pointer'}}>
             <LinkContainer to={"/products/" + product.slug}>
               <Image

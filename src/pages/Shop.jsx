@@ -75,11 +75,10 @@ const Shop = (props) => {
   }
   
   return(
-    <div style={{ marginTop: 30 }}>
+    <div style={{ marginTop: 20 }}>
       <Container>
         <Row>
-          <Col lg="12">
-            <h1 className="header">Menu</h1>
+          <Col lg="12" style={{marginBottom: 20}}>
             {Object.keys(categories).map((key) => 
               <DropdownButton
                 as={ButtonGroup}
@@ -102,7 +101,7 @@ const Shop = (props) => {
               </DropdownButton>
             )}
           </Col>
-          <Col lg="12">
+          <Col lg="12" style={{height: '82vh', overflowY: 'auto' }}>
             <Container fluid style={{marginTop: 20}}>
               {loader ? (
                 <div style={{ width: '100%' }}>

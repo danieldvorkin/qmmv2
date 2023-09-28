@@ -54,7 +54,6 @@ function App() {
                 <MainNavbar cartClick={onOpen} />
                 {onLandingPage() ? (
                   <>
-                    <div className={'full-bg'}></div>
                     <Outlet/>
                   </>
                 ) : (
@@ -62,9 +61,6 @@ function App() {
                     <Outlet />
                   </div>
                 )}
-                
-                
-                <Footer />
               </div>
               <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
             </>

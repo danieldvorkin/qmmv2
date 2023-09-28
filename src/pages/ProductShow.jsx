@@ -3,12 +3,13 @@ import { Link, useParams } from "react-router-dom";
 import { getItem, featuredItems } from "../utils/util";
 import { Badge, Carousel, Col, Container, Image, Row } from "react-bootstrap";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Select, Stack, Text } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { add } from "../manageCart";
 import Slider from "react-slick";
 import Product from "../components/Product";
 import loading from '../loading.svg';
 import { LinkContainer } from "react-router-bootstrap";
+import { getItemDiscount } from "../utils/helpers";
 
 const settings = {
   dots: false, infinite: true, 
@@ -29,13 +30,14 @@ const settings = {
   }]
 }
 
-const ProductShow = () => {
+const ProductShow = (props) => {
   const { slug } = useParams();
   const [product, setProduct] = useState({});
   const dispatch = useDispatch();
   const [productFeaturedItems, setProductFeaturedItems] = useState([]);
   const [loader, setLoader] = useState(true);
   const [selectedQty, setSelectedQty] = useState(1);
+  const { cart } = props; 
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -51,6 +53,12 @@ const ProductShow = () => {
     }
     fetchData();
   }, [slug]);
+
+  const showInCartBorder = () => {
+    if(cart && product){
+      return cart.filter((item) => item.product.id === product.id).length > 0 ? 'showInCart' : '';
+    }
+  }
 
   return (
     <Container>
@@ -84,7 +92,17 @@ const ProductShow = () => {
               </Col>
 
               <Col lg={5}>
-                <Carousel variant="dark">
+                {showInCartBorder() === 'showInCart' ? (
+                  <div style={{float: 'right'}}>
+                    <Badge bg={'success'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
+                      In Cart
+                    </Badge>
+                  </div>
+                ) : (
+                  <div style={{height: 25}}></div>
+                )}
+
+                <Carousel variant="dark" controls={false} indicators={false}>
                   <Carousel.Item>
                     <Image
                       src={product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
@@ -107,7 +125,14 @@ const ProductShow = () => {
               <Col lg={7}>
                 <Row>
                   <Col>
-                    <Text className="title" style={{marginBottom: 2, width: '90%'}}>{product.name}</Text>
+                    <Text className="title" style={{marginBottom: 2, width: '90%'}}>
+                      {product.name}
+                      {showInCartBorder() === 'showInCart' && (
+                        <Badge bg={'success'} style={{ marginBottom: 5, fontSize: 15, float: 'right' }}>
+                          In Cart
+                        </Badge>
+                      )}
+                    </Text>
                     <Text className="header" style={{marginBottom: 10}}>{product.category?.name}</Text>
                   </Col>
                 </Row>
@@ -165,14 +190,14 @@ const ProductShow = () => {
                 <br/> */}
                 <Row>
                   <Col>
-                    <Text>Select amount: </Text>
+                    <Text style={{fontSize: 25}}>Select amount: </Text>
                     <br/>
                     {product?.category?.type_of === "Strains" ? (
                       <ButtonGroup>
                         {[1, 3.5, 7, 14, 28].map((variant) => {
                           return (
-                            <Button style={{ fontSize: 13, padding: '2px 0px', margin: "0px 4px", fontWeight: 'bold' }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
-                              {variant}
+                            <Button style={{ fontSize: 18, padding: '2px 0px', margin: "0px 4px", fontWeight: 'bold', height: 50, width: 60 }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
+                              {variant}g
                             </Button>
                           )
                         })}
@@ -227,4 +252,10 @@ const ProductShow = () => {
   )
 }
 
-export default ProductShow;
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart
+  }
+}
+
+export default connect(mapStateToProps)(ProductShow);

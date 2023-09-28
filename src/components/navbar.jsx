@@ -39,17 +39,17 @@ const MainNavbar = (props) => {
     } else if(cartTotal >= 50 && cartTotal < 100){
       return `+$10 Delivery | You are $${getDiscountDiff()} away from free delivery`;
     } else if(cartTotal >= 100 && cartTotal < 150){
-      return `Free Delivery | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['200']}%`;
+      return `Free Delivery | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['200']}% off`;
     } else if(cartTotal >= 150 && cartTotal < 200){
-      return `${100.0 * DISCOUNT_SETTINGS['200']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['300']}%`;
+      return `${100.0 * DISCOUNT_SETTINGS['200']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['300']}% off`;
     } else if(cartTotal >= 200 && cartTotal < 300){
-      return `${100.0 * DISCOUNT_SETTINGS['300']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['400']}%`;
+      return `${100.0 * DISCOUNT_SETTINGS['300']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['400']}% off`;
     } else if(cartTotal >= 300 && cartTotal < 400){
-      return `${100.0 * DISCOUNT_SETTINGS['400']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['600']}%`;
+      return `${100.0 * DISCOUNT_SETTINGS['400']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['600']}% off`;
     } else if(cartTotal >= 400 && cartTotal < 600){
-      return `${100.0 * DISCOUNT_SETTINGS['600']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['800']}%`;
+      return `${100.0 * DISCOUNT_SETTINGS['600']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['800']}% off`;
     } else if(cartTotal >= 600 && cartTotal < 800){
-      return `${100.0 * DISCOUNT_SETTINGS['800']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['1000']}%`;
+      return `${100.0 * DISCOUNT_SETTINGS['800']}% Discount | You are $${getDiscountDiff()} away from ${100.0 * DISCOUNT_SETTINGS['1000']}% off`;
     } else if(cartTotal >= 800){
       return `${100.0 * DISCOUNT_SETTINGS['1000']}% Discount`;
     }
@@ -82,7 +82,7 @@ const MainNavbar = (props) => {
   return (
     <Navbar bg="light" expand="lg" sticky="top">
       {!isMobile && (
-        <LinkContainer to="/">
+        <LinkContainer to="/shop">
           <Navbar.Brand href="#">
             <img alt="img" style={{ height: 70, paddingLeft: 5 }} src={logo} />
           </Navbar.Brand>

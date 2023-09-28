@@ -68,13 +68,20 @@ const Cart = (props) => {
                 <CurrencyFormat value={getCartTotal(props.cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
               </Col>
             </Row>
-            
             <Row>
               <Col>
                 Discounts:
                 <CurrencyFormat value={getDiscountTotal(props.cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
               </Col>
             </Row>
+            {getCartTotal(props.cart) < 100 && (
+              <Row>
+                <Col>
+                  Delivery:
+                  <CurrencyFormat value={(10).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                </Col>
+              </Row>  
+            )}
             <Row>
               <Col>
                 <strong>Grand Total:</strong>

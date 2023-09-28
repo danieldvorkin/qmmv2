@@ -145,6 +145,7 @@ const OrderReview = () => {
                         <Th>Name</Th>
                         <Th>Variant</Th>
                         <Th>Price</Th>
+                        <Th>Total</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -154,6 +155,7 @@ const OrderReview = () => {
                             <Td>{item.item.name}</Td>
                             <Td>{item.quantity}</Td>
                             <Td><CurrencyFormat value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: 1 })} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
+                            <Td><CurrencyFormat value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} displayType={'text'} thousandSeparator={true} prefix={'$'} /></Td>
                           </Tr>
                         )
                       })}

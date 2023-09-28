@@ -36,14 +36,16 @@ const settings = {
 
 const LandingPage = (props) => {
   const [productFeaturedItems, setProductFeaturedItems] = useState([]);
+  const link = "/shop"
 
   useEffect(() => {
-    async function fetchData() {
-      const featuredItemResponse = await featuredItems();
-      setProductFeaturedItems(featuredItemResponse);
-    }
-    fetchData();
-  }, []);
+    // async function fetchData() {
+    //   const featuredItemResponse = await featuredItems();
+    //   setProductFeaturedItems(featuredItemResponse);
+    // }
+    // fetchData();
+    window.location.href = "/shop"
+  }, [link]);
 
   return (
     <Container fluid>

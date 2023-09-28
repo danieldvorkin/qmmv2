@@ -132,5 +132,5 @@ export const getItemDiscount = (item, items) => {
 }
 
 export const getGrandTotal = (items) => {
-  return getCartTotal(items) - getDiscountTotal(items);
+  return getCartTotal(items) - getDiscountTotal(items) + (getCartTotal(items) < 100 ? 10 : 0);
 }

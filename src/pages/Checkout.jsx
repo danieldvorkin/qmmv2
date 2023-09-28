@@ -47,11 +47,6 @@ const Checkout = (props) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setOrder({...order, total: getGrandTotal(props.cart)});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.cart])
-
   const removeItem = (id, variant, qty) => {
     dispatch(remove({id: id, variant: variant, qty: qty}))
   }
@@ -60,7 +55,6 @@ const Checkout = (props) => {
     dispatch(updateQty({ product_id: item.product.id, variant: item.variant, qty: parseInt(input) }))
   }
 
-
   const submitOrder = () => {
     setProcessing(true);
     
@@ -68,6 +62,10 @@ const Checkout = (props) => {
       setOrderComplete(true);
       navigate('/order/review/' + resp.order?.id);
     });
+  }
+
+  const changeOrderDetails = (e) => {
+    setOrder({...order, [e.target.name]: e.target.value})
   }
 
   return (
@@ -97,7 +95,7 @@ const Checkout = (props) => {
               getGrandTotal={getGrandTotal} 
               submitOrder={submitOrder} 
               order={order} 
-              setOrder={setOrder}
+              changeOrderDetails={changeOrderDetails}
               getItemSubtotal={getItemSubtotal}
             />
           </Row>
