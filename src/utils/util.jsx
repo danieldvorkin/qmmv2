@@ -65,6 +65,10 @@ export const updateOrder = async (order, params) => {
   return await axios.put(URL + "/orders/" + order.id + "/update", params).then((resp) => resp.data);
 }
 
+export const updateOrderStatus = async (order, params) => {
+  return await axios.put(URL + "/orders/" + order.id + "/update_status", params).then((resp) => resp.data);
+}
+
 export const updateProduct = async (slug, params) => {
   return await axios.put(URL + "/items/" + slug, params).then((resp) => resp.data);
 }

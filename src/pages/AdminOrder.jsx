@@ -1,5 +1,5 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { ButtonGroup, Button, Card, CardBody, CardHeader, Input, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure, Flex } from "@chakra-ui/react";
+import { ButtonGroup, Button, Card, CardBody, CardHeader, Input, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure, Flex, Select } from "@chakra-ui/react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Navbar, Row } from "react-bootstrap";
@@ -9,8 +9,9 @@ import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { getItemSubtotal, getOrderDiscount, getOrderTotal } from "../utils/helpers";
-import { featuredItems, getOrder, removeLineItem, updateOrder } from "../utils/util";
+import { featuredItems, getOrder, removeLineItem, updateOrder, updateOrderStatus } from "../utils/util";
 import Autosuggest from 'react-autosuggest';
+import { AppToaster, SuccessToaster } from "../toast";
 
 const AdminOrder = (props) => {
   const { id } = useParams();
@@ -122,6 +123,12 @@ const AdminOrder = (props) => {
     setOrder({...order, items: orderItems});
   }
 
+  const saveStatusChange = () => {
+    updateOrderStatus(order, {status: order.status}).then((resp) => {
+      SuccessToaster.show({ message: "Order status update successful." })
+    })
+  }
+
   return (
     <>
       <Navbar bg="dark" variant="dark"  className="adminNavbar">
@@ -197,7 +204,7 @@ const AdminOrder = (props) => {
             <Card>
               <CardHeader>
                 <Text fontSize='3xl' as='b'>Order Items</Text>
-                <div style={{float: 'right'}}>
+                <div style={{float: 'right', display: 'flex'}}>
                   <ButtonGroup>
                     <Button colorScheme={'purple'} onClick={() => onOpen()}>Add Product</Button>
                     {editmode ? (      
@@ -206,6 +213,15 @@ const AdminOrder = (props) => {
                       <Button colorScheme={'orange'} onClick={() => setEditmode(true)}>Edit Order</Button>
                     )}
                   </ButtonGroup>
+                  
+                  <Select value={order.status} style={{marginLeft: 8}} onChange={(e) => setOrder({...order, status: e.target.value})}>
+                    <option value='pending'>Pending</option>
+                    <option value='confirmed'>Confirmed</option>
+                    <option value='processing'>Processing</option>
+                    <option value='shipped'>Shipped</option>
+                    <option value='delivered'>Delivered</option>
+                  </Select>
+                  <Button style={{marginLeft: 10, width: 100}} onClick={saveStatusChange}>Save</Button>
                 </div>
                 <hr/>
               </CardHeader>
