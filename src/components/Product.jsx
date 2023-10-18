@@ -40,6 +40,8 @@ const Product = (props) => {
       }
     }
   }
+
+  const [showMore, setShowMore] = useState(false);
   
   return (
     <Card maxW='sm' className={`productCard ${showInCartBorder()}`}>
@@ -58,22 +60,22 @@ const Product = (props) => {
 
         <Carousel variant="dark" indicators={false} controls={product?.images?.length > 1}>
           <Carousel.Item style={{cursor: 'pointer'}}>
-            <LinkContainer to={"/products/" + product.slug}>
+            {/* <LinkContainer to={"/products/" + product.slug}> */}
               <Image
                 src={product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
                 borderRadius='lg'
               />
-            </LinkContainer>
+            {/* </LinkContainer> */}
           </Carousel.Item>
           {product?.images?.map((img) => {
             return (
               <Carousel.Item key={img}>
-                <LinkContainer to={"/products/" + product.slug}>
+                {/* <LinkContainer to={"/products/" + product.slug}> */}
                   <Image
                     src={img}
                     borderRadius='lg'
                   />
-                </LinkContainer>
+                {/* </LinkContainer> */}
               </Carousel.Item> 
             )
           })}
@@ -125,7 +127,7 @@ const Product = (props) => {
       </CardBody>
 
       <CardFooter style={{display: 'block', margin: '0px auto 14px', paddingLeft: 18, textAlign: 'center'}}>
-        <Text noOfLines={4}>
+        <Text noOfLines={showMore ? 50 : 4}>
           {product?.thc && (
             <><strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}</>
           )}
@@ -136,10 +138,12 @@ const Product = (props) => {
             <><strong style={{fontSize: 10}}>BRAND:{' '}</strong>{product.brand || ''}<br/></>
           )}
         
-          <Link to={"/products/" + product.slug} style={{ textDecoration: 'none'}}>
+          {/* <Link to={"/products/" + product.slug} style={{ textDecoration: 'none'}}> */}
             <span>{product.description || 'No Description Available'}</span>
-          </Link>
+            
+          {/* </Link> */}
         </Text>
+        <button style={{ color: 'blue' }} onClick={() => setShowMore(!showMore)}>{showMore ? 'show less' : 'show more'}</button>
       </CardFooter>
     </Card>
   )
