@@ -64,6 +64,7 @@ const Product = (props) => {
               <Image
                 src={product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
                 borderRadius='lg'
+                onClick={() => setShowMore(!showMore)} 
               />
             {/* </LinkContainer> */}
           </Carousel.Item>
@@ -74,6 +75,7 @@ const Product = (props) => {
                   <Image
                     src={img}
                     borderRadius='lg'
+                    onClick={() => setShowMore(!showMore)} 
                   />
                 {/* </LinkContainer> */}
               </Carousel.Item> 
@@ -83,9 +85,9 @@ const Product = (props) => {
 
         <Stack mt='2' ml="2" mr="2" spacing='1'>
           <Heading size='sm' style={{minHeight: 40}}>
-            <Link to={"/products/" + product.slug}>
+            {/* <Link to={"/products/" + product.slug}> */}
               {product.name}
-            </Link>
+            {/* </Link> */}
             <br/>
             <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12 }}>
               {`${product?.strain_type}`}
@@ -127,7 +129,7 @@ const Product = (props) => {
       </CardBody>
 
       <CardFooter style={{display: 'block', margin: '0px auto 14px', paddingLeft: 18, textAlign: 'center'}}>
-        <Text noOfLines={showMore ? 50 : 4}>
+        <Text noOfLines={showMore ? 50 : 4} onClick={() => setShowMore(!showMore)} style={{userSelect: 'none'}}>
           {product?.thc && (
             <><strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}</>
           )}
@@ -143,7 +145,6 @@ const Product = (props) => {
             
           {/* </Link> */}
         </Text>
-        <button style={{ color: 'blue' }} onClick={() => setShowMore(!showMore)}>{showMore ? 'show less' : 'show more'}</button>
       </CardFooter>
     </Card>
   )
