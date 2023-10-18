@@ -84,15 +84,15 @@ const Product = (props) => {
         </Carousel>
 
         <Stack mt='2' ml="2" mr="2" spacing='1'>
-          <Heading size='sm' style={{minHeight: 40}}>
+          <Heading size='sm' style={{minHeight: 40, userSelect: 'none'}}>
             {/* <Link to={"/products/" + product.slug}> */}
               {product.name}
             {/* </Link> */}
             <br/>
-            <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12 }}>
+            <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12, userSelect: 'none' }}>
               {`${product?.strain_type}`}
             </Badge>
-            <div style={{float: 'right', fontSize: 35, position: 'relative', right: 10}}>
+            <div style={{float: 'right', fontSize: 35, position: 'relative', right: 10, userSelect: 'none'}}>
               ${product.price}
             </div>
           </Heading>
