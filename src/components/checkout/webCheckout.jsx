@@ -1,16 +1,19 @@
 import { Button, Card, CardBody, CardHeader, Divider, FormControl, FormLabel, Input, List, ListItem, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import { PatternFormat } from 'react-number-format';
 import { LinkContainer } from "react-router-bootstrap";
+import { searchForUser } from "../../utils/util";
 import Breakdown from "../breakdown";
+import { produce } from "immer";
+import { ErrorToaster, SuccessToaster } from "../../toast";
 
 const WebCheckout = (props) => {
   const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, changeOrderDetails, getItemSubtotal } = props;
-
-  const io = useMemo(() => ({...order}), [order]);
-  const [initialOrder, setInitialOrder] = useState(io)
+  const [initialOrder, setInitialOrder] = useState(order)
+  const [validatedUser, setValidatedUser] = useState(false);
+  const [showReferralFields, setShowReferralFields] = useState(false);
 
   const validateBeforeSubmission = () => {
     return Boolean(order.full_name) &&
@@ -30,8 +33,36 @@ const WebCheckout = (props) => {
   ]
 
   const setInitialOrderDetails = (e) => {
-    setInitialOrder({...initialOrder, [e.target.name]: e.target.value })
+    setInitialOrder(
+      produce(initialOrder, (draft) => {
+        draft[e.target.name] = e.target.value;
+      })
+    );
     changeOrderDetails(e);
+  }
+
+  const searchUser = () => {
+    searchForUser(initialOrder.email).then((resp) => {
+      if(resp.length > 0){
+        setInitialOrder({
+          email: resp[0].email,
+          full_name: resp[0].address?.name,
+          phone: resp[0].phone,
+          address1: resp[0].address?.address1,
+          address2: resp[0].address?.address2,
+          postal_code: resp[0].address?.postal_code,
+          city: resp[0].address?.city,
+          notes: resp[0].address?.notes
+        });
+        setShowReferralFields(false);
+        SuccessToaster.show({ message: "User account found: Details have been added into the form." })
+      } else {
+        setShowReferralFields(true);
+        ErrorToaster.show({ message: "Sign up today by placing your first order" })
+      }
+
+      setValidatedUser(true);
+    });
   }
 
   return (
@@ -45,86 +76,94 @@ const WebCheckout = (props) => {
             <Row style={{marginBottom: 10}}>
               <Col sm={12}>
                 <FormControl>
-                  <FormLabel>Your Name *</FormLabel>
-                  <Input type='text' name="full_name" value={initialOrder?.full_name} isRequired={true} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-              <Col sm={12}>
-                <FormControl>
-                  <FormLabel>Your Phone Number *</FormLabel>
-                  <PatternFormat className="chakra-input-custom" displayType="input" isRequired={true} format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={initialOrder?.phone} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-            </Row>
-            <Row style={{marginBottom: 10}}>
-              <Col sm={12}>
-                <FormControl>
                   <FormLabel>Your Email *</FormLabel>
-                  <Input type='text' name="email" value={initialOrder?.email} isRequired={true} onChange={(e) => setInitialOrderDetails(e)} />
+                  <Input type='text' name="email" value={initialOrder?.email} isRequired={true} onChange={(e) => setInitialOrderDetails(e)} onBlur={() => searchUser()}/>
                 </FormControl>
               </Col>
             </Row>
-            <br/>
-            <hr/>
-            <br/>
-            <Row style={{marginBottom: 10}}>
-              <Col sm={6}>
-                <FormControl>
-                  <FormLabel>Referred by Name</FormLabel>
-                  <Input type='text' name="referred_by_name" value={initialOrder?.referred_by_name} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-              <Col sm={6}>
-                <FormControl>
-                  <FormLabel>Referred by Phone Number</FormLabel>
-                  <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="referred_by_phone" allowEmptyFormatting mask="_" value={initialOrder?.referred_by_phone} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-            </Row>
-            <Row style={{marginBottom: 10}}>
-              <Col sm={12} lg={6}>
-                <FormControl>
-                  <FormLabel>Address 1</FormLabel>
-                  <Input type='text' name="address1" value={initialOrder?.address1} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-              <Col sm={12} lg={6}>
-                <FormControl>
-                  <FormLabel>Address 2</FormLabel>
-                  <Input type='text' name="address2" value={initialOrder?.address2} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-            </Row>
-            <Row style={{marginBottom: 10}}>
-              <Col sm={12} lg={6}>
-                <FormControl>
-                  <FormLabel>Postal Code</FormLabel>
-                  <Input type='text' name="postal_code" value={initialOrder?.postal_code} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-              <Col sm={12} lg={6}>
-                <FormControl>
-                  <FormLabel>City</FormLabel>
-                  <Input type='text' name="city" value={initialOrder?.city} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-            </Row>
-            <Row style={{marginBottom: 10}}>
-              <Col>
-                <FormControl>
-                  <FormLabel>Delivery Instructions</FormLabel>
-                  <Input type='text' placeholder="anytime today / between 3 and 4pm / call me upon arrival / etc" name="delivery_instructions" value={initialOrder?.delivery_instructions} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-            </Row>
-            <Row style={{marginBottom: 10}}>
-              <Col>
-                <FormControl>
-                  <FormLabel>Notes</FormLabel>
-                  <Input type='text' name="notes" value={initialOrder?.notes} onChange={(e) => setInitialOrderDetails(e)} />
-                </FormControl>
-              </Col>
-            </Row>
+            {validatedUser && (
+              <>
+                <Row style={{marginBottom: 10}}>
+                  <Col sm={12}>
+                    <FormControl>
+                      <FormLabel>Your Name *</FormLabel>
+                      <Input type='text' name="full_name" value={initialOrder?.full_name} isRequired={true} onChange={(e) => setInitialOrderDetails(e)} />
+                    </FormControl>
+                  </Col>
+                  <Col sm={12}>
+                    <FormControl>
+                      <FormLabel>Your Phone Number *</FormLabel>
+                      <PatternFormat className="chakra-input-custom" displayType="input" isRequired={true} format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={initialOrder?.phone} onChange={(e) => setInitialOrderDetails(e)} />
+                    </FormControl>
+                  </Col>
+                </Row>
+                <br/>
+                <hr/>
+                <br/>
+                
+                {showReferralFields && (
+                  <Row style={{marginBottom: 10}}>
+                    <Col sm={6}>
+                      <FormControl>
+                        <FormLabel>Referred by Name</FormLabel>
+                        <Input type='text' name="referred_by_name" value={initialOrder?.referred_by_name} onChange={(e) => setInitialOrderDetails(e)} />
+                      </FormControl>
+                    </Col>
+                    <Col sm={6}>
+                      <FormControl>
+                        <FormLabel>Referred by Phone Number</FormLabel>
+                        <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="referred_by_phone" allowEmptyFormatting mask="_" value={initialOrder?.referred_by_phone} onChange={(e) => setInitialOrderDetails(e)} />
+                      </FormControl>
+                    </Col>
+                  </Row>  
+                )}
+                
+                <Row style={{marginBottom: 10}}>
+                  <Col sm={12} lg={6}>
+                    <FormControl>
+                      <FormLabel>Address 1</FormLabel>
+                      <Input type='text' name="address1" value={initialOrder?.address1} onChange={(e) => setInitialOrderDetails(e)} />
+                    </FormControl>
+                  </Col>
+                  <Col sm={12} lg={6}>
+                    <FormControl>
+                      <FormLabel>Address 2</FormLabel>
+                      <Input type='text' name="address2" value={initialOrder?.address2} onChange={(e) => setInitialOrderDetails(e)} />
+                    </FormControl>
+                  </Col>
+                </Row>
+                <Row style={{marginBottom: 10}}>
+                  <Col sm={12} lg={6}>
+                    <FormControl>
+                      <FormLabel>Postal Code</FormLabel>
+                      <Input type='text' name="postal_code" value={initialOrder?.postal_code} onChange={(e) => setInitialOrderDetails(e)} />
+                    </FormControl>
+                  </Col>
+                  <Col sm={12} lg={6}>
+                    <FormControl>
+                      <FormLabel>City</FormLabel>
+                      <Input type='text' name="city" value={initialOrder?.city} onChange={(e) => setInitialOrderDetails(e)} />
+                    </FormControl>
+                  </Col>
+                </Row>
+                <Row style={{marginBottom: 10}}>
+                  <Col>
+                    <FormControl>
+                      <FormLabel>Delivery Instructions</FormLabel>
+                      <Input type='text' placeholder="anytime today / between 3 and 4pm / call me upon arrival / etc" name="delivery_instructions" value={initialOrder?.delivery_instructions} onChange={(e) => setInitialOrderDetails(e)} />
+                    </FormControl>
+                  </Col>
+                </Row>
+                <Row style={{marginBottom: 10}}>
+                  <Col>
+                    <FormControl>
+                      <FormLabel>Notes</FormLabel>
+                      <Input type='text' name="notes" value={initialOrder?.notes} onChange={(e) => setInitialOrderDetails(e)} />
+                    </FormControl>
+                  </Col>
+                </Row>
+              </>
+            )}
           </CardBody>
         </Card>
       </Col>
@@ -145,7 +184,7 @@ const WebCheckout = (props) => {
                 />
               )
             })}
-            <br/><Divider /><br/>
+            <br/><Divider />
 
             <div style={{textAlign: 'right'}}>
               <Row>
@@ -175,7 +214,7 @@ const WebCheckout = (props) => {
                 </Col>
               </Row>
 
-              <br/><Divider /><br/>
+              <Divider style={{ marginBottom: 4 }} />
 
               <Row>
                 <Col>

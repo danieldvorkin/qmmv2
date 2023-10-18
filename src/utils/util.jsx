@@ -85,4 +85,8 @@ export const getOrdersById = async (userId) => {
   return await axios.get(URL + '/orders?user_id=' + userId).then((resp) => resp.data);
 }
 
+export const searchForUser = async (email) => {
+  return await axios.get(URL + '/users/search?email=' + email).then((resp) => resp.data);
+}
+
 
