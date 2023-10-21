@@ -16,9 +16,10 @@ const WebCheckout = (props) => {
   const [showReferralFields, setShowReferralFields] = useState(false);
 
   const validateBeforeSubmission = () => {
-    return Boolean(order.full_name) &&
-      Boolean(order.email) &&
-      Boolean(order.phone)
+    // return Boolean(order.full_name) &&
+    //   Boolean(order.email) &&
+    //   Boolean(order.phone)
+    return true;
   }
   
   const discountBreakdown = [
@@ -81,8 +82,7 @@ const WebCheckout = (props) => {
                 </FormControl>
               </Col>
             </Row>
-            {validatedUser && (
-              <>
+            <>
                 <Row style={{marginBottom: 10}}>
                   <Col sm={12}>
                     <FormControl>
@@ -121,7 +121,7 @@ const WebCheckout = (props) => {
                 <Row style={{marginBottom: 10}}>
                   <Col sm={12} lg={6}>
                     <FormControl>
-                      <FormLabel>Address 1</FormLabel>
+                      <FormLabel>Address 1 *</FormLabel>
                       <Input type='text' name="address1" value={initialOrder?.address1} onChange={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
@@ -135,7 +135,7 @@ const WebCheckout = (props) => {
                 <Row style={{marginBottom: 10}}>
                   <Col sm={12} lg={6}>
                     <FormControl>
-                      <FormLabel>Postal Code</FormLabel>
+                      <FormLabel>Postal Code *</FormLabel>
                       <Input type='text' name="postal_code" value={initialOrder?.postal_code} onChange={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
@@ -163,7 +163,6 @@ const WebCheckout = (props) => {
                   </Col>
                 </Row>
               </>
-            )}
           </CardBody>
         </Card>
       </Col>
