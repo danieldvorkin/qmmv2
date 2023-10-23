@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardHeader, Divider, FormControl, FormLabel, Input, List, ListItem, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardHeader, Checkbox, Divider, FormControl, FormLabel, Input, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
@@ -6,7 +6,6 @@ import { PatternFormat } from 'react-number-format';
 import { LinkContainer } from "react-router-bootstrap";
 import { searchForUser } from "../../utils/util";
 import Breakdown from "../breakdown";
-import { produce } from "immer";
 import { ErrorToaster, SuccessToaster } from "../../toast";
 
 const WebCheckout = (props) => {
@@ -14,6 +13,7 @@ const WebCheckout = (props) => {
   const [initialOrder, setInitialOrder] = useState(order)
   const [validatedUser, setValidatedUser] = useState(false);
   const [showReferralFields, setShowReferralFields] = useState(false);
+  const [alreadyMember, setAlreadyMember] = useState(false);
 
   const validateBeforeSubmission = () => {
     return (Boolean(order.full_name) && Boolean(order.email) && Boolean(order.phone)) || validatedUser
@@ -31,11 +31,6 @@ const WebCheckout = (props) => {
   ]
 
   const setInitialOrderDetails = (e) => {
-    // setInitialOrder(
-    //   produce(initialOrder, (draft) => {
-    //     draft[e.target.name] = e.target.value;
-    //   })
-    // );
     setInitialOrder({...initialOrder, [e.target.name]: e.target.value })
     // Check the input value after a short delay
     setTimeout(() => {
@@ -43,7 +38,6 @@ const WebCheckout = (props) => {
         setInitialOrder({...initialOrder, [e.target.name]: e.target.value })
       }
     }, 400); // Adjust the delay as needed
-    // changeOrderDetails(e);
   }
 
   const searchUser = () => {
@@ -108,22 +102,31 @@ const WebCheckout = (props) => {
                 <br/>
                 <hr/>
                 <br/>
-                
-                {showReferralFields && (
+
+                <Row style={{marginBottom: 10}}>
+                  <Col>
+                    <FormControl>
+                      <FormLabel>Already a Member?</FormLabel>
+                      <Checkbox value={!alreadyMember} onChange={() => setAlreadyMember(!alreadyMember)}/>
+                    </FormControl>
+                  </Col>
+                </Row>
+
+                {showReferralFields && !alreadyMember && (
                   <Row style={{marginBottom: 10}}>
                     <Col sm={6}>
                       <FormControl>
-                        <FormLabel>Referred by Name</FormLabel>
+                        <FormLabel>Referred by Name *</FormLabel>
                         <Input type='text' name="referred_by_name" value={initialOrder?.referred_by_name} onInput={(e) => setInitialOrderDetails(e)} />
                       </FormControl>
                     </Col>
                     <Col sm={6}>
                       <FormControl>
-                        <FormLabel>Referred by Phone Number</FormLabel>
+                        <FormLabel>Referred by Phone Number *</FormLabel>
                         <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="referred_by_phone" allowEmptyFormatting mask="_" value={initialOrder?.referred_by_phone} onInput={(e) => setInitialOrderDetails(e)} />
                       </FormControl>
                     </Col>
-                  </Row>  
+                  </Row>
                 )}
                 
                 <Row style={{marginBottom: 10}}>
@@ -149,7 +152,7 @@ const WebCheckout = (props) => {
                   </Col>
                   <Col sm={12} lg={6}>
                     <FormControl>
-                      <FormLabel>City</FormLabel>
+                      <FormLabel>City *</FormLabel>
                       <Input type='text' name="city" value={initialOrder?.city} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
