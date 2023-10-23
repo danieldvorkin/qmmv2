@@ -10,16 +10,13 @@ import { produce } from "immer";
 import { ErrorToaster, SuccessToaster } from "../../toast";
 
 const WebCheckout = (props) => {
-  const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, changeOrderDetails, getItemSubtotal } = props;
+  const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, getItemSubtotal } = props;
   const [initialOrder, setInitialOrder] = useState(order)
   const [validatedUser, setValidatedUser] = useState(false);
   const [showReferralFields, setShowReferralFields] = useState(false);
 
   const validateBeforeSubmission = () => {
-    // return Boolean(order.full_name) &&
-    //   Boolean(order.email) &&
-    //   Boolean(order.phone)
-    return true;
+    return (Boolean(order.full_name) && Boolean(order.email) && Boolean(order.phone)) || validatedUser
   }
   
   const discountBreakdown = [
@@ -34,12 +31,19 @@ const WebCheckout = (props) => {
   ]
 
   const setInitialOrderDetails = (e) => {
-    setInitialOrder(
-      produce(initialOrder, (draft) => {
-        draft[e.target.name] = e.target.value;
-      })
-    );
-    changeOrderDetails(e);
+    // setInitialOrder(
+    //   produce(initialOrder, (draft) => {
+    //     draft[e.target.name] = e.target.value;
+    //   })
+    // );
+    setInitialOrder({...initialOrder, [e.target.name]: e.target.value })
+    // Check the input value after a short delay
+    setTimeout(() => {
+      if (e.target.value !== initialOrder[e.target.name]) {
+        setInitialOrder({...initialOrder, [e.target.name]: e.target.value })
+      }
+    }, 400); // Adjust the delay as needed
+    // changeOrderDetails(e);
   }
 
   const searchUser = () => {
@@ -51,7 +55,7 @@ const WebCheckout = (props) => {
           phone: resp[0].phone,
           address1: resp[0].address?.address1,
           address2: resp[0].address?.address2,
-          postal_code: resp[0].address?.postal_code,
+          zipcode: resp[0].address?.zipcode,
           city: resp[0].address?.city,
           notes: resp[0].address?.notes
         });
@@ -66,6 +70,10 @@ const WebCheckout = (props) => {
     });
   }
 
+  const submitNewOrder = () => {
+    submitOrder(initialOrder);
+  }
+
   return (
     <>
       <Col lg={8}>
@@ -78,7 +86,7 @@ const WebCheckout = (props) => {
               <Col sm={12}>
                 <FormControl>
                   <FormLabel>Your Email *</FormLabel>
-                  <Input type='text' name="email" value={initialOrder?.email} isRequired={true} onChange={(e) => setInitialOrderDetails(e)} onBlur={() => searchUser()}/>
+                  <Input type='text' name="email" value={initialOrder?.email} isRequired={true} onInput={(e) => setInitialOrderDetails(e)} onBlur={() => searchUser()}/>
                 </FormControl>
               </Col>
             </Row>
@@ -87,13 +95,13 @@ const WebCheckout = (props) => {
                   <Col sm={12}>
                     <FormControl>
                       <FormLabel>Your Name *</FormLabel>
-                      <Input type='text' name="full_name" value={initialOrder?.full_name} isRequired={true} onChange={(e) => setInitialOrderDetails(e)} />
+                      <Input type='text' name="full_name" value={initialOrder?.full_name} isRequired={true} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                   <Col sm={12}>
                     <FormControl>
                       <FormLabel>Your Phone Number *</FormLabel>
-                      <PatternFormat className="chakra-input-custom" displayType="input" isRequired={true} format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={initialOrder?.phone} onChange={(e) => setInitialOrderDetails(e)} />
+                      <PatternFormat className="chakra-input-custom" displayType="input" isRequired={true} format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={initialOrder?.phone} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                 </Row>
@@ -106,13 +114,13 @@ const WebCheckout = (props) => {
                     <Col sm={6}>
                       <FormControl>
                         <FormLabel>Referred by Name</FormLabel>
-                        <Input type='text' name="referred_by_name" value={initialOrder?.referred_by_name} onChange={(e) => setInitialOrderDetails(e)} />
+                        <Input type='text' name="referred_by_name" value={initialOrder?.referred_by_name} onInput={(e) => setInitialOrderDetails(e)} />
                       </FormControl>
                     </Col>
                     <Col sm={6}>
                       <FormControl>
                         <FormLabel>Referred by Phone Number</FormLabel>
-                        <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="referred_by_phone" allowEmptyFormatting mask="_" value={initialOrder?.referred_by_phone} onChange={(e) => setInitialOrderDetails(e)} />
+                        <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="referred_by_phone" allowEmptyFormatting mask="_" value={initialOrder?.referred_by_phone} onInput={(e) => setInitialOrderDetails(e)} />
                       </FormControl>
                     </Col>
                   </Row>  
@@ -122,13 +130,13 @@ const WebCheckout = (props) => {
                   <Col sm={12} lg={6}>
                     <FormControl>
                       <FormLabel>Address 1 *</FormLabel>
-                      <Input type='text' name="address1" value={initialOrder?.address1} onChange={(e) => setInitialOrderDetails(e)} />
+                      <Input type='text' name="address1" value={initialOrder?.address1} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                   <Col sm={12} lg={6}>
                     <FormControl>
                       <FormLabel>Address 2</FormLabel>
-                      <Input type='text' name="address2" value={initialOrder?.address2} onChange={(e) => setInitialOrderDetails(e)} />
+                      <Input type='text' name="address2" value={initialOrder?.address2} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                 </Row>
@@ -136,13 +144,13 @@ const WebCheckout = (props) => {
                   <Col sm={12} lg={6}>
                     <FormControl>
                       <FormLabel>Postal Code *</FormLabel>
-                      <Input type='text' name="postal_code" value={initialOrder?.postal_code} onChange={(e) => setInitialOrderDetails(e)} />
+                      <Input type='text' name="zipcode" value={initialOrder?.zipcode} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                   <Col sm={12} lg={6}>
                     <FormControl>
                       <FormLabel>City</FormLabel>
-                      <Input type='text' name="city" value={initialOrder?.city} onChange={(e) => setInitialOrderDetails(e)} />
+                      <Input type='text' name="city" value={initialOrder?.city} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                 </Row>
@@ -150,7 +158,7 @@ const WebCheckout = (props) => {
                   <Col>
                     <FormControl>
                       <FormLabel>Delivery Instructions</FormLabel>
-                      <Input type='text' placeholder="anytime today / between 3 and 4pm / call me upon arrival / etc" name="delivery_instructions" value={initialOrder?.delivery_instructions} onChange={(e) => setInitialOrderDetails(e)} />
+                      <Input type='text' placeholder="anytime today / between 3 and 4pm / call me upon arrival / etc" name="delivery_instructions" value={initialOrder?.delivery_instructions} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                 </Row>
@@ -158,7 +166,7 @@ const WebCheckout = (props) => {
                   <Col>
                     <FormControl>
                       <FormLabel>Notes</FormLabel>
-                      <Input type='text' name="notes" value={initialOrder?.notes} onChange={(e) => setInitialOrderDetails(e)} />
+                      <Input type='text' name="notes" value={initialOrder?.notes} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                 </Row>
@@ -223,7 +231,7 @@ const WebCheckout = (props) => {
                 </Col>
                 <Col>
                   {validateBeforeSubmission() ? (
-                    <Button colorScheme={"green"} style={{width: '100%'}} onClick={submitOrder}>Checkout</Button>
+                    <Button colorScheme={"green"} style={{width: '100%'}} onClick={() => submitNewOrder() }>Checkout</Button>
                   ) : (
                     <Text>Enter the required(*) info to checkout</Text>
                   )}

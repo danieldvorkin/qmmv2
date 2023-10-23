@@ -1,4 +1,5 @@
 import { finalizeOrder, login, loginError } from "./manageCart";
+import { getGrandTotal } from "./utils/helpers";
 import { loginUser, submitOrder } from "./utils/util";
 
 export const URL = "https://queenmarymedical.herokuapp.com/api/v1";
@@ -14,7 +15,9 @@ export const loginService = (loginData) => async (dispatch) => {
 };
 
 export const submitNewOrder = (order) => async (dispatch) => {
-  const response = await submitOrder(order)
+  let total = getGrandTotal(order.cart);
+  
+  const response = await submitOrder({ ...order, total: total })
   dispatch(finalizeOrder(response));
 
   return response;

@@ -55,17 +55,17 @@ const Checkout = (props) => {
     dispatch(updateQty({ product_id: item.product.id, variant: item.variant, qty: parseInt(input) }))
   }
 
-  const submitOrder = () => {
+  const submitOrder = (newOrder) => {
     setProcessing(true);
     
-    dispatch(submitNewOrder(order)).then((resp) => {
+    dispatch(submitNewOrder(Object.assign({}, newOrder, order))).then((resp) => {
       setOrderComplete(true);
       navigate('/order/review/' + resp.order?.id);
     });
   }
 
   const changeOrderDetails = (e) => {
-    setOrder({...order, [e.target.name]: e.target.value})
+    setOrder({...order, [e.target.name]: e.target.value});
   }
 
   return (
