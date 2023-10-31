@@ -1,6 +1,6 @@
-import { Button } from "@blueprintjs/core";
-import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Text } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+
+import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Button, Text } from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
 import { Badge, ButtonGroup, Col, Container, Dropdown, DropdownButton, ProgressBar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -8,6 +8,7 @@ import Products from "../components/Products";
 import { featuredItems, getCategories, getCategory } from "../utils/util";
 import loading from '../loading.svg';
 import CustomSlider from "../components/slider";
+import { ChevronUpIcon } from "@chakra-ui/icons";
 
 const Shop = (props) => {
   const [queryParams, _] = useSearchParams();
@@ -20,6 +21,7 @@ const Shop = (props) => {
   const [thcSliderValue, setThcSliderValue] = useState(50)
   const [cbdSliderValue, setCbdSliderValue] = useState(50)
   const [typeFilter, setTypeFilter] = useState('');
+  const containerRef = useRef(null);
 
   useEffect(() => {
     let slug = queryParams.get('filter');
@@ -93,10 +95,17 @@ const Shop = (props) => {
       setLoader(false);  
     }, 1000);
   }
+
+  
+  const scrollToTop = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    }
+  }
   
   return(
     <div style={{ marginTop: 20 }}>
-      <Container>
+      <div className="container">
         <Row>
           <Col lg="12" style={{marginBottom: 20}}>
             {Object.keys(categories).map((key) => 
@@ -136,8 +145,8 @@ const Shop = (props) => {
                 })}
               </DropdownButton>
           </Col>
-          <Col lg="12" style={{height: '82vh', overflowY: 'auto' }}>
-            <Container fluid style={{marginTop: 20}}>
+          <Col lg="12" style={{height: '82vh', overflowY: 'auto', width: '98%' }} ref={containerRef}>
+            <div fluid style={{marginTop: 20}}>
               {loader ? (
                 <div style={{ width: '100%' }}>
                   <img style={{ margin: '0 auto' }} src={loading} alt={"loading"}/>
@@ -158,10 +167,15 @@ const Shop = (props) => {
                 
               )}
               
-            </Container>
+            </div>
+          </Col>
+          <Col style={{maxWidth: 10}} className={'backToTop'}>
+            <Button colorScheme='gray' className="bp4-minimal" onClick={() => scrollToTop()}>
+              <ChevronUpIcon /> To Top
+            </Button>
           </Col>
         </Row>
-      </Container>
+      </div>
     </div>
   )
 }
