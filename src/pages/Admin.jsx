@@ -18,6 +18,12 @@ const Admin = (props) => {
   const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => {
+    if(props.isLoggedIn){
+      if(!props.user?.admin){
+        navigate("/shop");
+      }
+    }
+
     if(!props.isLoggedIn){
       navigate("/login?mustbesignedin=true")
     }

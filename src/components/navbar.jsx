@@ -4,9 +4,10 @@ import { Button } from '@blueprintjs/core';
 import { Badge, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Nav, Navbar, ProgressBar } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
+import { logout } from '../manageCart';
 import logo from '../new_logo.svg';
 import { DISCOUNT_SETTINGS, getCartTotal, getDiscountTotal, getGrandTotal } from '../utils/helpers';
 
@@ -15,6 +16,7 @@ const MainNavbar = (props) => {
   const navigate = useNavigate();
   const [width, setWidth] = useState(window.innerWidth);
   const isMobile = width <= 768;
+  const dispatch = useDispatch();
 
   const handleWindowSizeChange = () => {
     setWidth(window.innerWidth);
@@ -78,7 +80,7 @@ const MainNavbar = (props) => {
       return (100 - cartTotal).toFixed(2);
     }
   }
-  
+
   return (
     <Navbar bg="light" expand="lg" sticky="top">
       {!isMobile && (
@@ -122,15 +124,17 @@ const MainNavbar = (props) => {
             </Link>
 
             {props.isLoggedIn && props.user?.admin && (
-              <LinkContainer to="/admin">
-                <Button className="bp4-minimal" text="Admin" />
+              <LinkContainer  to="/admin">
+                <Button className="nav-link bp4-minimal" text="Admin" style={{textAlign: 'left', color: 'grey' }} />
               </LinkContainer>
             )}
 
-            {!props.isLoggedIn && (
+            {!props.isLoggedIn ? (
               <LinkContainer to="/login">
-                <Button className="bp4-minimal" text="Login" />
+                <Button className="nav-link bp4-minimal" text="Login" style={{textAlign: 'left', color: 'grey' }} />
               </LinkContainer>
+            ) : (
+              <Button className="nav-link bp4-minimal" text="Logout" onClick={() => dispatch(logout())}  style={{textAlign: 'left', color: 'grey', height: 40 }} />
             )}
           </>
         )}
@@ -158,10 +162,12 @@ const MainNavbar = (props) => {
               </LinkContainer>
             )}
 
-            {!props.isLoggedIn && (
+            {!props.isLoggedIn ? (
               <LinkContainer to="/login">
-                <Button className="bp4-minimal" text="Login" />
+                <Button className="nav-link bp4-minimal" text="Login" />
               </LinkContainer>
+            ) : (
+              <Button className="nav-link bp4-minimal" text="Logout" onClick={() => dispatch(logout())} />
             )}
           </>
         )}

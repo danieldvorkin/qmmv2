@@ -89,4 +89,3 @@ export const searchForUser = async (email) => {
   return await axios.get(URL + '/users/search?email=' + email).then((resp) => resp.data);
 }
 
-

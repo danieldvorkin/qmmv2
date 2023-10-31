@@ -1,7 +1,7 @@
 import { Button } from "@blueprintjs/core";
 import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { ButtonGroup, Col, Container, Dropdown, DropdownButton, ProgressBar, Row } from "react-bootstrap";
+import { Badge, ButtonGroup, Col, Container, Dropdown, DropdownButton, ProgressBar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Products from "../components/Products";
@@ -19,6 +19,7 @@ const Shop = (props) => {
   const [loader, setLoader] = useState(true)
   const [thcSliderValue, setThcSliderValue] = useState(50)
   const [cbdSliderValue, setCbdSliderValue] = useState(50)
+  const [typeFilter, setTypeFilter] = useState('');
 
   useEffect(() => {
     let slug = queryParams.get('filter');
@@ -63,6 +64,25 @@ const Shop = (props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterSlug])
 
+  useEffect(() => {
+    setLoader(true);
+    
+    if(!!typeFilter && typeFilter?.length > 0){
+      setProducts(products.filter((p) => p.strain_type === typeFilter));
+      setLoader(false);
+    } else {
+      featuredItems().then((resp) => {
+        setProducts(resp);
+        setLoader(false);
+      });
+    }
+  }, [typeFilter]);
+
+  useEffect(() => {
+    if(!!typeFilter)
+      setTypeFilter('');
+  }, [filterObject]);
+
   const resetFilter = () => {
     setLoader(true);
     setFilterSlug("");
@@ -100,6 +120,21 @@ const Shop = (props) => {
                 
               </DropdownButton>
             )}
+            <DropdownButton
+              as={ButtonGroup}
+              id={"type"}
+              size="sm"
+              key={`dropdown-type`}
+              variant="outline-secondary"
+              title={"Strain Types"}
+              style={{marginRight: 5, border: 'none !important'}}
+              >
+                {["Indica", "Indica Hybrid", "Hybrid", "Sativa Hybrid", "Sativa"].map((option) => {
+                  return (
+                    <Dropdown.Item eventKey={option} value={typeFilter} onClick={(e) => setTypeFilter(e.target.text)} style={{ border: 'none' }}>{option}</Dropdown.Item>
+                  )
+                })}
+              </DropdownButton>
           </Col>
           <Col lg="12" style={{height: '82vh', overflowY: 'auto' }}>
             <Container fluid style={{marginTop: 20}}>
@@ -108,7 +143,19 @@ const Shop = (props) => {
                   <img style={{ margin: '0 auto' }} src={loading} alt={"loading"}/>
                 </div>
               ) : (
-                <Products selectedFilter={filterObject} products={products} resetFilter={resetFilter}/>
+                <>
+                  {!!typeFilter && (
+                    <Text style={{fontSize: 20, marginLeft: 10, marginBottom: 10}}>
+                      <Badge bg="secondary" style={{paddingRight: 5}}>
+                        {typeFilter}
+                        <Button className="bp4-minimal" style={{ backgroundColor: 'transparent' }} icon="cross" onClick={() => setTypeFilter('')} />
+                      </Badge>
+                    </Text>
+                  )}
+                  
+                  <Products selectedFilter={filterObject} products={products} resetFilter={resetFilter}/>
+                </>
+                
               )}
               
             </Container>

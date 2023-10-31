@@ -23,9 +23,10 @@ const AdminProduct = (props) => {
 
   const update = () => {
     updateProduct(slug, product).then((resp) => {
-      debugger;
+      setProduct(resp);
     })
   }
+
 
   return (
     <>
@@ -73,6 +74,16 @@ const AdminProduct = (props) => {
                         <Form.Label>Price</Form.Label>
                         <Form.Control type="text" placeholder="Enter price" onChange={(e) => setProduct({...product, 'price': e.target.value })} value={product?.price} />
                       </Form.Group>
+                      <Form.Group className="mb-3" controlId="on_sale">
+                        <Form.Check type="checkbox" label={"Sale"} placeholder="Enter " onChange={(e) => setProduct({...product, 'on_sale': e.target.checked })} value={product?.on_sale} />
+                      </Form.Group>
+
+                      {!!product?.on_sale && (
+                        <Form.Group className="mb-3" controlId="sale_price">
+                          <Form.Label>Sale Price</Form.Label>
+                          <Form.Control type="text" placeholder="Enter sale price" onChange={(e) => setProduct({...product, 'sale_price': e.target.value })} value={product?.sale_price} />
+                        </Form.Group>
+                      )}
                       <Form.Group className="mb-3" controlId="productStrainType">
                         <Form.Label>Strain Type</Form.Label>
                         <Form.Select aria-label="Default select example" onChange={(e) => setProduct({...product, 'strain_type': e.target.value })} value={product?.strain_type}>
@@ -83,9 +94,9 @@ const AdminProduct = (props) => {
                           <option value="Indica">Indica</option>
                         </Form.Select>
                       </Form.Group>
-                      <Form.Group className="mb-3" controlId="productThc">
-                        <Form.Check type="checkbox" label={"Variant by Weight"} placeholder="Enter " onChange={(e) => setProduct({...product, 'variant_by_weight': e.target.value })} value={product?.variant_by_weight} />
-                      </Form.Group>
+                      {/* <Form.Group className="mb-3" controlId="productThc">
+                        <Form.Check type="checkbox" label={"Variant by Weight"} placeholder="Enter " onChange={(e) => setProduct({...product, 'variant_by_weight': e.target.checked })} value={product?.variant_by_weight} />
+                      </Form.Group> */}
                       <Form.Group className="mb-3" controlId="productThc">
                         <Form.Label>THC</Form.Label>
                         <Form.Control type="text" placeholder="Enter THC" onChange={(e) => setProduct({...product, 'thc': e.target.value })} value={product?.thc} />

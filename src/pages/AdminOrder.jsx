@@ -1,17 +1,16 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { ButtonGroup, Button, Card, CardBody, CardHeader, Input, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure, Flex, Select } from "@chakra-ui/react";
+import { ButtonGroup, Button, Card, CardBody, CardHeader, Input, Text,  Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure, Flex } from "@chakra-ui/react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Navbar, Row } from "react-bootstrap";
-import CurrencyFormat from "react-currency-format";
 import { BiCheckCircle, BiTrash } from "react-icons/bi";
 import { connect } from "react-redux";
-import { LinkContainer } from "react-router-bootstrap";
 import { Link, useParams } from "react-router-dom";
-import { getItemSubtotal, getOrderDiscount, getOrderTotal } from "../utils/helpers";
 import { featuredItems, getOrder, removeLineItem, updateOrder, updateOrderStatus } from "../utils/util";
 import Autosuggest from 'react-autosuggest';
-import { AppToaster, SuccessToaster } from "../toast";
+import { SuccessToaster } from "../toast";
+import WebOrderItems from "../components/adminOrder/webOrderItems";
+import MobileOrderItems from "../components/adminOrder/mobileOrderItems";
 
 const AdminOrder = (props) => {
   const { id } = useParams();
@@ -19,6 +18,18 @@ const AdminOrder = (props) => {
   const [orderItems, setOrderItems] = useState([]);
   const [editmode, setEditmode] = useState(false);
   const finalRef = React.useRef(null);
+
+  const [width, setWidth] = useState(window.innerWidth);
+  const isMobile = width <= 768;
+
+  const handleWindowSizeChange = () => {
+    setWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => window.removeEventListener('resize', handleWindowSizeChange);
+  }, []);
   
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [products, setProducts] = useState([]);
@@ -92,7 +103,6 @@ const AdminOrder = (props) => {
   }
 
   const removeItem = (item) => {
-    console.log("Item: ", item);
     let params = { item_name: item.item.name };
 
     removeLineItem(order, params).then((resp) => {
@@ -176,9 +186,9 @@ const AdminOrder = (props) => {
                 <Row>
                   <Col>
                     <Text size="10" color="grey">Address:</Text>
-                    <Text>To: {order.address?.name}</Text>
-                    <Text>{`${order.address?.address1} ${order.address?.address2 ? ' - ' : ''}${order.address?.address2}`}</Text>
-                    <Text>{`${order.address?.city}${order.address?.city ? ', ' : ' '}${order.address?.province}, Canada`}</Text>
+                    <Text>To: <b>{order.address?.name}</b></Text>
+                    <Text>{`${order.address?.address1} ${order.address?.address2 ? ' - ' : ''}${order.address?.address2 ?? ''}`}</Text>
+                    <Text>{`${order.address?.city ?? ''}${order.address?.city ? ', ' : ' '}${order.address?.province}, Canada`}</Text>
                     <Text as="b">{order.address?.address_type}</Text>
                   </Col>
                 </Row>
@@ -201,94 +211,33 @@ const AdminOrder = (props) => {
           </Col>
 
           <Col lg={8}>
-            <Card>
-              <CardHeader>
-                <Text fontSize='3xl' as='b'>Order Items</Text>
-                <div style={{float: 'right', display: 'flex'}}>
-                  <ButtonGroup>
-                    <Button colorScheme={'purple'} onClick={() => onOpen()}>Add Product</Button>
-                    {editmode ? (      
-                      <Button colorScheme={'green'} onClick={() => setEditmode(false)}>Confirm Order</Button>
-                    ) : (
-                      <Button colorScheme={'orange'} onClick={() => setEditmode(true)}>Edit Order</Button>
-                    )}
-                  </ButtonGroup>
-                  
-                  <Select value={order.status} style={{marginLeft: 8}} onChange={(e) => setOrder({...order, status: e.target.value})}>
-                    <option value='pending'>Pending</option>
-                    <option value='confirmed'>Confirmed</option>
-                    <option value='processing'>Processing</option>
-                    <option value='shipped'>Shipped</option>
-                    <option value='delivered'>Delivered</option>
-                  </Select>
-                  <Button style={{marginLeft: 10, width: 100}} onClick={saveStatusChange}>Save</Button>
-                </div>
-                <hr/>
-              </CardHeader>
-              <CardBody>
-                <TableContainer>
-                  <Table variant='simple'>
-                    <TableCaption>
-                      Status: {order.status}
-                      <br/>
-                      Order SubTotal: {getOrderTotal(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
-                      <br/>
-                      Discount: {getOrderDiscount(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
-                      <br/>
-                      Grand Total: {(getOrderTotal(order.items) - getOrderDiscount(order.items)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
-                    </TableCaption>
-                    <Thead>
-                      <Tr>
-                        <Th>Name</Th>
-                        <Th>Quantity</Th>
-                        <Th>Price</Th>
-                        {editmode && (
-                          <Th>Remove</Th>
-                        )}
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {orderItems.map((item) => {
-                        return (
-                          <Tr>
-                            <Td style={{maxWidth: 300, minWidth: 300 }}>
-                              <LinkContainer to={{ pathname: "/admin/products/" + item.item.slug, search: "?order=" + order.id }} style={{cursor: 'pointer'}}>
-                                <Text>{item.item.name}</Text>
-                              </LinkContainer>
-                            </Td>
-                            <Td style={{maxWidth: 200, minWidth: 200 }}>
-                              {editmode ? (
-                                <Input placeholder='quantity' size='sm' value={item.quantity} onChange={(e) => handleQtyChange(item, e)}/>
-                              ) : (
-                                item.quantity
-                              )}
-                            </Td>
-                            <Td style={{maxWidth: 200, minWidth: 200 }}>
-                              {editmode ? (
-                                <Input placeholder='custom price' size="sm" value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} onChange={(e) => handlePriceChange(item, e)}/>
-                              ) : (
-                                <CurrencyFormat 
-                                  value={getItemSubtotal({ product: item.item, variant: item.quantity, quantity: item.quantity })} 
-                                  displayType={'text'} 
-                                  thousandSeparator={true} 
-                                  prefix={'$'} />
-                              )}
-                            </Td>
-                            {editmode && (
-                              <Td>
-                                <Button colorScheme="red" onClick={() => removeItem(item)}><BiTrash /></Button>
-                              </Td>
-                            )}
-                          </Tr>
-                        )
-                      })}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </CardBody>
-            </Card>
-
-            <br/>
+            {isMobile ? (
+              <MobileOrderItems
+                onOpen={onOpen}
+                editmode={editmode}
+                setEditmode={setEditmode}
+                order={order}
+                setOrder={setOrder}
+                saveStatusChange={saveStatusChange}
+                orderItems={orderItems}
+                handleQtyChange={handleQtyChange}
+                handlePriceChange={handlePriceChange}
+                removeItem={removeItem}
+              />
+            ) : (
+              <WebOrderItems
+                onOpen={onOpen}
+                editmode={editmode}
+                setEditmode={setEditmode}
+                order={order}
+                setOrder={setOrder}
+                saveStatusChange={saveStatusChange}
+                orderItems={orderItems}
+                handleQtyChange={handleQtyChange}
+                handlePriceChange={handlePriceChange}
+                removeItem={removeItem}
+              />
+            )}
           </Col>
         </Row>
 

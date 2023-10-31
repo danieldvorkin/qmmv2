@@ -30,7 +30,7 @@ const Breakdown = (props) => {
           </div>
           
           <Text style={{ marginTop: 10 }}>
-            <strong>Total Price:{' '}</strong>
+            <strong>Price:{' '}</strong>
             {discountPercent ? (
               <>
                 <Badge colorScheme="red">

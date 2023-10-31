@@ -1,4 +1,4 @@
-import { finalizeOrder, login, loginError } from "./manageCart";
+import { finalizeOrder, login, loginError, logout } from "./manageCart";
 import { getGrandTotal } from "./utils/helpers";
 import { loginUser, submitOrder } from "./utils/util";
 
@@ -13,6 +13,14 @@ export const loginService = (loginData) => async (dispatch) => {
     dispatch(loginError((error)));
   }
 };
+
+export const logoutService = () => async (dispatch) => {
+  try {
+    dispatch(logout());
+  } catch (error) {
+    console.log("Error logging out");
+  }
+}
 
 export const submitNewOrder = (order) => async (dispatch) => {
   let total = getGrandTotal(order.cart);

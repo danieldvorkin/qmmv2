@@ -93,7 +93,15 @@ const Product = (props) => {
               {`${product?.strain_type}`}
             </Badge>
             <div style={{float: 'right', fontSize: 35, position: 'relative', right: 10, userSelect: 'none'}}>
-              ${product.price}
+              {product.on_sale ? (
+                <>
+                  <s>{`$${product.price}`}</s>
+                  &nbsp;
+                  <i>{`$${product.sale_price}`}</i>
+                </>
+              ) : (
+                `$${product.price}`
+              )}
             </div>
           </Heading>
 

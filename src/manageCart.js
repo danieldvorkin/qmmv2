@@ -56,13 +56,15 @@ export const cartSlice = createSlice({
         AppToaster.show({ message: "You have successfully logged in."})
       }
     },
+    logout: (state) => {
+      state.token = null;
+      state.user = null;
+      state.isLoggedIn = false;
+      
+      AppToaster.show({ message: "You have successfully logged out."})
+    },
     loginError: (state, errors) => {
       ErrorToaster.show({ message: "Login attempt failed" });
-    },
-    logout: (state, params) => {
-      state.isLoggedIn = false
-      state.user = null
-      state.token = null
     },
     finalizeOrder: (state, params) => {
       state.cart = [];
