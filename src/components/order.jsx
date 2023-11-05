@@ -8,7 +8,7 @@ import { QuestionIcon } from '@chakra-ui/icons'
 import { FaShippingFast } from 'react-icons/fa';
 import { HiReceiptRefund } from 'react-icons/hi';
 import { Link } from "react-router-dom";
-import { getOrderDiscount, getOrderTotal } from "../utils/helpers";
+import { getItemSubtotal, getOrderDiscount, getOrderTotal } from "../utils/helpers";
 
 const Order = (props) => {
   const { order } = props;
@@ -18,10 +18,10 @@ const Order = (props) => {
 
   const orderStatuses = {
     "Order Pending": "blue",
-    "Order Confirmed": "green",
+    "Order Confirmed": "yellow",
     "Order Processing": "red",
-    "Order Shipped": "yellow",
-    "Order Delivered": "silver"
+    "Order Shipped": "orange",
+    "Order Delivered": "green"
   }
 
   const handleWindowSizeChange = () => {
@@ -45,8 +45,9 @@ const Order = (props) => {
   }
 
   const getItemPrice = (item, variantQty) => {
-    let variant = item.variants.find((variant) => variant.quantity === variantQty);
-    return variant ? variant.price : item.variants[0].price * variantQty;
+    return getItemSubtotal({ product: item, quantity: variantQty });
+    // let variant = item.variants.find((variant) => variant.quantity === variantQty);
+    // return variant ? variant.price : item.variants[0].price * variantQty;
   }
 
   const getItemTotals = (items) => {
