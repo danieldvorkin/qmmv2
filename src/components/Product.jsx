@@ -48,7 +48,7 @@ const Product = (props) => {
   const [showMore, setShowMore] = useState(false);
   
   return (
-    <Card maxW='sm' className={`productCard ${showInCartBorder()}`}>
+    <Card maxW='sm' className={`productCard ${showInCartBorder()}`} id={`${product.slug}`}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
           {product.on_sale && (
@@ -96,9 +96,9 @@ const Product = (props) => {
 
         <Stack mt='2' ml="2" mr="2" spacing='1'>
           <Heading size='sm' style={{minHeight: 40, userSelect: 'none'}}>
-            {/* <Link to={"/products/" + product.slug}> */}
+            <Link to={"/products/" + product.slug}>
               {product.name}
-            {/* </Link> */}
+            </Link>
             <br/>
             <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12, userSelect: 'none' }}>
               {`${product?.strain_type}`}

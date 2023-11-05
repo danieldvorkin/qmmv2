@@ -22,6 +22,7 @@ const Shop = (props) => {
   const [cbdSliderValue, setCbdSliderValue] = useState(50)
   const [typeFilter, setTypeFilter] = useState('');
   const containerRef = useRef(null);
+  const [scrolledTo, setScrolledTo] = useState(false);
 
   useEffect(() => {
     let slug = queryParams.get('filter');
@@ -102,6 +103,22 @@ const Shop = (props) => {
       containerRef.current.scrollTop = 0;
     }
   }
+
+  useEffect(() => {
+    const hash = window.location.hash;
+
+    if (hash && containerRef.current && products.length > 0 && !scrolledTo) {
+      const itemSlug = hash.substring(1);
+      const element = containerRef.current.querySelector(`#${itemSlug}`);
+
+      if (element) {
+        // Calculate the scroll position based on the element's offset
+        const offset = element.offsetTop;
+        containerRef.current.scrollTop = offset - 130;
+        setScrolledTo(true);
+      }
+    }
+  }, [products]);
   
   return(
     <div style={{ marginTop: 20 }}>

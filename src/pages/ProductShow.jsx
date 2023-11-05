@@ -74,14 +74,8 @@ const ProductShow = (props) => {
               <Col lg={12} style={{marginBottom: 10}}>
                 <Breadcrumb>
                   <BreadcrumbItem>
-                    <LinkContainer to="/shop">
-                      <BreadcrumbLink href='#'>Shop</BreadcrumbLink>
-                    </LinkContainer>
-                  </BreadcrumbItem>
-
-                  <BreadcrumbItem>
-                    <LinkContainer to={"/category/" + product?.category?.slug}>
-                      <BreadcrumbLink href='#'>{product?.category?.name}</BreadcrumbLink>
+                    <LinkContainer to={{ pathname: "/shop", hash: `#${product?.slug}`}}>
+                      <BreadcrumbLink href=''>Back to Shop</BreadcrumbLink>
                     </LinkContainer>
                   </BreadcrumbItem>
 
