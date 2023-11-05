@@ -65,6 +65,8 @@ const Checkout = (props) => {
       if(!!resp.order?.id){
         navigate('/order/review/' + resp.order?.id);
       } else {
+        setProcessing(false);
+        setOrderComplete(false);
         AppToaster.show({ message: `Order submission failed: ${resp?.errors}`})  
       }
     });
