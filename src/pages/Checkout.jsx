@@ -11,6 +11,7 @@ import { submitNewOrder } from "../actions";
 import { getCartTotal, getDiscountTotal, getGrandTotal, getItemSubtotal } from "../utils/helpers";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import loading from '../loading.svg';
+import { AppToaster } from "../toast";
 
 const Checkout = (props) => {
   const dispatch = useDispatch();
@@ -60,7 +61,12 @@ const Checkout = (props) => {
     
     dispatch(submitNewOrder(Object.assign({}, newOrder, order))).then((resp) => {
       setOrderComplete(true);
-      navigate('/order/review/' + resp.order?.id);
+
+      if(!!resp.order?.id){
+        navigate('/order/review/' + resp.order?.id);
+      } else {
+        AppToaster.show({ message: `Order submission failed: ${resp?.errors}`})  
+      }
     });
   }
 

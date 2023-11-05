@@ -8,7 +8,9 @@ export const getOrderTotal = (items) => {
   if(items && items.length > 0){
     let totals = items.map((item) => {
       if(Boolean(item.item.price)){
-        return parseFloat(item.item.price) * parseFloat(item.quantity)
+        let price = item.item.on_sale ? item.item.sale_price : item.item.price;
+
+        return parseFloat(price) * parseFloat(item.quantity)
       } else {
         let variant = item.item.variants.filter((v) => v.quantity === item.quantity)[0];
 
@@ -20,7 +22,12 @@ export const getOrderTotal = (items) => {
       }
     });
 
-    return totals.reduce((tot, cur) => tot = tot + cur);
+    let finalTotal = totals.reduce((tot, cur) => tot = tot + cur);
+    if(finalTotal < 100){
+      return finalTotal + 10;
+    }
+
+    return finalTotal;
   } else {
     return 0;
   }
@@ -63,7 +70,11 @@ export const getCartTotal = (items) => {
 
 export const getItemSubtotal = (item) => {
   if(item.product.price){
-    return item.product.price * item.quantity;
+    if(item.product?.on_sale){
+      return item.product.sale_price * item.quantity;
+    } else {
+      return item.product.price * item.quantity;
+    }
   } else {
     let variants = item.product.variants.filter((v) => v.quantity === item.quantity);
 

@@ -43,7 +43,7 @@ const WebCheckout = (props) => {
   const searchUser = () => {
     searchForUser(initialOrder.email).then((resp) => {
       if(resp.length > 0){
-        setInitialOrder({
+        setInitialOrder({...initialOrder,
           email: resp[0].email,
           full_name: resp[0].address?.name,
           phone: resp[0].phone,
@@ -160,16 +160,8 @@ const WebCheckout = (props) => {
                 <Row style={{marginBottom: 10}}>
                   <Col>
                     <FormControl>
-                      <FormLabel>Delivery Instructions</FormLabel>
+                      <FormLabel>Notes / Delivery Instructions</FormLabel>
                       <Input type='text' placeholder="anytime today / between 3 and 4pm / call me upon arrival / etc" name="delivery_instructions" value={initialOrder?.delivery_instructions} onInput={(e) => setInitialOrderDetails(e)} />
-                    </FormControl>
-                  </Col>
-                </Row>
-                <Row style={{marginBottom: 10}}>
-                  <Col>
-                    <FormControl>
-                      <FormLabel>Notes</FormLabel>
-                      <Input type='text' name="notes" value={initialOrder?.notes} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                 </Row>
