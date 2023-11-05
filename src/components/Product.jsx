@@ -27,7 +27,11 @@ const Product = (props) => {
 
   const showInCartBorder = () => {
     if(cart && product){
-      return cart.filter((item) => item.product.id === product.id).length > 0 ? 'showInCart' : '';
+      let itemInCart = cart.filter((item) => {
+        return item.product.id === product.id
+      }).length > 0;
+      
+      return itemInCart && product.on_sale ? 'showInCart saleBorder' : (itemInCart ? 'showInCart' : '');
     }
   }
 
@@ -47,7 +51,14 @@ const Product = (props) => {
     <Card maxW='sm' className={`productCard ${showInCartBorder()}`}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
-          {showInCartBorder() === 'showInCart' ? (
+          {product.on_sale && (
+            <div style={{float: 'left'}}>
+              <Badge bg={'danger'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
+                SALE!!!!
+              </Badge>
+            </div>
+          )}
+          {showInCartBorder().includes('showInCart') ? (
             <div style={{float: 'right'}}>
               <Badge bg={'success'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
                 {getCartQty()}
@@ -97,7 +108,7 @@ const Product = (props) => {
                 <>
                   <s>{`$${product.price}`}</s>
                   &nbsp;
-                  <i>{`$${product.sale_price}`}</i>
+                  <i style={{color: 'red'}}>{`$${product.sale_price}`}</i>
                 </>
               ) : (
                 `$${product.price}`

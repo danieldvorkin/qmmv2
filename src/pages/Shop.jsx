@@ -157,7 +157,7 @@ const Shop = (props) => {
                     <Text style={{fontSize: 20, marginLeft: 10, marginBottom: 10}}>
                       <Badge bg="secondary" style={{paddingRight: 5}}>
                         {typeFilter}
-                        <Button className="bp4-minimal" style={{ backgroundColor: 'transparent' }} icon="cross" onClick={() => setTypeFilter('')} />
+                        <Button style={{ backgroundColor: 'transparent' }} icon="cross" onClick={() => setTypeFilter('')}>X</Button>
                       </Badge>
                     </Text>
                   )}
