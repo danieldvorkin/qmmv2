@@ -460,7 +460,18 @@ img {
   right: 35px;
 }
 
+#shopSearchInput {
+  position: relative;
+  top: 4px;
+  width: 45%;
+  max-height: 32px;
+}
+
 @media only screen and (max-width: 600px) {
+  #shopSearchInput {
+    width: 55%;
+  }
+
   .backToTop button {
     bottom: 30px;
     right: 28px;

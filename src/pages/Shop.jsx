@@ -1,5 +1,5 @@
 
-import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Button, Text } from "@chakra-ui/react";
+import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Button, Text, Input } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Badge, ButtonGroup, Col, Container, Dropdown, DropdownButton, ProgressBar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -23,6 +23,9 @@ const Shop = (props) => {
   const [typeFilter, setTypeFilter] = useState('');
   const containerRef = useRef(null);
   const [scrolledTo, setScrolledTo] = useState(false);
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [previousQuery, setPreviousQuery] = useState('');
 
   useEffect(() => {
     let slug = queryParams.get('filter');
@@ -119,6 +122,64 @@ const Shop = (props) => {
       }
     }
   }, [products]);
+
+  useEffect(() => {
+    let debounceTimeout;
+  
+    const updateProducts = async (query) => {
+      if (query) {
+        let applicableItems = [];
+  
+        if (query?.length < previousQuery?.length) {
+          const resp = await featuredItems();
+          applicableItems = resp.filter((p) => nameCheck(p, query));
+        } else {
+          applicableItems = products.filter((p) => nameCheck(p, query));
+        }
+  
+        setProducts(applicableItems);
+        setLoader(false);
+      } else {
+        // If the search query is empty, fetch the default data (e.g., featured items)
+        const resp = await featuredItems();
+        setProducts(resp);
+        setLoader(false);
+      }
+    };
+  
+    const handleSearch = () => {
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+  
+      debounceTimeout = setTimeout(() => {
+        updateProducts(searchQuery);
+      }, 500); // Adjust the delay as needed
+    };
+  
+    handleSearch();
+  
+    return () => {
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+    };
+  }, [searchQuery]);
+
+  const nameCheck = (product, query) => {
+    let lcName = product?.name?.toLowerCase();
+
+    return lcName.includes(query.toLowerCase());
+  }
+
+  const onSearchChange = (e) => {
+    const newSearchQuery = e.target.value;
+    
+    setPreviousQuery(searchQuery);
+    setLoader(true);
+
+    setSearchQuery(newSearchQuery);
+  }
   
   return(
     <div style={{ marginTop: 20 }}>
@@ -153,7 +214,7 @@ const Shop = (props) => {
               key={`dropdown-type`}
               variant="outline-secondary"
               title={"Strain Types"}
-              style={{marginRight: 5, border: 'none !important'}}
+              style={{marginRight: 5, border: 'none !important', marginTop: 4 }}
               >
                 {["Indica", "Indica Hybrid", "Hybrid", "Sativa Hybrid", "Sativa"].map((option) => {
                   return (
@@ -161,6 +222,7 @@ const Shop = (props) => {
                   )
                 })}
               </DropdownButton>
+              <Input id="shopSearchInput" name="searchItem" placeholder="Search..." onChange={onSearchChange}/>
           </Col>
           <Col lg="12" style={{height: '82vh', overflowY: 'auto', width: '98%' }} ref={containerRef}>
             <div fluid style={{marginTop: 20}}>
