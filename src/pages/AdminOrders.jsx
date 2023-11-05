@@ -58,19 +58,23 @@ const AdminOrders = (props) => {
       return <CurrencyFormat value={row.total} displayType={'text'} decimalScale={2} fixedDecimalScale={true} thousandSeparator={true} prefix={'$'} />
     }, value: row => row.total }
   ]
+
+  const getBasePathname = () => {
+    return window.location.href.includes('/orders') ? "/admin/orders" : "/admin";
+  }
   
   return (
     <Container fluid>
       <Card>
         <CardHeader>
           <ButtonGroup>
-            <LinkContainer to={{ pathname: "/admin/orders" }}>
+            <LinkContainer to={{ pathname: getBasePathname() }}>
               <Button colorScheme={(selectedStatus === "All") ? 'green' : 'gray'} size='xs'>All</Button>
             </LinkContainer>
             {Object.keys(STATUSES).map((status) => {
               if(status !== 'pending'){
                 return (
-                  <LinkContainer to={{ pathname: "/admin/orders", search: "?status=" + status.slice(6) }}>
+                  <LinkContainer to={{ pathname: getBasePathname(), search: "?status=" + status.slice(6) }}>
                     <Button colorScheme={selectedStatus === status.slice(6) ? STATUSES[status] : 'gray'} size='xs'>{status.slice(6)}</Button>
                   </LinkContainer>
                 )

@@ -31,7 +31,7 @@ const Product = (props) => {
         return item.product.id === product.id
       }).length > 0;
       
-      return itemInCart && product.on_sale ? 'showInCart saleBorder' : (itemInCart ? 'showInCart' : '');
+      return itemInCart && product.on_sale ? 'showInCart' : (itemInCart ? 'showInCart' : '');
     }
   }
 
@@ -54,7 +54,7 @@ const Product = (props) => {
           {product.on_sale && (
             <div style={{float: 'left'}}>
               <Badge bg={'danger'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
-                SALE!!!!
+                SALE
               </Badge>
             </div>
           )}
@@ -106,9 +106,9 @@ const Product = (props) => {
             <div style={{float: 'right', fontSize: 35, position: 'relative', right: 10, userSelect: 'none'}}>
               {product.on_sale && !!product.sale_price ? (
                 <>
-                  <s>{`$${product.price}`}</s>
+                  <s style={{color: 'red'}}>{`$${product.price}`}</s>
                   &nbsp;
-                  <i style={{color: 'red'}}>{`$${product.sale_price}`}</i>
+                  {`$${product.sale_price}`}
                 </>
               ) : (
                 `$${product.price}`

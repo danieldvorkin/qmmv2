@@ -38,7 +38,7 @@ root.render(
           <Route path="order/review/:id" element={<OrderReview />} />
           <Route path="my_orders" exact element={<MyOrders/>} />
           <Route path="my_orders/:id" exact element={<MyOrders/>} />
-          <Route path="admin" element={<Admin/>} />
+          <Route path="admin" element={<><AdminOrders /><br/><AdminProducts /></>} />
           <Route path="login" element={<Login />} />
           <Route path="admin/products" exact element={<AdminProducts />} />
           <Route path="admin/products/new" exact element={<NewProduct />} />
