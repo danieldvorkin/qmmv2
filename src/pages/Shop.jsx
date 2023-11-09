@@ -1,14 +1,14 @@
 
-import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Button, Text, Input } from "@chakra-ui/react";
+import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Button, Text, Input, Flex, Box, Card, CardBody, Avatar } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Badge, ButtonGroup, Col, Container, Dropdown, DropdownButton, ProgressBar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Products from "../components/Products";
-import { featuredItems, getCategories, getCategory } from "../utils/util";
+import { featuredItems, getCategories, getCategory, getOrder, getOrders } from "../utils/util";
 import loading from '../loading.svg';
 import CustomSlider from "../components/slider";
-import { ChevronUpIcon } from "@chakra-ui/icons";
+import { ChevronUpIcon, CloseIcon } from "@chakra-ui/icons";
 
 const Shop = (props) => {
   const [queryParams, _] = useSearchParams();
@@ -23,9 +23,47 @@ const Shop = (props) => {
   const [typeFilter, setTypeFilter] = useState('');
   const containerRef = useRef(null);
   const [scrolledTo, setScrolledTo] = useState(false);
-  
+  const [showRecentlyBoughtBadge, setShowRecentlyBoughtBadge] = useState(true);  
+  const [mostRecentOrders, setMostRecentOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [previousQuery, setPreviousQuery] = useState('');
+  const [recentlyBought, setRecentlyBought] = useState({});
+  const [orderCount, setOrderCount] = useState(0);
+
+  const fetchOrders = async () => {
+    try {
+      setShowRecentlyBoughtBadge(false);
+      if(mostRecentOrders.length === 0){
+        const resp = await getOrders(1, 'Order Delivered');
+        if (resp.orders.length > 0) {
+          setMostRecentOrders(resp.orders);
+          setRecentlyBought(resp.orders[orderCount].line_items[0]);
+        }
+      } else {
+        if(!!mostRecentOrders[orderCount]){
+          setRecentlyBought(mostRecentOrders[orderCount].line_items[0]);
+        } else {
+          setOrderCount(0);
+          setRecentlyBought(mostRecentOrders[0].line_items[0]);
+        }
+      }
+
+      setOrderCount((prevOrderCount) => prevOrderCount + 1);
+      setShowRecentlyBoughtBadge(true);
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+  
+  useEffect(() => {
+    const intervalId = setInterval(fetchOrders, 10000);
+  
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [orderCount]);
+  
 
   useEffect(() => {
     let slug = queryParams.get('filter');
@@ -117,7 +155,7 @@ const Shop = (props) => {
       if (element) {
         // Calculate the scroll position based on the element's offset
         const offset = element.offsetTop;
-        containerRef.current.scrollTop = offset - 130;
+        containerRef.current.scrollTop = offset - 80;
         setScrolledTo(true);
       }
     }
@@ -180,9 +218,34 @@ const Shop = (props) => {
 
     setSearchQuery(newSearchQuery);
   }
+
+  const goToProduct = () => {
+    navigate("/products/" + recentlyBought.item?.slug)
+  }
   
   return(
     <div style={{ marginTop: 20 }}>
+      { showRecentlyBoughtBadge && !!recentlyBought.item && (
+        <div className="recentlyBought">
+          <Card>
+            <CardBody>
+              <Flex>
+                <Avatar name={recentlyBought && recentlyBought.item?.name} />
+                <Box ml="3" onClick={() => goToProduct()} style={{cursor: 'pointer'}}>
+                  <Text fontWeight='bold'>
+                    Someone Recently Bought
+                  </Text>
+                  {recentlyBought && (
+                    <Text fontSize='sm'>{recentlyBought?.quantity}g of {recentlyBought.item?.name}</Text>  
+                  )}
+                </Box>
+                <CloseIcon style={{cursor: 'pointer'}} ml="3" onClick={() => setShowRecentlyBoughtBadge(false)}/>
+              </Flex>
+            </CardBody>
+          </Card>
+        </div>
+      )}
+      
       <div className="container">
         <Row>
           <Col lg="12" style={{marginBottom: 20}}>
@@ -214,7 +277,7 @@ const Shop = (props) => {
               key={`dropdown-type`}
               variant="outline-secondary"
               title={"Strain Types"}
-              style={{marginRight: 5, border: 'none !important', marginTop: 4 }}
+              style={{marginRight: 5, border: 'none !important' }}
               >
                 {["Indica", "Indica Hybrid", "Hybrid", "Sativa Hybrid", "Sativa"].map((option) => {
                   return (

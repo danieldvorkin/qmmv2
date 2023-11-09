@@ -460,14 +460,28 @@ img {
   right: 35px;
 }
 
+.recentlyBought {
+  position: fixed;
+  bottom: 85px;
+  left: 25px;
+  z-index: 999;
+  min-width: 330px;
+  max-width: 350px;
+}
+
 #shopSearchInput {
   position: relative;
-  top: 4px;
+  top: 3px;
   width: 45%;
-  max-height: 32px;
+  max-height: 31px;
 }
 
 @media only screen and (max-width: 600px) {
+  .recentlyBought {
+    min-width: 332px;
+    max-width: 332px;
+  }
+
   #shopSearchInput {
     width: 55%;
   }
