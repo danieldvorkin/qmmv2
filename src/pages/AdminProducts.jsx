@@ -103,6 +103,9 @@ const AdminProducts = (props) => {
               }} />
             </div>
           </ButtonGroup>
+          <ButtonGroup style={{float: 'right'}}>
+            <Button color="green" onClick={() => navigate("/admin/products/new")}>Add New Product</Button>
+          </ButtonGroup>
         </CardHeader>
         <CardBody>
           <DataTable
