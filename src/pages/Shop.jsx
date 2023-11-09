@@ -5,7 +5,7 @@ import { Badge, ButtonGroup, Col, Container, Dropdown, DropdownButton, ProgressB
 import { connect } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Products from "../components/Products";
-import { featuredItems, getCategories, getCategory, getOrder, getOrders } from "../utils/util";
+import { featuredItems, getCategories, getCategory, getItem, getOrder, getOrders } from "../utils/util";
 import loading from '../loading.svg';
 import CustomSlider from "../components/slider";
 import { ChevronUpIcon, CloseIcon } from "@chakra-ui/icons";
@@ -63,6 +63,16 @@ const Shop = (props) => {
       clearInterval(intervalId);
     };
   }, [orderCount]);
+
+  useEffect(() => {
+    if(!!recentlyBought.item){
+      getItem(recentlyBought.item.slug).then((resp) => {
+        if(!!resp.id){
+          setRecentlyBought({ ...recentlyBought, item: resp });
+        }
+      })
+    }
+  }, [orderCount])
   
 
   useEffect(() => {
@@ -230,7 +240,7 @@ const Shop = (props) => {
           <Card>
             <CardBody>
               <Flex>
-                <Avatar name={recentlyBought && recentlyBought.item?.name} />
+                <Avatar name={recentlyBought && recentlyBought.item?.name} src={recentlyBought.item?.cover_photo}/>
                 <Box ml="3" onClick={() => goToProduct()} style={{cursor: 'pointer'}}>
                   <Text fontWeight='bold'>
                     Someone Recently Bought
