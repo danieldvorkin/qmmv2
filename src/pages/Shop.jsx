@@ -23,7 +23,8 @@ const Shop = (props) => {
   const [typeFilter, setTypeFilter] = useState('');
   const containerRef = useRef(null);
   const [scrolledTo, setScrolledTo] = useState(false);
-  const [showRecentlyBoughtBadge, setShowRecentlyBoughtBadge] = useState(true);  
+  const [showRecentlyBoughtBadge, setShowRecentlyBoughtBadge] = useState(true);
+  const [stopShowingRecentlyBought, setStopShowingRecentlyBought] = useState(false);
   const [mostRecentOrders, setMostRecentOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [previousQuery, setPreviousQuery] = useState('');
@@ -31,38 +32,46 @@ const Shop = (props) => {
   const [orderCount, setOrderCount] = useState(0);
 
   const fetchOrders = async () => {
-    try {
-      setShowRecentlyBoughtBadge(false);
-      if(mostRecentOrders.length === 0){
-        const resp = await getOrders(1, 'Order Delivered');
-        if (resp.orders.length > 0) {
-          setMostRecentOrders(resp.orders);
-          setRecentlyBought(resp.orders[orderCount].line_items[0]);
-        }
-      } else {
-        if(!!mostRecentOrders[orderCount]){
-          setRecentlyBought(mostRecentOrders[orderCount].line_items[0]);
+    if(!stopShowingRecentlyBought){
+      try {
+        setShowRecentlyBoughtBadge(false);
+        if(mostRecentOrders.length === 0){
+          const resp = await getOrders(1, 'Order Delivered');
+          if (resp.orders.length > 0) {
+            setMostRecentOrders(resp.orders);
+            setRecentlyBought(resp.orders[orderCount].line_items[0]);
+          }
         } else {
-          setOrderCount(0);
-          setRecentlyBought(mostRecentOrders[0].line_items[0]);
+          if(!!mostRecentOrders[orderCount]){
+            setRecentlyBought(mostRecentOrders[orderCount].line_items[0]);
+          } else {
+            setOrderCount(0);
+            setRecentlyBought(mostRecentOrders[0].line_items[0]);
+          }
         }
+  
+        setOrderCount((prevOrderCount) => prevOrderCount + 1);
+        setShowRecentlyBoughtBadge(true);
+      } catch (error) {
+        console.log("Error: ", error);
       }
-
-      setOrderCount((prevOrderCount) => prevOrderCount + 1);
-      setShowRecentlyBoughtBadge(true);
-    } catch (error) {
-      console.log("Error: ", error);
     }
   };
   
   useEffect(() => {
-    const intervalId = setInterval(fetchOrders, 10000);
+    const intervalId = setInterval(fetchOrders, 30000);
   
     // Clean up the interval when the component unmounts
     return () => {
       clearInterval(intervalId);
     };
   }, [orderCount]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      fetchOrders();
+    }, 5000)
+  }, []);
 
   useEffect(() => {
     if(!!recentlyBought.item){
@@ -73,7 +82,6 @@ const Shop = (props) => {
       })
     }
   }, [orderCount])
-  
 
   useEffect(() => {
     let slug = queryParams.get('filter');
@@ -235,13 +243,13 @@ const Shop = (props) => {
   
   return(
     <div style={{ marginTop: 20 }}>
-      { showRecentlyBoughtBadge && !!recentlyBought.item && (
+      {!stopShowingRecentlyBought && showRecentlyBoughtBadge && !!recentlyBought.item && (
         <div className="recentlyBought">
           <Card>
             <CardBody>
               <Flex>
                 <Avatar name={recentlyBought && recentlyBought.item?.name} src={recentlyBought.item?.cover_photo}/>
-                <Box ml="3" onClick={() => goToProduct()} style={{cursor: 'pointer'}}>
+                <Box ml="3" onClick={() => goToProduct()} style={{cursor: 'pointer', width: '100%'}}>
                   <Text fontWeight='bold'>
                     Someone Recently Bought
                   </Text>
@@ -249,7 +257,7 @@ const Shop = (props) => {
                     <Text fontSize='sm'>{recentlyBought?.quantity}g of {recentlyBought.item?.name}</Text>  
                   )}
                 </Box>
-                <CloseIcon style={{cursor: 'pointer'}} ml="3" onClick={() => setShowRecentlyBoughtBadge(false)}/>
+                <CloseIcon style={{cursor: 'pointer', right: 0, position: 'relative' }} ml="3" onClick={() => setStopShowingRecentlyBought(true)}/>
               </Flex>
             </CardBody>
           </Card>

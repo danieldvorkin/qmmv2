@@ -131,6 +131,9 @@ const AdminProduct = (props) => {
                       <Form.Group className="mb-3" controlId="on_sale">
                         <Form.Check type="checkbox" label={"Sale"} placeholder="Enter " onChange={(e) => setProduct({...product, 'on_sale': e.target.checked })} value={product?.on_sale} />
                       </Form.Group>
+                      <Form.Group className="mb-3" controlId="featured_item">
+                        <Form.Check type="checkbox" label={"New"} placeholder="Enter " onChange={(e) => setProduct({...product, 'featured_item': e.target.checked })} value={product?.featured_item} />
+                      </Form.Group>
 
                       {!!product?.on_sale && (
                         <Form.Group className="mb-3" controlId="sale_price">

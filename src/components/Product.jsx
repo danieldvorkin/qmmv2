@@ -35,6 +35,10 @@ const Product = (props) => {
     }
   }
 
+  const showNewProductBorder = () => {
+    return !!product?.featured_item ? 'newProduct' : '';
+  }
+
   const getCartQty = () => {
     if(cart && product){
       let item = cart.filter((i) => i.product.id === product.id)[0];
@@ -48,13 +52,20 @@ const Product = (props) => {
   const [showMore, setShowMore] = useState(false);
   
   return (
-    <Card maxW='sm' className={`productCard ${showInCartBorder()}`} id={`${product.slug}`}>
+    <Card maxW='sm' className={`productCard ${showInCartBorder()} ${showNewProductBorder()}`} id={`${product.slug}`}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
           {product.on_sale && (
             <div style={{float: 'left'}}>
               <Badge bg={'danger'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
                 SALE
+              </Badge>
+            </div>
+          )}
+          {product?.featured_item && (
+            <div style={{float: 'left', marginLeft: 5}}>
+              <Badge bg={'primary'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
+                NEW
               </Badge>
             </div>
           )}
