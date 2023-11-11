@@ -6,7 +6,7 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { BiCheckCircle, BiTrash } from "react-icons/bi";
-import { getItem, updateProduct, uploadItemCoverPhoto } from "../utils/util";
+import { getCategories, getItem, updateProduct, uploadItemCoverPhoto } from "../utils/util";
 import Product from "../components/Product";
 import { AppToaster } from "../toast";
 
@@ -17,6 +17,7 @@ const AdminProduct = (props) => {
   const [product, setProduct] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   const handleFileChange = (e) => {
     // When a file is selected, store it in the state
@@ -36,6 +37,8 @@ const AdminProduct = (props) => {
   }
   
   useEffect(() => {
+    getCategories().then((resp) => setCategories(resp));
+    
     if(slug){
       getItem(slug).then((resp) => setProduct(resp));
     }
@@ -56,7 +59,7 @@ const AdminProduct = (props) => {
       uploadItemCoverPhoto(slug, formData).then((resp) => {
         if(!!resp?.id){
           setSelectedFile(null);
-          AppToaster.show({ message: 'Covr photo updated successfully' })
+          AppToaster.show({ message: 'Cover photo updated successfully' })
         }
       })
     }
@@ -134,7 +137,18 @@ const AdminProduct = (props) => {
                       <Form.Group className="mb-3" controlId="featured_item">
                         <Form.Check type="checkbox" label={"New"} placeholder="Enter " onChange={(e) => setProduct({...product, 'featured_item': e.target.checked })} value={product?.featured_item} />
                       </Form.Group>
-
+                      <Form.Group className="mb-3" controlId="productCategory">
+                        <Form.Label>Category</Form.Label>
+                        <Form.Select aria-label="Default select example" onChange={(e) => setProduct({...product, 'category_id': e.target.value })} value={product?.category_id}>
+                          {!!Object.keys(categories) && Object.keys(categories).map((cat) => {
+                            return (
+                              categories[cat].map((l) => {
+                                return <option value={l.id}>{cat} - {l.name}</option>
+                              })
+                            )
+                          })}
+                        </Form.Select>
+                      </Form.Group>
                       {!!product?.on_sale && (
                         <Form.Group className="mb-3" controlId="sale_price">
                           <Form.Label>Sale Price</Form.Label>

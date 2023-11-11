@@ -73,6 +73,10 @@ export const updateProduct = async (slug, params) => {
   return await axios.put(URL + "/items/" + slug, params).then((resp) => resp.data);
 }
 
+export const createProduct = async (params) => {
+  return await axios.post(URL + "/items/new", params).then((resp) => resp.data);
+}
+
 export const removeLineItem = async (order, params) => {
   return await axios.post(URL + "/orders/" + order.id + "/remove_item", params).then((resp) => resp.data);
 }

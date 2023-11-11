@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { LinkContainer } from "react-router-bootstrap";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { BiCheckCircle, BiTrash } from "react-icons/bi";
-import { getItem, updateProduct, uploadItemCoverPhoto } from "../utils/util";
+import { createProduct, getCategories, getItem, updateProduct, uploadItemCoverPhoto } from "../utils/util";
 import Product from "../components/Product";
 import { AppToaster } from "../toast";
 
@@ -15,51 +15,19 @@ const AdminProduct = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const orderId = searchParams.get('order');
   const [product, setProduct] = useState({});
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
-  const handleFileChange = (e) => {
-    // When a file is selected, store it in the state
-    const file = e.target.files[0];
-    setSelectedFile(file);
-
-    // Display a preview of the selected image
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImagePreview(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const removeSelectedFile = () => {
-    setSelectedFile(null);
-  }
-  
   useEffect(() => {
-    if(slug){
-      getItem(slug).then((resp) => setProduct(resp));
-    }
+    getCategories().then((resp) => setCategories(resp));
   }, []);
 
-  const update = () => {
-    updateProduct(slug, product).then((resp) => {
-      setProduct(resp);
-    })
-  }
-
-  const handleUpload = () => {
-    if (selectedFile) {
-      // You can use the FormData API to send the selected file to your server
-      const formData = new FormData();
-      formData.append('cover_photo', selectedFile);
-
-      uploadItemCoverPhoto(slug, formData).then((resp) => {
-        if(!!resp?.id){
-          setSelectedFile(null);
-          AppToaster.show({ message: 'Covr photo updated successfully' })
-        }
-      })
-    }
+  const save = () => {
+    createProduct(product).then((resp) => {
+      if(!!resp?.id){
+        navigate("/admin/products/" + resp.slug);
+      }
+    });
   }
 
   return (
@@ -71,15 +39,6 @@ const AdminProduct = (props) => {
               <Link to={`/admin/${orderId ? 'orders' : 'products'}` + (orderId ? "/" + orderId : '')}><ChevronLeftIcon/>Back to {orderId ? 'Order' : 'Products'}</Link>
             </Navbar.Text>
           </Navbar.Collapse>
-
-          {/* <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              <ButtonGroup>
-                <Link style={{margin: '0px 5px'}}><BiTrash className="onIconHoverDanger" size="25" /></Link>
-                <Link style={{margin: '0px 5px'}}><BiCheckCircle className="onIconHoverSuccess" size="25" /></Link>
-              </ButtonGroup>
-            </Navbar.Text>
-          </Navbar.Collapse> */}
         </Container>
       </Navbar>
 
@@ -90,25 +49,17 @@ const AdminProduct = (props) => {
               <CardBody>
                 <Row>
                   <Col lg={4}>
-                    <Text as="b">Product Card Preview</Text>
-                    <br/>
-                    <Product product={product} />
-                    <div style={{width: '98%'}}>
-                      <Form.Group controlId="formFile" className="mb-3">
-                        {selectedFile && (
-                          <div style={{width: '100%'}}>
-                            <img src={imagePreview} alt="Selected" style={{ maxWidth: '100px', margin: '10px auto' }} />
-                          </div>
-                        )}
-                        <Form.Control type="file" name="cover_photo" onChange={handleFileChange} style={{marginBottom: 10}} selectedFile={selectedFile?.name} />
-                        {selectedFile && (
-                          <>
-                            <Button colorScheme={"teal"} width={"48%"} onClick={handleUpload} style={{margin: '0 2px'}}>Upload</Button>
-                            <Button colorScheme={"red"} width={"48%"} onClick={removeSelectedFile} style={{margin: '0 2px'}}>Cancel</Button>
-                          </>
-                        )}
-                      </Form.Group>
-                    </div>
+                    {product.name && product.price ? (
+                      <>
+                        <Text as="b">Product Card Preview</Text>
+                        <br/>
+                        <Product product={product} />
+                      </>
+                    ) : (
+                      <Text>No Preview Available - Enter a name and price</Text>
+                    )}
+                    <hr style={{margin: '10px auto'}} />
+                    <Text>Image can only be set once product is created</Text>
                   </Col>
                   <Col lg={8}>
                     <Form>
@@ -131,6 +82,9 @@ const AdminProduct = (props) => {
                       <Form.Group className="mb-3" controlId="on_sale">
                         <Form.Check type="checkbox" label={"Sale"} placeholder="Enter " onChange={(e) => setProduct({...product, 'on_sale': e.target.checked })} value={product?.on_sale} />
                       </Form.Group>
+                      <Form.Group className="mb-3" controlId="featured_item">
+                        <Form.Check type="checkbox" label={"New"} placeholder="Enter " onChange={(e) => setProduct({...product, 'featured_item': e.target.checked })} value={product?.featured_item} />
+                      </Form.Group>
 
                       {!!product?.on_sale && (
                         <Form.Group className="mb-3" controlId="sale_price">
@@ -138,6 +92,18 @@ const AdminProduct = (props) => {
                           <Form.Control type="text" placeholder="Enter sale price" onChange={(e) => setProduct({...product, 'sale_price': e.target.value })} value={product?.sale_price} />
                         </Form.Group>
                       )}
+                      <Form.Group className="mb-3" controlId="productCategory">
+                        <Form.Label>Category</Form.Label>
+                        <Form.Select aria-label="Default select example" onChange={(e) => setProduct({...product, 'category_id': e.target.value })} value={product?.category_id}>
+                          {!!Object.keys(categories) && Object.keys(categories).map((cat) => {
+                            return (
+                              categories[cat].map((l) => {
+                                return <option value={l.id}>{cat} - {l.name}</option>
+                              })
+                            )
+                          })}
+                        </Form.Select>
+                      </Form.Group>
                       <Form.Group className="mb-3" controlId="productStrainType">
                         <Form.Label>Strain Type</Form.Label>
                         <Form.Select aria-label="Default select example" onChange={(e) => setProduct({...product, 'strain_type': e.target.value })} value={product?.strain_type}>
@@ -168,7 +134,7 @@ const AdminProduct = (props) => {
                 </Row>
                 
                 <div style={{float: 'right'}}>
-                  <Button onClick={update}>Update</Button>
+                  <Button onClick={save}>Save</Button>
                 </div>
                 
               </CardBody>
