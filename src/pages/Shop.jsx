@@ -240,6 +240,13 @@ const Shop = (props) => {
   const goToProduct = () => {
     navigate("/products/" + recentlyBought.item?.slug)
   }
+
+  const determineScale = () => {
+    if(!!recentlyBought && !!recentlyBought.item){
+      if(recentlyBought.item?.category?.type_of === "Strains")
+        return "g";
+    }
+  }
   
   return(
     <div style={{ marginTop: 20 }}>
@@ -254,7 +261,7 @@ const Shop = (props) => {
                     Someone Recently Bought
                   </Text>
                   {recentlyBought && (
-                    <Text fontSize='sm'>{recentlyBought?.quantity}g of {recentlyBought.item?.name}</Text>  
+                    <Text fontSize='sm'>{recentlyBought?.quantity}{determineScale()} of {recentlyBought.item?.name}</Text>  
                   )}
                 </Box>
                 <CloseIcon style={{cursor: 'pointer', right: 0, position: 'relative' }} ml="3" onClick={() => setStopShowingRecentlyBought(true)}/>

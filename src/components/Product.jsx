@@ -96,6 +96,7 @@ const Product = (props) => {
                 {/* <LinkContainer to={"/products/" + product.slug}> */}
                   <Image
                     src={img}
+                    loading={"eager"}
                     borderRadius='lg'
                     onClick={() => setShowMore(!showMore)} 
                   />
