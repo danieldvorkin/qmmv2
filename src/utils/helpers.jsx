@@ -145,3 +145,53 @@ export const getItemDiscount = (item, items) => {
 export const getGrandTotal = (items) => {
   return getCartTotal(items) - getDiscountTotal(items) + (getCartTotal(items) < 100 ? 10 : 0);
 }
+
+// Orders Table helpers
+export const getTableGrandTotal = (items) => {
+  return getTableTotal(items) - getTableDiscountTotal(items) + (getTableTotal(items) < 100 ? 10 : 0);
+}
+
+export const getTableTotal = (items) => {
+  let subtotal = 0;
+  
+  if(items?.length > 0){
+    subtotal = items.map((curr) => getTableItemSubtotal(curr));
+    return subtotal.reduce((total, current) => total = total + current) ;
+  } else {
+    return 0;
+  }
+}
+
+export const getTableItemSubtotal = (item) => {
+  if(item.item.price){
+    if(item.item?.on_sale){
+      return item.item.sale_price * item.quantity;
+    } else {
+      return item.item.price * item.quantity;
+    }
+  } else {
+    return 0;
+  }
+}
+
+export const getTableDiscountTotal = (items) => {
+  let cartTotal = getTableTotal(items);
+  
+  if(cartTotal >= 100 && cartTotal < 150){
+    return DISCOUNT_SETTINGS['150'];
+  } else if(cartTotal >= 150 && cartTotal < 200){
+    return cartTotal * DISCOUNT_SETTINGS['200'];
+  } else if(cartTotal >= 200 && cartTotal < 300){
+    return cartTotal * DISCOUNT_SETTINGS['300'];
+  } else if(cartTotal >= 300 && cartTotal < 400){
+    return cartTotal * DISCOUNT_SETTINGS['400'];
+  } else if(cartTotal >= 400 && cartTotal < 600){
+    return cartTotal * DISCOUNT_SETTINGS['600'];
+  } else if(cartTotal >= 600 && cartTotal < 800){
+    return cartTotal * DISCOUNT_SETTINGS['800'];
+  } else if(cartTotal > 799){
+    return cartTotal * DISCOUNT_SETTINGS['1000'];
+  }
+
+  return 0;
+}

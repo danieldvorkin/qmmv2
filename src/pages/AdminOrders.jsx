@@ -7,6 +7,7 @@ import DataTable from 'react-data-table-component';
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { getTableGrandTotal } from "../utils/helpers";
 import { getOrders, searchOrders } from "../utils/util";
 
 const AdminOrders = (props) => {
@@ -55,7 +56,7 @@ const AdminOrders = (props) => {
     { name: 'Phone #', sortable: false, selector: row => row.contact_phone },
     { name: 'Status', sortable: true, selector: row => <Badge colorScheme={STATUSES[row.status]}>{row.status === 'pending' ? 'ORDER PENDING' : row.status}</Badge> },
     { name: 'Total $', sortable: false, selector: row => { 
-      return <CurrencyFormat value={row.total} displayType={'text'} decimalScale={2} fixedDecimalScale={true} thousandSeparator={true} prefix={'$'} />
+      return <CurrencyFormat value={row.total || getTableGrandTotal(row.line_items)} displayType={'text'} decimalScale={2} fixedDecimalScale={true} thousandSeparator={true} prefix={'$'} />
     }, value: row => row.total }
   ]
 
