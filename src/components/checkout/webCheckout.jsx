@@ -95,7 +95,7 @@ const WebCheckout = (props) => {
                   <Col sm={12}>
                     <FormControl>
                       <FormLabel>Your Phone Number *</FormLabel>
-                      <PatternFormat className="chakra-input-custom" displayType="input" isRequired={true} format="+1 (###) ### ####" name="phone" allowEmptyFormatting mask="_" value={initialOrder?.phone} onInput={(e) => setInitialOrderDetails(e)} />
+                      <Input type="text" className="chakra-input-custom" isRequired={true} name="phone"  value={initialOrder?.phone} onInput={(e) => setInitialOrderDetails(e)} />
                     </FormControl>
                   </Col>
                 </Row>
@@ -123,7 +123,7 @@ const WebCheckout = (props) => {
                     <Col sm={6}>
                       <FormControl>
                         <FormLabel>Referred by Phone Number *</FormLabel>
-                        <PatternFormat className="chakra-input-custom" displayType="input" format="+1 (###) ### ####" name="referred_by_phone" allowEmptyFormatting mask="_" value={initialOrder?.referred_by_phone} onInput={(e) => setInitialOrderDetails(e)} />
+                        <Input type="text" className="chakra-input-custom" name="referred_by_phone"  value={initialOrder?.referred_by_phone} onInput={(e) => setInitialOrderDetails(e)} />
                       </FormControl>
                     </Col>
                   </Row>
