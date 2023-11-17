@@ -35,23 +35,33 @@ const Shop = (props) => {
     if(!stopShowingRecentlyBought){
       try {
         setShowRecentlyBoughtBadge(false);
+        let recentlyBoughtItem = null;
+
         if(mostRecentOrders.length === 0){
           const resp = await getOrders(1, 'Order Delivered');
+      
           if (resp.orders.length > 0) {
             setMostRecentOrders(resp.orders);
-            setRecentlyBought(resp.orders[orderCount].line_items[0]);
+            recentlyBoughtItem = resp.orders[orderCount].line_items[0]
+            // setRecentlyBought(resp.orders[orderCount].line_items[0]);
           }
         } else {
           if(!!mostRecentOrders[orderCount]){
-            setRecentlyBought(mostRecentOrders[orderCount].line_items[0]);
+            // setRecentlyBought(mostRecentOrders[orderCount].line_items[0]);
+            recentlyBoughtItem = mostRecentOrders[orderCount].line_items[0]
           } else {
             setOrderCount(0);
-            setRecentlyBought(mostRecentOrders[0].line_items[0]);
+            // setRecentlyBought(mostRecentOrders[0].line_items[0]);
+            recentlyBoughtItem = mostRecentOrders[orderCount].line_items[0]
           }
         }
-  
-        setOrderCount((prevOrderCount) => prevOrderCount + 1);
-        setShowRecentlyBoughtBadge(true);
+
+        if(recentlyBoughtItem?.item?.inventory > 0){
+          setRecentlyBought(recentlyBoughtItem);
+        } else {
+          setOrderCount((prevOrderCount) => prevOrderCount + 1);
+          setShowRecentlyBoughtBadge(true);
+        }
       } catch (error) {
         console.log("Error: ", error);
       }
