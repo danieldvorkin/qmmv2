@@ -55,13 +55,13 @@ const Shop = (props) => {
             recentlyBoughtItem = mostRecentOrders[orderCount].line_items[0]
           }
         }
-
+        
         if(recentlyBoughtItem?.item?.inventory > 0){
           setRecentlyBought(recentlyBoughtItem);
-        } else {
           setOrderCount((prevOrderCount) => prevOrderCount + 1);
-          setShowRecentlyBoughtBadge(true);
         }
+
+        setShowRecentlyBoughtBadge(true);
       } catch (error) {
         console.log("Error: ", error);
       }
