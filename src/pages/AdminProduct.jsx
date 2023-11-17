@@ -46,6 +46,7 @@ const AdminProduct = (props) => {
 
   const update = () => {
     updateProduct(slug, product).then((resp) => {
+      AppToaster.show({ message: 'Product details updated successfully' })
       setProduct(resp);
     })
   }
