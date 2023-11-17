@@ -52,7 +52,7 @@ const Product = (props) => {
   const [showMore, setShowMore] = useState(false);
   
   return (
-    <Card maxW='sm' className={`productCard ${showInCartBorder()} ${showNewProductBorder()}`} id={`${product.slug}`}>
+    <Card maxW='sm' className={`productCard ${showInCartBorder()}`} id={`${product.slug}`}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
           {product.on_sale && (
