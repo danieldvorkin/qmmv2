@@ -96,4 +96,6 @@ export const searchForUser = async (email) => {
 export const uploadItemCoverPhoto = async(slug, params) => {
   return await axios.post(URL + "/items/upload_cover_photo/" + slug, params).then((resp) => resp.data);
 }
-
+export const adminOrders = async(date) => {
+  return await axios.get(URL + "/orders/orders_by_date?date=" + date).then((resp) => resp.data);
+}

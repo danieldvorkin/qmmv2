@@ -18,8 +18,6 @@ const Panel = (props) => {
         <Text fontSize='3xl' as='b'>{headerText}</Text>
         <br/>
         {children}
-        <hr style={{ marginBottom: 10, marginTop: 10 }} />
-        <Text as="b" fontSize="lg" className="view-report">View Report{' '}<BsArrowRight /></Text>
       </CardBody>
     </Card>
   )
