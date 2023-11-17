@@ -38,6 +38,7 @@ const ProductShow = (props) => {
   const [loader, setLoader] = useState(true);
   const [selectedQty, setSelectedQty] = useState(1);
   const { cart } = props; 
+  const [showEditBtn, setShowEditBtn] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -52,7 +53,17 @@ const ProductShow = (props) => {
       
     }
     fetchData();
+
+    if(props.isLoggedIn && props.user?.admin){
+      setShowEditBtn(true);
+    }
   }, [slug]);
+
+  useEffect(() => {
+    if(!props.isLoggedIn){
+      setShowEditBtn(false);
+    }
+  }, [props])
 
   const showInCartBorder = () => {
     if(cart && product){
@@ -121,13 +132,15 @@ const ProductShow = (props) => {
                   <Col>
                     <Text className="title" style={{marginBottom: 2, width: '90%'}}>
                       {product.name}
-                      {showInCartBorder() === 'showInCart' && (
-                        <Badge bg={'success'} style={{ marginBottom: 5, fontSize: 15, float: 'right' }}>
-                          In Cart
-                        </Badge>
-                      )}
                     </Text>
                     <Text className="header" style={{marginBottom: 10}}>{product.category?.name}</Text>
+                  </Col>
+                  <Col lg={2}>
+                    {showEditBtn && (
+                      <Link to={`/admin/products/${product.slug}`} style={{float: 'right'}}>
+                        <Button style={{marginTop: 10}}>Edit Product</Button>
+                      </Link>
+                    )}
                   </Col>
                 </Row>
                 <Row>
@@ -248,7 +261,9 @@ const ProductShow = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    cart: state.cart
+    cart: state.cart,
+    isLoggedIn: state.isLoggedIn,
+    user: state.user
   }
 }
 
