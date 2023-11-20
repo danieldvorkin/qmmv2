@@ -138,6 +138,9 @@ const AdminProduct = (props) => {
                       <Form.Group className="mb-3" controlId="featured_item">
                         <Form.Check type="checkbox" label={"New"} placeholder="Enter " onChange={(e) => setProduct({...product, 'featured_item': e.target.checked })} value={product?.featured_item} />
                       </Form.Group>
+                      <Form.Group className="mb-3" controlId="recommended">
+                        <Form.Check type="checkbox" label={"Recommended"} placeholder="Enter " onChange={(e) => setProduct({...product, 'recommended': e.target.checked })} value={product?.recommended} />
+                      </Form.Group>
                       <Form.Group className="mb-3" controlId="productCategory">
                         <Form.Label>Category</Form.Label>
                         <Form.Select aria-label="Default select example" onChange={(e) => setProduct({...product, 'category_id': e.target.value })} value={product?.category_id}>

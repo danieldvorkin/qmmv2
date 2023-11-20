@@ -13,6 +13,12 @@ import "slick-carousel/slick/slick.css"
 import Footer from "./components/Footer";
 import "slick-carousel/slick/slick-theme.css";
 import AdminNavbar from './components/AdminNavbar';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: 'https://queenmarymedical.herokuapp.com/graphql',
+  cache: new InMemoryCache(),
+});
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,36 +44,38 @@ function App() {
   }
 
   return (
-    <ChakraProvider>
-      <Provider store={store}>
-        <PersistGate loading={loader()} persistor={persistor}>
-          {location.pathname.includes("admin") || location.pathname.includes("login") ? (
-            <>
-              <AdminNavbar />
-              <div className={adminNavbarWidth()}>
-                <Outlet />
-              </div>
-            </>
-          ) : (
-            <>
-              <div>
-                <MainNavbar cartClick={onOpen} />
-                {onLandingPage() ? (
-                  <>
-                    <Outlet/>
-                  </>
-                ) : (
-                  <div style={{ minHeight: 700 }}>
-                    <Outlet />
-                  </div>
-                )}
-              </div>
-              <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-            </>
-          )}
-        </PersistGate>
-      </Provider> 
-    </ChakraProvider>
+    <ApolloProvider client={client}>
+      <ChakraProvider>
+        <Provider store={store}>
+          <PersistGate loading={loader()} persistor={persistor}>
+            {location.pathname.includes("admin") || location.pathname.includes("login") ? (
+              <>
+                <AdminNavbar />
+                <div className={adminNavbarWidth()}>
+                  <Outlet />
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <MainNavbar cartClick={onOpen} />
+                  {onLandingPage() ? (
+                    <>
+                      <Outlet/>
+                    </>
+                  ) : (
+                    <div style={{ minHeight: 700 }}>
+                      <Outlet />
+                    </div>
+                  )}
+                </div>
+                <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+              </>
+            )}
+          </PersistGate>
+        </Provider> 
+      </ChakraProvider>
+    </ApolloProvider>
   );
 }
 export default App;

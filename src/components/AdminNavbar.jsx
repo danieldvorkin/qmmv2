@@ -40,6 +40,9 @@ const AdminNavbar = (props) => {
               <Link className="nav-link" to="/admin/orders">
                 Orders
               </Link>
+              <Link className="nav-link" to="/admin/coupons">
+                Coupons
+              </Link>
             </>
           ) : (
             <Link className="nav-link" to="/login">
