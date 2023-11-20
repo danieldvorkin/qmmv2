@@ -268,6 +268,18 @@ img {
   border-radius: 25px;
 }
 
+ 
+#coupon-checkbox input {
+  width: 25px;
+  height: 25px; 
+}
+
+#coupon-checkbox label {
+  margin-left: 8px;
+  margin-top: 4px;
+  font-size: 14px;
+}
+
 /* Portrait */
 @media only screen 
   and (min-device-width: 768px) 

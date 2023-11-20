@@ -48,6 +48,7 @@ root.render(
           <Route path="admin/orders/:id" exact element={<AdminOrder />} />
           <Route path="admin/products/:slug" exact element={<AdminProduct />} />
           <Route path="admin/coupons" exact element={<Coupons />} />
+          <Route path="admin/coupons/:id" exact element={<CouponForm />} />
           <Route path="admin/coupons/new" exact element={<CouponForm />} />
         </Route>
       </Routes>
