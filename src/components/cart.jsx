@@ -74,7 +74,7 @@ const Cart = (props) => {
                 <CurrencyFormat value={getDiscountTotal(props.cart, props.activeCoupon).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
               </Col>
             </Row>
-            {!!props.activeCoupon && (
+            {props.activeCoupon?.code?.length > 0 && (
             <Row>
               <Col>
                 {`${props.activeCoupon?.code} - ${!props.activeCoupon?.percentage ? '$' : ''}${props.activeCoupon?.amount}${props.activeCoupon?.percentage ? '%' : ' Off'}`}
