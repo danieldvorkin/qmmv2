@@ -97,8 +97,8 @@ const MainNavbar = (props) => {
             <div style={{display: 'block', float: 'right'}}>
               <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
                 <Badge colorScheme="red"><p style={{textDecoration: getDiscountTotal(props.cart) > 0 ? 'line-through' : ''}}>${getCartTotal(props.cart).toFixed(2)}</p></Badge>
-                {getDiscountTotal(props.cart) > 0 && (
-                  <Badge colorScheme="green">${getGrandTotal(props.cart).toFixed(2)}</Badge>
+                {getDiscountTotal(props.cart, props.activeCoupon) > 0 && (
+                  <Badge colorScheme="green">${getGrandTotal(props.cart, props.activeCoupon).toFixed(2)}</Badge>
                 )}
               </Button>
             </div>
@@ -146,8 +146,8 @@ const MainNavbar = (props) => {
           <>
             <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
               <Badge colorScheme="red"><p style={{textDecoration: getDiscountTotal(props.cart) > 0 ? 'line-through' : ''}}>${getCartTotal(props.cart).toFixed(2)}</p></Badge>
-              {getDiscountTotal(props.cart) > 0 && (
-                <Badge colorScheme="green">${getGrandTotal(props.cart).toFixed(2)}</Badge>
+              {getDiscountTotal(props.cart, props.activeCoupon) > 0 && (
+                <Badge colorScheme="green">${getGrandTotal(props.cart, props.activeCoupon).toFixed(2)}</Badge>
               )}
               
             </Button>
@@ -190,7 +190,8 @@ const mapStateToProps = (state) => {
     cart: state.cart,
     isLoggedIn: state.isLoggedIn,
     user: state.user,
-    token: state.token
+    token: state.token,
+    activeCoupon: state.activeCoupon
   }
 }
 

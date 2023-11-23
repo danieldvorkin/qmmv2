@@ -6,7 +6,7 @@ import CurrencyFormat from "react-currency-format";
 import { BiTrash } from "react-icons/bi";
 
 const WebOrderItems = (props) => {
-  const { onOpen, editmode, setEditmode, order, setOrder, saveStatusChange, orderItems, handleQtyChange, handlePriceChange, removeItem } = props;
+  const { onOpen, editmode, setEditmode, order, setOrder, saveStatusChange, orderItems, handleQtyChange, handlePriceChange, removeItem, coupon } = props;
   
   return(
     <Card>
@@ -41,9 +41,15 @@ const WebOrderItems = (props) => {
               <br/>
               Order SubTotal: {getOrderTotal(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
               <br/>
-              Discount: {getOrderDiscount(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+              {coupon?.code?.length > 0 && (
+                <>
+                  Coupon: {coupon?.code}
+                  <br/>
+                </>
+              )}
+              Discount: {getOrderDiscount(order.items, coupon).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
               <br/>
-              Grand Total: {(getOrderTotal(order.items) - getOrderDiscount(order.items)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+              Grand Total: {(getOrderTotal(order.items, coupon) - getOrderDiscount(order.items, coupon)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
             </TableCaption>
             <Thead>
               <Tr>

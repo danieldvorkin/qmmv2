@@ -59,7 +59,7 @@ const Checkout = (props) => {
   const submitOrder = (newOrder) => {
     setProcessing(true);
     
-    dispatch(submitNewOrder(Object.assign({}, newOrder, order))).then((resp) => {
+    dispatch(submitNewOrder(Object.assign({}, newOrder, order), props.activeCoupon)).then((resp) => {
       setOrderComplete(true);
 
       if(!!resp.order?.id){
@@ -78,12 +78,6 @@ const Checkout = (props) => {
 
   return (
     <Container>
-      {getDiscountTotal() > 0 && !orderComplete && (
-        <Alert status='info'>
-          <AlertIcon />
-          <Text fontSize='lg'>This order qualifies for a discount</Text>
-        </Alert>
-      )}
       {orderComplete && (
         <Alert status='success'>
           <AlertIcon />
@@ -96,6 +90,7 @@ const Checkout = (props) => {
           <Row style={{marginTop: 10}}>
             <WebCheckout 
               cart={props.cart} 
+              activeCoupon={props.activeCoupon}
               removeItem={removeItem} 
               qtyChange={qtyChange} 
               getCartTotal={getCartTotal} 
@@ -138,7 +133,8 @@ const Checkout = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    cart: state.cart
+    cart: state.cart,
+    activeCoupon: state.activeCoupon
   }
 }
 

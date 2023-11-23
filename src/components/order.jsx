@@ -59,20 +59,6 @@ const Order = (props) => {
   }
     
 
-  const getGrandTotal = () => {
-    if(order.total){
-      return (order.total).toFixed(2)
-    } else if(order.custom_price){
-      return (order.custom_price).toFixed(2)
-    } else {
-     return (getItemTotals(order.items)).toFixed(2)
-    }
-  }
-
-  const getDiscountFee = () => {
-    return getItemTotals(order.items).toFixed(2) - getGrandTotal() > 0 ? getItemTotals(order.items).toFixed(2) - getGrandTotal() : 0;
-  }
-
   return (
     <div style={{minHeight: 100}}>
       <Row style={{paddingTop: 15}}>

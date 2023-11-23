@@ -65,15 +65,22 @@ const Cart = (props) => {
             <Row>
               <Col>
                 Subtotal: 
-                <CurrencyFormat value={getCartTotal(props.cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                <CurrencyFormat value={getCartTotal(props.cart, props.activeCoupon).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
               </Col>
             </Row>
             <Row>
               <Col>
                 Discounts:
-                <CurrencyFormat value={getDiscountTotal(props.cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                <CurrencyFormat value={getDiscountTotal(props.cart, props.activeCoupon).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
               </Col>
             </Row>
+            {!!props.activeCoupon && (
+            <Row>
+              <Col>
+                {`${props.activeCoupon?.code} - ${!props.activeCoupon?.percentage ? '$' : ''}${props.activeCoupon?.amount}${props.activeCoupon?.percentage ? '%' : ' Off'}`}
+              </Col>
+            </Row>  
+            )}
             {getCartTotal(props.cart) < 100 && (
               <Row>
                 <Col>
@@ -85,7 +92,7 @@ const Cart = (props) => {
             <Row>
               <Col>
                 <strong>Grand Total:</strong>
-                <CurrencyFormat value={getGrandTotal(props.cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                <CurrencyFormat value={getGrandTotal(props.cart, props.activeCoupon).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
               </Col>
             </Row>
           </div>
@@ -103,7 +110,8 @@ const Cart = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    cart: state.cart
+    cart: state.cart,
+    activeCoupon: state.activeCoupon
   }
 }
 

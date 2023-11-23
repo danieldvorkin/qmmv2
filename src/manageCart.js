@@ -7,7 +7,8 @@ export const cartSlice = createSlice({
     cart: [],
     isLoggedIn: false,
     user: null,
-    token: null
+    token: null,
+    activeCoupon: {}
   },
   reducers: {
     add: (state, params) => {
@@ -68,11 +69,26 @@ export const cartSlice = createSlice({
     },
     finalizeOrder: (state, params) => {
       state.cart = [];
+    },
+    manageActiveCoupon: (state, params) => {
+      if(params.payload.valid){
+        state.activeCoupon = params.payload.coupon;
+        AppToaster.show({ message: "Coupon successfully added to cart."})
+      } else {
+        state.activeCoupon = {};
+        
+      }
+    },
+    removeCoupon: (state, params) => {
+      if(state.activeCoupon?.code?.length > 0){
+        state.activeCoupon = {}
+        AppToaster.show({ message: "Coupon removed" })
+      }
     }
   },
 })
 
 
-export const { add, remove, updateQty, login, loginError, logout, finalizeOrder } = cartSlice.actions
-
+export const { add, remove, updateQty, login, loginError, logout, finalizeOrder, manageActiveCoupon, removeCoupon } = cartSlice.actions
+export const selectActiveCoupon = (state) => state.cart.activeCoupon
 export default cartSlice.reducer

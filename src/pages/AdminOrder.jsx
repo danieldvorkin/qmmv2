@@ -11,6 +11,8 @@ import Autosuggest from 'react-autosuggest';
 import { SuccessToaster } from "../toast";
 import WebOrderItems from "../components/adminOrder/webOrderItems";
 import MobileOrderItems from "../components/adminOrder/mobileOrderItems";
+import { GET_COUPONS } from "./graphql/coupons";
+import { useQuery } from "@apollo/client";
 
 const AdminOrder = (props) => {
   const { id } = useParams();
@@ -37,6 +39,20 @@ const AdminOrder = (props) => {
   const [value, setValue] = useState('');
   const [newQuantity, setNewQuantity] = useState(1);
   const [suggestions, setSuggestions] = useState([]);
+
+  const { _, data: availableCoupons
+  } = useQuery(GET_COUPONS);
+  const [coupon, setCoupon] = useState({});
+
+  useEffect(() => {
+    if(order.id && availableCoupons?.coupons?.length > 0){
+      let foundCoupon = availableCoupons?.coupons.find((c) => c.code === order.coupon_code)
+      
+      if(foundCoupon){
+        setCoupon(foundCoupon)
+      } 
+    }
+  }, [order, availableCoupons])
 
   useEffect(() => {
     if(id){
@@ -213,6 +229,7 @@ const AdminOrder = (props) => {
           <Col lg={8}>
             {isMobile ? (
               <MobileOrderItems
+                coupon={coupon}
                 onOpen={onOpen}
                 editmode={editmode}
                 setEditmode={setEditmode}
@@ -226,6 +243,7 @@ const AdminOrder = (props) => {
               />
             ) : (
               <WebOrderItems
+                coupon={coupon}
                 onOpen={onOpen}
                 editmode={editmode}
                 setEditmode={setEditmode}

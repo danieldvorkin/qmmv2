@@ -9,18 +9,33 @@ import { getItemSubtotal, getOrderDiscount, getOrderTotal } from "../utils/helpe
 import { getOrder } from "../utils/util";
 import { MdCancel } from "react-icons/md";
 import { SuccessToaster } from "../toast";
+import { GET_COUPONS } from "./graphql/coupons";
+import { useQuery } from "@apollo/client";
 
 const OrderReview = () => {
   const { id } = useParams();
   const [order, setOrder] = useState({});
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef(null);
+  const { loading: availableCouponsLoading, data: availableCoupons
+  } = useQuery(GET_COUPONS);
+  const [coupon, setCoupon] = useState({});
 
   useEffect(() => {
     if(id?.length > 0){
       getOrder(id).then((resp) => setOrder(resp));
     }
   }, [id]);
+
+  useEffect(() => {
+    if(order.id && availableCoupons?.coupons?.length > 0){
+      let foundCoupon = availableCoupons?.coupons.find((c) => c.code === order.coupon_code)
+      
+      if(foundCoupon){
+        setCoupon(foundCoupon)
+      } 
+    }
+  }, [order, availableCoupons])
 
   const cancelOrder = () => {
     onClose();
@@ -136,9 +151,9 @@ const OrderReview = () => {
                       <br/>
                       Order SubTotal: {getOrderTotal(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
                       <br/>
-                      Discount: {getOrderDiscount(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+                      Discount: {getOrderDiscount(order.items, coupon).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
                       <br/>
-                      Grand Total: {(getOrderTotal(order.items) - getOrderDiscount(order.items)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
+                      Grand Total: {(getOrderTotal(order.items, coupon) - getOrderDiscount(order.items, coupon)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}
                     </TableCaption>
                     <Thead>
                       <Tr>

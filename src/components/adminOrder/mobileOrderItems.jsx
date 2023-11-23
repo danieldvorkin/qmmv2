@@ -4,7 +4,7 @@ import { Col, Row } from "react-bootstrap";
 import { getOrderDiscount, getOrderTotal } from "../../utils/helpers";
 
 const MobileOrderItems = (props) => {
-  const { onOpen, editmode, setEditmode, order, setOrder, saveStatusChange, orderItems, handleQtyChange, handlePriceChange, removeItem } = props;
+  const { onOpen, editmode, setEditmode, order, setOrder, saveStatusChange, orderItems, handleQtyChange, handlePriceChange, removeItem, coupon } = props;
 
   return (
     <Card>
@@ -35,9 +35,10 @@ const MobileOrderItems = (props) => {
         <Row>
           <Col>
             <Text>Status: <b>{order.status}</b></Text>
+            {coupon?.code?.length > 0  && <Text>Coupon: <b>{order.coupon_code}</b></Text>}
             <Text>Order SubTotal: <b>{getOrderTotal(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}</b></Text>
-            <Text>Discount: <b>{getOrderDiscount(order.items).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}</b></Text>
-            <Text>Grand Total: <b>{(getOrderTotal(order.items) - getOrderDiscount(order.items)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}</b></Text>
+            <Text>Discount: <b>{getOrderDiscount(order.items, coupon).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}</b></Text>
+            <Text>Grand Total: <b>{(getOrderTotal(order.items, coupon) - getOrderDiscount(order.items, coupon)).toLocaleString('en-US', { style: 'currency', currency: 'USD'})}</b></Text>
           </Col>
         </Row>
       </CardBody>

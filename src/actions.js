@@ -22,10 +22,10 @@ export const logoutService = () => async (dispatch) => {
   }
 }
 
-export const submitNewOrder = (order) => async (dispatch) => {
-  let total = getGrandTotal(order.cart);
+export const submitNewOrder = (order, coupon) => async (dispatch) => {
+  let total = getGrandTotal(order.cart, coupon);
   
-  const response = await submitOrder({ ...order, total: total })
+  const response = await submitOrder({ ...order, total: total, coupon_code: !!coupon ? coupon.code : null })
   dispatch(finalizeOrder(response));
 
   return response;

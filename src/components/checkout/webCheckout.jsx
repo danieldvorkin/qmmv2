@@ -1,19 +1,30 @@
-import { Button, Card, CardBody, CardHeader, Checkbox, Divider, FormControl, FormLabel, Input, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Button, Card, CardBody, CardHeader, Checkbox, Divider, FormControl, FormLabel, Input, Table, TableContainer, Tag, TagCloseButton, TagLabel, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";
 import { PatternFormat } from 'react-number-format';
 import { LinkContainer } from "react-router-bootstrap";
 import { searchForUser } from "../../utils/util";
 import Breakdown from "../breakdown";
-import { ErrorToaster, SuccessToaster } from "../../toast";
+import { AppToaster, ErrorToaster, SuccessToaster } from "../../toast";
+import { Label } from "@blueprintjs/core";
+import { GET_COUPONS } from "../../pages/graphql/coupons";
+import { useQuery } from "@apollo/client";
+import { useDispatch } from "react-redux";
+import { manageActiveCoupon, removeCoupon } from "../../manageCart";
 
 const WebCheckout = (props) => {
-  const { cart, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, getItemSubtotal } = props;
+  const { cart, activeCoupon, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, getItemSubtotal } = props;
+  const dispatch = useDispatch();
   const [initialOrder, setInitialOrder] = useState(order)
   const [validatedUser, setValidatedUser] = useState(false);
   const [showReferralFields, setShowReferralFields] = useState(false);
   const [alreadyMember, setAlreadyMember] = useState(false);
+  const [coupon, setCoupon] = useState(null);
+  const { loading: availableCouponsLoading, error, data: availableCoupons, refetch
+  } = useQuery(GET_COUPONS);
+  const [confirmingCoupon, setConfirmingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState({});
 
   const validateBeforeSubmission = () => {
     return (Boolean(order.full_name) && Boolean(order.email) && Boolean(order.phone)) || validatedUser
@@ -67,6 +78,25 @@ const WebCheckout = (props) => {
   const submitNewOrder = () => {
     submitOrder(initialOrder);
   }
+
+  const checkCoupon = () => {
+    if(!!coupon && !!availableCoupons){
+      setConfirmingCoupon(true);
+      
+      let foundCoupon = availableCoupons.coupons.find((c) => c.code === coupon);
+      dispatch(manageActiveCoupon({ coupon: foundCoupon, valid: !!foundCoupon }));
+
+      if(foundCoupon === undefined){
+        setCouponError({ msg: 'Code not valid, please try another code' })
+      } else {
+        setCouponError({ })
+        setCoupon("");
+      }
+      setConfirmingCoupon(false);
+    }
+  }
+
+  const removeActiveCoupon = () => dispatch(removeCoupon())
 
   return (
     <>
@@ -206,17 +236,17 @@ const WebCheckout = (props) => {
               <Row>
                 <Col>
                   Discounts: 
-                  <CurrencyFormat value={getDiscountTotal(cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <CurrencyFormat value={getDiscountTotal(cart, activeCoupon).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </Col>
               </Row>
               <Row>
                 <Col>
                   <strong>Grand Total:</strong>
-                  <CurrencyFormat value={getGrandTotal(cart).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <CurrencyFormat value={getGrandTotal(cart, activeCoupon).toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </Col>
               </Row>
 
-              <Divider style={{ marginBottom: 4 }} />
+              <Divider style={{ marginBottom: 15 }} />
 
               <Row>
                 <Col>
@@ -225,11 +255,33 @@ const WebCheckout = (props) => {
                   </LinkContainer>
                 </Col>
                 <Col>
-                  {validateBeforeSubmission() ? (
-                    <Button colorScheme={"green"} style={{width: '100%'}} onClick={() => submitNewOrder() }>Checkout</Button>
-                  ) : (
-                    <Text>Enter the required(*) info to checkout</Text>
+                  <Button colorScheme={"green"} style={{width: '100%'}} onClick={() => submitNewOrder()} disabled={validateBeforeSubmission()}>Checkout</Button>
+                </Col>
+              </Row>
+
+              <Divider style={{ marginBottom: 15, marginTop: 15 }} />
+
+              <Row style={{textAlign: 'left'}}>
+                <Col>  
+                  {activeCoupon?.code?.length > 0 && (
+                    <>
+                      <Text mb="1" fontSize={15}>Active Coupon:</Text>
+                      <Tag
+                        size={'md'}
+                        key={'md'}
+                        variant='solid'
+                        colorScheme='green'
+                      >
+                        <TagLabel>{activeCoupon?.code}</TagLabel>
+                        <TagCloseButton onClick={removeActiveCoupon}/>
+                      </Tag>
+                      <Divider mb="2" mt="2" />
+                    </>
                   )}
+                  <Text mb="1" fontSize={15}>Coupon Code:</Text>
+                  {!!couponError?.msg && <Text color="red">{couponError?.msg}</Text>}
+                  <Input style={{borderColor: !!couponError?.msg ? 'red' : 'silver'}} type="text" name="couponCode" placeholder="Enter Coupon CODE here" value={coupon} onChange={(e) => setCoupon(e.target.value)}/>
+                  <Button isLoading={confirmingCoupon} onClick={checkCoupon} colorScheme="green" mt="2" width="100%">Confirm Coupon</Button>
                 </Col>
               </Row>
             </div>
