@@ -18,11 +18,10 @@ const WebCheckout = (props) => {
   const dispatch = useDispatch();
   const [initialOrder, setInitialOrder] = useState(order)
   const [validatedUser, setValidatedUser] = useState(false);
-  const [showReferralFields, setShowReferralFields] = useState(false);
+  const [showReferralFields, setShowReferralFields] = useState(true);
   const [alreadyMember, setAlreadyMember] = useState(false);
   const [coupon, setCoupon] = useState(null);
-  const { loading: availableCouponsLoading, error, data: availableCoupons, refetch
-  } = useQuery(GET_COUPONS);
+  const { loading, error, data: availableCoupons } = useQuery(GET_COUPONS);
   const [confirmingCoupon, setConfirmingCoupon] = useState(false);
   const [couponError, setCouponError] = useState({});
 
@@ -110,7 +109,7 @@ const WebCheckout = (props) => {
               <Col sm={12}>
                 <FormControl>
                   <FormLabel>Your Email *</FormLabel>
-                  <Input type='text' name="email" value={initialOrder?.email} isRequired={true} onInput={(e) => setInitialOrderDetails(e)} onBlur={() => searchUser()}/>
+                  <Input type='text' name="email" value={initialOrder?.email} isRequired={true} onInput={(e) => setInitialOrderDetails(e)} />
                 </FormControl>
               </Col>
             </Row>

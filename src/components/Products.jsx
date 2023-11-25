@@ -24,7 +24,7 @@ const Products = (props) => {
           
           <Row>
             {products && products.map((product) => {
-              if(product?.price > 0) {
+              if(product?.price > 0 && product?.inventory > 0) {
                 return (
                   <Col xl={3} lg={4} md={6} xs={12} key={product.id}>
                     <Product product={product} category={selectedFilter} />
