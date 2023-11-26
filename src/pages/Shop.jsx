@@ -1,8 +1,8 @@
 
-import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Button, Text, Input, Flex, Box, Card, CardBody, Avatar } from "@chakra-ui/react";
+import { Accordion, AccordionIcon, AccordionButton, AccordionItem, AccordionPanel, Divider, Button, Text, Input, Flex, Box, Card, CardBody, Avatar, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Tr, TableContainer, Table, TableCaption, Thead, Th, Tbody, Td } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Badge, ButtonGroup, Col, Container, Dropdown, DropdownButton, ProgressBar, Row } from "react-bootstrap";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Products from "../components/Products";
 import { featuredItems, getCategories, getCategory, getItem, getOrder, getOrders } from "../utils/util";
@@ -10,6 +10,7 @@ import loading from '../loading.svg';
 import CustomSlider from "../components/slider";
 import { ChevronUpIcon, CloseIcon } from "@chakra-ui/icons";
 import { AppToaster } from "../toast";
+import { markBreakdownViewed } from "../manageCart";
 
 const Shop = (props) => {
   const [queryParams, _] = useSearchParams();
@@ -34,6 +35,20 @@ const Shop = (props) => {
   const [typeFilter, setTypeFilter] = useState('');
   const [emptyCategoryError, setEmptyCategoryError] = useState(null);
   const [dataFetched, setDataFetched] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [shouldShowModal, setShouldShowModal] = useState(false);
+  const dispatch = useDispatch();
+
+  const discountBreakdown = [
+    "$50+ | $10 Shipping",
+    "$100+ | Free Shipping",
+    "$150+ | 5% off",
+    "$200+ | 10% off",
+    "$300+ | 15% off",
+    "$400+ | 20% off",
+    "$600+ | 25% off",
+    "$800+ | 30% off"
+  ]
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -58,6 +73,10 @@ const Shop = (props) => {
     setTimeout(() => {
       fetchOrders();
     }, 5000);
+
+    setTimeout(() => {
+      onOpen();
+    }, 5000)
 
     const fetchData = async () => {
       try {
@@ -137,6 +156,22 @@ const Shop = (props) => {
 
     fetchData();
   }, [filterSlug, typeFilter, searchQuery]);
+
+  useEffect(() => {
+    if (props?.cart?.viewedBreakdown?.viewedAt) {
+      const viewedTimestamp = new Date(props.cart.viewedBreakdown.viewedAt);
+      const currentTime = new Date();
+
+      // Calculate the time difference in milliseconds
+      const timeDifference = currentTime - viewedTimestamp;
+
+      // Convert milliseconds to hours
+      const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+      // Show the modal if the difference is greater than 24 hours
+      setShouldShowModal(hoursDifference >= 24);
+    }
+  }, [props?.cart?.viewedBreakdown]);
 
   const fetchFeaturedItems = async () => {
     const resp = await featuredItems();
@@ -221,6 +256,11 @@ const Shop = (props) => {
     }
   };
 
+  const closeAnnouncement = () => {
+    dispatch(markBreakdownViewed());
+    onClose();
+  }
+
   return (
     <div style={{ marginTop: 20 }}>
       {false && !stopShowingRecentlyBought && showRecentlyBoughtBadge && !!recentlyBought.item && (
@@ -243,6 +283,37 @@ const Shop = (props) => {
           </Card>
         </div>
       )}
+      
+      <Modal onClose={onClose} isOpen={shouldShowModal && isOpen} isCentered size={window.innerWidth < 700 ? "xs" : "lg"}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Discount Breakdown</ModalHeader>
+          <ModalCloseButton onClick={closeAnnouncement}/>
+          <ModalBody>
+            <TableContainer>
+              <Table variant='simple' size='sm'>
+                <TableCaption>Automatically applied at checkout</TableCaption>
+                <Thead>
+                  <Tr>
+                    <Th>Requirement</Th>
+                    <Th isNumeric>Discount</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {discountBreakdown.map((db) => {
+                    return (
+                      <Tr>
+                        <Td>{db.split(" | ")[0]}</Td>
+                        <Td isNumeric>{db.split(" | ")[1]}</Td>
+                      </Tr>
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </TableContainer>            
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
       <div className="container">
         <Row>

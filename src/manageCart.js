@@ -1,15 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AppToaster, ErrorToaster } from "./toast";
 
+const initialState = {
+  cart: [],
+  isLoggedIn: false,
+  user: null,
+  token: null,
+  activeCoupon: {},
+  viewedBreakdown: {}
+}
+
 export const cartSlice = createSlice({
   name: 'cart',
-  initialState: {
-    cart: [],
-    isLoggedIn: false,
-    user: null,
-    token: null,
-    activeCoupon: {}
-  },
+  initialState: initialState,
   reducers: {
     add: (state, params) => {
       if(state.cart.length > 0){
@@ -84,11 +87,16 @@ export const cartSlice = createSlice({
         state.activeCoupon = {}
         AppToaster.show({ message: "Coupon removed" })
       }
+    },
+    markBreakdownViewed: (state, params) => {
+      state.viewedBreakdown = {
+        viewed: true, viewedAt: (new Date()).toDateString()
+      }
     }
   },
 })
 
 
-export const { add, remove, updateQty, login, loginError, logout, finalizeOrder, manageActiveCoupon, removeCoupon } = cartSlice.actions
+export const { add, remove, updateQty, login, loginError, logout, finalizeOrder, manageActiveCoupon, removeCoupon, markBreakdownViewed } = cartSlice.actions
 export const selectActiveCoupon = (state) => state.cart.activeCoupon
 export default cartSlice.reducer

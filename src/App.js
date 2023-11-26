@@ -10,7 +10,6 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import loading from './loading.svg';
 import "slick-carousel/slick/slick.css"
-import Footer from "./components/Footer";
 import "slick-carousel/slick/slick-theme.css";
 import AdminNavbar from './components/AdminNavbar';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
