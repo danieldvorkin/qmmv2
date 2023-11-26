@@ -22,6 +22,7 @@ import AdminProduct from './pages/AdminProduct';
 import NewProduct from './pages/NewProduct';
 import Coupons from './pages/Coupons';
 import CouponForm from './pages/CouponForm';
+import Register from './pages/Customer/register';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -50,6 +51,7 @@ root.render(
           <Route path="admin/coupons" exact element={<Coupons />} />
           <Route path="admin/coupons/:id" exact element={<CouponForm />} />
           <Route path="admin/coupons/new" exact element={<CouponForm />} />
+          <Route path="register" exact element={<Register />} />
         </Route>
       </Routes>
     </BrowserRouter>

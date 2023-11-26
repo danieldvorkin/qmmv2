@@ -163,16 +163,21 @@ const MainNavbar = (props) => {
             )}
 
             {!props.isLoggedIn ? (
-              <LinkContainer to="/login">
-                <Button className="nav-link bp4-minimal" text="Login" />
-              </LinkContainer>
+              <>
+                {/* <LinkContainer to="/login">
+                  <Button className="nav-link bp4-minimal" text="Login" />
+                </LinkContainer>
+                <LinkContainer to="/register">
+                  <Button className="nav-link bp4-minimal" text="Register" />
+                </LinkContainer> */}
+              </>
             ) : (
               <Button className="nav-link bp4-minimal" text="Logout" onClick={() => dispatch(logout())} />
             )}
           </>
         )}
         
-        <input className="bp4-input" style={{width: isMobile ? '100%' : 200}} placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} />
+        {/* <input className="bp4-input" style={{width: isMobile ? '100%' : 200}} placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} /> */}
         {search.length > 0 && (
           <Button className="bp4-minimal" icon="cross" onClick={() => {
             navigate("/shop");

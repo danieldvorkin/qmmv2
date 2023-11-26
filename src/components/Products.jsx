@@ -5,8 +5,8 @@ import { Badge, Col, Row } from "react-bootstrap";
 import Product from "./Product";
 
 const Products = (props) => {
-  let { products, selectedFilter, resetFilter, typeFilter, resetTypeFilter, emptyCategoryError } = props;
-  console.log("Selected Filter: ", selectedFilter);
+  let { products, selectedFilter, resetFilter, typeFilter, resetTypeFilter, emptyCategoryError, dataFetched } = props;
+
   return (
     <div>
       <div style={{display: 'flex'}}>
@@ -29,7 +29,7 @@ const Products = (props) => {
       </div>
       
       <Row>
-        {products && products.map((product) => {
+        {dataFetched && products && products.map((product) => {
           if(product?.price > 0 && product?.inventory > 0) {
             return (
               <Col xl={3} lg={4} md={6} xs={12} key={product.id}>
@@ -38,7 +38,7 @@ const Products = (props) => {
             )
           }
         })}
-        {!!emptyCategoryError && (
+        {emptyCategoryError?.length && (
           <Col>
             <Text ml={4}>{emptyCategoryError}</Text>
           </Col>

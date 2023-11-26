@@ -33,25 +33,24 @@ const Shop = (props) => {
   const [cbdSliderValue, setCbdSliderValue] = useState(50);
   const [typeFilter, setTypeFilter] = useState('');
   const [emptyCategoryError, setEmptyCategoryError] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {
-    const intervalId = setInterval(fetchOrders, 30000);
-
-    // Clean up the interval when the component unmounts
+    const intervalId = setInterval(() => {
+      fetchOrders();
+      if (!!recentlyBought.item) {
+        getItem(recentlyBought.item.slug).then((resp) => {
+          if (!!resp.id) {
+            setRecentlyBought({ ...recentlyBought, item: resp });
+          }
+        });
+      }
+    }, 30000);
+  
     return () => {
       clearInterval(intervalId);
     };
-  }, [orderCount]);
-
-  useEffect(() => {
-    if (!!recentlyBought.item) {
-      getItem(recentlyBought.item.slug).then((resp) => {
-        if (!!resp.id) {
-          setRecentlyBought({ ...recentlyBought, item: resp });
-        }
-      });
-    }
-  }, [orderCount]);
+  }, [orderCount, recentlyBought.item]);
 
   useEffect(() => {
     setLoader(true);
@@ -68,8 +67,10 @@ const Shop = (props) => {
         const featuredItemsResponse = await featuredItems();
         setProducts(featuredItemsResponse);
         setBaseProducts(featuredItemsResponse);
+        setLoader(false);
+        setDataFetched(true);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        AppToaster.show({ message: "Error fetching data: " + error });
       } finally {
         setLoader(false);
       }
@@ -122,13 +123,13 @@ const Shop = (props) => {
           filteredProducts = filteredProducts.filter((p) => nameCheck(p, searchQuery));
         }
 
-        if(filteredProducts?.length <= 0){
+        if(baseProducts?.length > 0 && filteredProducts?.length <= 0){
           setEmptyCategoryError("No products available....")
         }
 
         setProducts(filteredProducts);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        AppToaster.show({ message: "Error fetching data: " + error });
       } finally {
         setLoader(false);
       }
@@ -212,10 +213,6 @@ const Shop = (props) => {
     setSearchQuery(newSearchQuery);
   };
 
-  const goToProduct = () => {
-    navigate("/products/" + recentlyBought.item?.slug);
-  };
-
   const determineScale = () => {
     if (!!recentlyBought && !!recentlyBought.item) {
       if (recentlyBought.item?.category?.type_of === "Strains") {
@@ -232,7 +229,7 @@ const Shop = (props) => {
             <CardBody>
               <Flex>
                 <Avatar name={recentlyBought && recentlyBought.item?.name} src={recentlyBought.item?.cover_photo} />
-                <Box ml="3" onClick={() => goToProduct()} style={{ cursor: 'pointer', width: '100%' }}>
+                <Box ml="3" onClick={() => navigate("/products/" + recentlyBought.item?.slug)} style={{ cursor: 'pointer', width: '100%' }}>
                   <Text fontWeight='bold'>
                     Someone Recently Bought
                   </Text>
@@ -298,6 +295,7 @@ const Shop = (props) => {
                 <>
                   <Products
                     loader={loader}
+                    dataFetched={dataFetched}
                     selectedFilter={filterObject}
                     products={products}
                     resetFilter={resetFilter}

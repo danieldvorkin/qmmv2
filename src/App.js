@@ -48,7 +48,7 @@ function App() {
       <ChakraProvider>
         <Provider store={store}>
           <PersistGate loading={loader()} persistor={persistor}>
-            {location.pathname.includes("admin") || location.pathname.includes("login") ? (
+            {location.pathname.includes("admin") ? (
               <>
                 <AdminNavbar />
                 <div className={adminNavbarWidth()}>
