@@ -26,7 +26,9 @@ export const submitNewOrder = (order, coupon) => async (dispatch) => {
   let total = getGrandTotal(order.cart, coupon);
   
   const response = await submitOrder({ ...order, total: total, coupon_code: !!coupon ? coupon.code : null })
-  dispatch(finalizeOrder(response));
-
+  if(response.success){
+    dispatch(finalizeOrder(response));
+  }
+  
   return response;
 }

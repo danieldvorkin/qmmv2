@@ -14,7 +14,19 @@ import { useDispatch } from "react-redux";
 import { manageActiveCoupon, removeCoupon } from "../../manageCart";
 
 const WebCheckout = (props) => {
-  const { cart, activeCoupon, removeItem, qtyChange, getCartTotal, getDiscountTotal, getGrandTotal, submitOrder, order, getItemSubtotal } = props;
+  const { 
+    cart, 
+    activeCoupon, 
+    removeItem, 
+    qtyChange, 
+    getCartTotal, 
+    getDiscountTotal, 
+    getGrandTotal, 
+    submitOrder, 
+    order, 
+    getItemSubtotal,
+    processing
+  } = props;
   const dispatch = useDispatch();
   const [initialOrder, setInitialOrder] = useState(order)
   const [validatedUser, setValidatedUser] = useState(false);
@@ -48,30 +60,6 @@ const WebCheckout = (props) => {
         setInitialOrder({...initialOrder, [e.target.name]: e.target.value })
       }
     }, 400); // Adjust the delay as needed
-  }
-
-  const searchUser = () => {
-    searchForUser(initialOrder.email).then((resp) => {
-      if(resp.length > 0){
-        setInitialOrder({...initialOrder,
-          email: resp[0].email,
-          full_name: resp[0].address?.name,
-          phone: resp[0].phone,
-          address1: resp[0].address?.address1,
-          address2: resp[0].address?.address2,
-          zipcode: resp[0].address?.zipcode,
-          city: resp[0].address?.city,
-          notes: resp[0].address?.notes
-        });
-        setShowReferralFields(false);
-        SuccessToaster.show({ message: "User account found: Details have been added into the form." })
-      } else {
-        setShowReferralFields(true);
-        ErrorToaster.show({ message: "Sign up today by placing your first order" })
-      }
-
-      setValidatedUser(true);
-    });
   }
 
   const submitNewOrder = () => {
@@ -113,7 +101,7 @@ const WebCheckout = (props) => {
                 </FormControl>
               </Col>
             </Row>
-            <>
+              <>
                 <Row style={{marginBottom: 10}}>
                   <Col sm={12}>
                     <FormControl>
@@ -254,7 +242,14 @@ const WebCheckout = (props) => {
                   </LinkContainer>
                 </Col>
                 <Col>
-                  <Button colorScheme={"green"} style={{width: '100%'}} onClick={() => submitNewOrder()} disabled={validateBeforeSubmission()}>Checkout</Button>
+                  <Button 
+                    colorScheme={"green"} 
+                    style={{width: '100%'}} 
+                    onClick={() => submitNewOrder()} 
+                    disabled={validateBeforeSubmission()}
+                    isLoading={processing}
+                    loadingText='processing order...'
+                  >Checkout</Button>
                 </Col>
               </Row>
 

@@ -130,9 +130,11 @@ const MainNavbar = (props) => {
             )}
 
             {!props.isLoggedIn ? (
-              <LinkContainer to="/login">
-                <Button className="nav-link bp4-minimal" text="Login" style={{textAlign: 'left', color: 'grey' }} />
-              </LinkContainer>
+              <>
+                {/* <LinkContainer to="/login">
+                  <Button className="nav-link bp4-minimal" text="Login" style={{textAlign: 'left', color: 'grey' }} />
+                </LinkContainer> */}
+              </>
             ) : (
               <Button className="nav-link bp4-minimal" text="Logout" onClick={() => dispatch(logout())}  style={{textAlign: 'left', color: 'grey', height: 40 }} />
             )}
@@ -141,8 +143,8 @@ const MainNavbar = (props) => {
         </Nav>
       </Navbar.Collapse>
       
-      <Navbar.Collapse className="justify-content-end" style={{top: isMobile ? '-10px' : 0}}>
-        {!isMobile && (
+      {!isMobile && (
+        <Navbar.Collapse className="justify-content-end" style={{top: isMobile ? '-10px' : 0}}>
           <>
             <Button className="bp4-minimal addToCart" icon="shopping-cart" onClick={props.cartClick}>
               <Badge colorScheme="red"><p style={{textDecoration: getDiscountTotal(props.cart) > 0 ? 'line-through' : ''}}>${getCartTotal(props.cart).toFixed(2)}</p></Badge>
@@ -175,17 +177,8 @@ const MainNavbar = (props) => {
               <Button className="nav-link bp4-minimal" text="Logout" onClick={() => dispatch(logout())} />
             )}
           </>
-        )}
-        
-        {/* <input className="bp4-input" style={{width: isMobile ? '100%' : 200}} placeholder="Search..." type="text" onChange={(e) => setSearch(e.target.value)} value={search} onKeyDown={(e) => checkForEnter(e)} /> */}
-        {search.length > 0 && (
-          <Button className="bp4-minimal" icon="cross" onClick={() => {
-            navigate("/shop");
-            setSearch("");
-          }} />
-        )}         
-      </Navbar.Collapse>
-
+        </Navbar.Collapse>
+      )}
     </Navbar>
   )
 }

@@ -85,48 +85,40 @@ const Checkout = (props) => {
         </Alert>
       )}
       
-      {!processing ? (
-        <>
-          <Row style={{marginTop: 10}}>
-            <WebCheckout 
-              cart={props.cart} 
-              activeCoupon={props.activeCoupon}
-              removeItem={removeItem} 
-              qtyChange={qtyChange} 
-              getCartTotal={getCartTotal} 
-              getDiscountTotal={getDiscountTotal} 
-              getGrandTotal={getGrandTotal} 
-              submitOrder={submitOrder} 
-              order={order} 
-              changeOrderDetails={changeOrderDetails}
-              getItemSubtotal={getItemSubtotal}
-            />
-          </Row>
+      
+      <Row style={{marginTop: 10}}>
+        <WebCheckout 
+          cart={props.cart} 
+          activeCoupon={props.activeCoupon}
+          removeItem={removeItem} 
+          qtyChange={qtyChange} 
+          getCartTotal={getCartTotal} 
+          getDiscountTotal={getDiscountTotal} 
+          getGrandTotal={getGrandTotal} 
+          submitOrder={submitOrder} 
+          order={order} 
+          changeOrderDetails={changeOrderDetails}
+          getItemSubtotal={getItemSubtotal}
+          processing={processing}
+        />
+      </Row>
 
-          <br/><Divider/><br/>
+      <br/><Divider/><br/>
 
-          <Row>
-            <Col pr={3} pl={3}>
-              <Card>
-                <CardHeader><Text fontSize='2xl' as='b'>Featured Items</Text></CardHeader>
-                <CardBody>
-                  <Slider {...settings}>
-                    {featuredItemsList.map((item) => {
-                      return <Product product={item} category={item.category} />
-                    })}
-                  </Slider>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </>
-      ) : (
-        <>
-          <img style={{ margin: '0 auto' }} src={loading} alt={"loading"}/>
-          <Text style={{textAlign: 'center', position: 'relative', top: '-150px'}}>Order is being processed...</Text>
-        </>
-        
-      )}
+      <Row>
+        <Col pr={3} pl={3}>
+          <Card>
+            <CardHeader><Text fontSize='2xl' as='b'>Featured Items</Text></CardHeader>
+            <CardBody>
+              <Slider {...settings}>
+                {featuredItemsList.map((item) => {
+                  return <Product product={item} category={item.category} />
+                })}
+              </Slider>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   )
 }
