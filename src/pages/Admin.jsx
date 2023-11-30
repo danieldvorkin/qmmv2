@@ -32,6 +32,7 @@ const Admin = (props) => {
   // const [products, setProducts] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [todaysRevenue, setTodaysRevenue] = useState(0);
+  const [dateRange, setDateRange] = useState([])
 
   const {
     loading,
@@ -51,6 +52,7 @@ const Admin = (props) => {
         navigate("/shop");
       }
 
+      setDateRange([])
       const date = moment(selectedDate || new Date()).format("YYYY-MM-DD");
       adminOrders(date).then((resp) => {
         setOrders(resp);
@@ -126,6 +128,17 @@ const Admin = (props) => {
     return 0;
   }
 
+  const handleNewDateRange = () => {
+    const currentDate = moment();
+
+    // Get the start of the week (Sunday) and end of the week (Saturday)
+    const startOfWeek = currentDate.clone().startOf('week').format('ddd MMM DD YYYY');
+    const endOfWeek = currentDate.clone().endOf('week').format('ddd MMM DD YYYY');
+
+    // Update the state with the date range
+    setDateRange([startOfWeek, endOfWeek]);
+  }
+
   return (
     <Container>
       <Card>
@@ -141,8 +154,8 @@ const Admin = (props) => {
             </Button>
             <Button
               leftIcon={<CalendarIcon style={{ marginLeft: 10 }} />}
-              onClick={() => setSelectedDate(new Date())}
-              style={{ paddingRight: 20 }}
+              onClick={handleNewDateRange}
+              style={{ paddingRight: 32, paddingLeft: 28 }}
               size="sm"
             >
               This week
@@ -161,6 +174,19 @@ const Admin = (props) => {
               }}
             />
           </ButtonGroup>
+          
+          <Row style={{margin: '10px 0px', }}>
+            <Col>
+              <p>
+                <b>Selected Date: </b>
+                {dateRange?.length > 0 ? (
+                  dateRange[0] + " - " + dateRange[1]
+                ) : (
+                  selectedDate?.toDateString()
+                )}
+              </p>
+            </Col>
+          </Row>
         </CardHeader>
 
         <CardBody>
