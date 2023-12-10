@@ -51,6 +51,8 @@ const AdminProduct = (props) => {
     updateProduct(slug, newProduct).then((resp) => {
       AppToaster.show({ message: 'Product details updated successfully' })
       setProduct(resp);
+    }).catch((e) => {
+      AppToaster.show({ message: e?.response?.data?.error });
     })
   }
 
@@ -146,7 +148,8 @@ const AdminProduct = (props) => {
                       </Form.Group>
                       <Form.Group className="mb-3" controlId="productCategory">
                         <Form.Label>Category</Form.Label>
-                        <Form.Select aria-label="Default select example" onChange={(e) => setProduct({...product, 'category_id': e.target.value })} value={product?.category?.id}>
+                        <Form.Select aria-label="Default select example" onChange={(e) => setProduct({...product, 'category_id': e.target.value })} value={product?.category_id || product?.category?.id}>
+                          <option value={null}>--- Select Category ---</option>
                           {!!Object.keys(categories) && Object.keys(categories).map((cat) => {
                             return (
                               categories[cat].map((l) => {
