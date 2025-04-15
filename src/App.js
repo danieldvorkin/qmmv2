@@ -14,7 +14,7 @@ import "slick-carousel/slick/slick-theme.css";
 import AdminNavbar from './components/AdminNavbar';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   uri: 'https://queenmarymedical.herokuapp.com/graphql',
   cache: new InMemoryCache(),
 });

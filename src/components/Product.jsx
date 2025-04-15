@@ -9,7 +9,7 @@ import { getItemDiscount } from "../utils/helpers";
 
 const Product = (props) => {
   const { product, category, cart } = props;
-  
+
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
 
@@ -84,7 +84,7 @@ const Product = (props) => {
           <Carousel.Item style={{cursor: 'pointer'}}>
             {/* <LinkContainer to={"/products/" + product.slug}> */}
               <Image
-                src={product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
+                src={product.coverPhoto || product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
                 borderRadius='lg'
                 onClick={() => setShowMore(!showMore)} 
               />
@@ -112,8 +112,8 @@ const Product = (props) => {
               {product.name}
             </Link>
             <br/>
-            <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type), padding: 5, marginBottom: 5, fontSize: 12, userSelect: 'none' }}>
-              {`${product?.strain_type}`}
+            <Badge bg={''} style={{ backgroundColor: getBadgeColor(product?.strain_type || product?.strainType), padding: 5, marginBottom: 5, fontSize: 12, userSelect: 'none' }}>
+              {`${product?.strain_type || product?.strainType}`}
             </Badge>
             <div style={{float: 'right', fontSize: 35, position: 'relative', right: 10, userSelect: 'none'}}>
               {product.on_sale && !!product.sale_price ? (
@@ -128,7 +128,7 @@ const Product = (props) => {
             </div>
           </Heading>
 
-          {category?.type_of === "Strains" || product.category?.type_of === "Strains" ? (
+          {category.type_of === "Strains" || product?.category?.typeOf === "Strains" || product.category?.type_of === "Strains" ? (
             <div style={{top: 0, position: 'relative', textAlign: 'center' }}>
               {/* <Text style={{marginBottom: 5, fontWeight: 'bold', textAlign: 'left'}}>Select Qty</Text> */}
               <ButtonGroup>
@@ -161,7 +161,7 @@ const Product = (props) => {
 
       <CardFooter style={{display: 'block', margin: '0px auto 14px', paddingLeft: 18, textAlign: 'center'}}>
         <Text noOfLines={showMore ? 50 : 4} onClick={() => setShowMore(!showMore)} style={{userSelect: 'none'}}>
-          {product?.thc && (
+          {/* {product?.thc && (
             <><strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}</>
           )}
           {product?.cbd && (
@@ -169,7 +169,7 @@ const Product = (props) => {
           )}
           {product?.brand && (
             <><strong style={{fontSize: 10}}>BRAND:{' '}</strong>{product.brand || ''}<br/></>
-          )}
+          )} */}
         
           {/* <Link to={"/products/" + product.slug} style={{ textDecoration: 'none'}}> */}
             <span>{product.description || 'No Description Available'}</span>

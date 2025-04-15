@@ -11,6 +11,34 @@ import CustomSlider from "../components/slider";
 import { ChevronUpIcon, CloseIcon } from "@chakra-ui/icons";
 import { AppToaster } from "../toast";
 import { markBreakdownViewed } from "../manageCart";
+import MobileShop from "../components/MobileShop";
+import { gql } from '@apollo/client';
+import { client } from "../App";
+
+const GET_FEATURED_ITEMS = gql`
+  query GetFeaturedItems {
+    featuredItems {
+      id
+      name
+      strainType
+      description
+      imgSrc
+      coverPhoto
+      slug
+      inventory
+      onSale
+      strainType
+      price
+      salePrice
+      category {
+        id
+        name
+        slug
+        typeOf
+      }
+    }
+  }
+`;
 
 const Shop = (props) => {
   const [queryParams, _] = useSearchParams();
@@ -70,22 +98,25 @@ const Shop = (props) => {
   useEffect(() => {
     setLoader(true);
     
-    setTimeout(() => {
-      fetchOrders();
-    }, 5000);
+    fetchOrders();
 
     setTimeout(() => {
       onOpen();
-    }, 5000)
+    }, 500)
 
     const fetchData = async () => {
       try {
         const categoriesResponse = await getCategories();
         setCategories(categoriesResponse);
 
-        const featuredItemsResponse = await featuredItems();
-        setProducts(featuredItemsResponse);
-        setBaseProducts(featuredItemsResponse);
+        // const featuredItemsResponse = await featuredItems();
+        // graphql
+        const featuredItemsResponse = await client.query({
+          query: GET_FEATURED_ITEMS,
+        });
+        
+        setProducts(featuredItemsResponse.data.featuredItems);
+        setBaseProducts(featuredItemsResponse.data.featuredItems);
         setLoader(false);
         setDataFetched(true);
       } catch (error) {
@@ -97,6 +128,24 @@ const Shop = (props) => {
 
     fetchData();
   }, []);
+
+
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    // Set initial screen width
+    setScreenWidth(window.innerWidth);
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [])
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -135,7 +184,7 @@ const Shop = (props) => {
         }
 
         if (!!typeFilter && typeFilter.length > 0) {
-          filteredProducts = filteredProducts.filter((p) => p.strain_type.includes(typeFilter));
+          filteredProducts = filteredProducts.filter((p) => p.strain_type?.includes(typeFilter) || p.strainType?.includes(typeFilter));
         }
 
         if (searchQuery.length > 0) {
@@ -174,9 +223,11 @@ const Shop = (props) => {
   }, [props?.cart?.viewedBreakdown]);
 
   const fetchFeaturedItems = async () => {
-    const resp = await featuredItems();
-    setProducts(resp);
-    setBaseProducts(resp);
+    const resp = client.query({
+      query: GET_FEATURED_ITEMS,
+    });
+    setProducts(resp.data.featuredItems);
+    setBaseProducts(resp.data.featuredItems);
   };
 
   const fetchOrders = async () => {
@@ -262,7 +313,7 @@ const Shop = (props) => {
   }
 
   return (
-    <div style={{ marginTop: 20 }}>
+    <div style={{ marginTop: screenWidth < 475 ? 0 : 20 }}>
       {false && !stopShowingRecentlyBought && showRecentlyBoughtBadge && !!recentlyBought.item && (
         <div className="recentlyBought">
           <Card>
@@ -315,11 +366,22 @@ const Shop = (props) => {
         </ModalContent>
       </Modal>
 
-      <div className="container">
-        <Row>
-          <Col lg="12" style={{ marginBottom: 20 }}>
-            {Object.keys(categories).map((key) =>
-              <DropdownButton
+      {screenWidth < 475 ? (
+        <MobileShop 
+          loading={!dataFetched} 
+          products={products} 
+          categories={categories} 
+          setFilterSlug={setFilterSlug}
+          filterObject={filterObject}
+          resetFilter={resetFilter}
+          onSearchChange={onSearchChange}
+        />
+      ) : (
+        <div className="container">
+          <Row>
+            <Col lg="12" style={{ marginBottom: 20 }}>
+              {Object.keys(categories).map((key) =>
+                <DropdownButton
                 as={ButtonGroup}
                 id={"filter"}
                 size="sm"
@@ -327,66 +389,67 @@ const Shop = (props) => {
                 variant="outline-secondary"
                 title={key}
                 style={{ marginRight: 5, border: 'none !important' }}
-              >
-                {categories[key].sort((a, b) => a.sort - b.sort).map((category) => {
-                  return (
-                    <Dropdown.Item
+                >
+                  {categories[key].sort((a, b) => a.sort - b.sort).map((category) => {
+                    return (
+                      <Dropdown.Item
                       eventKey={category.slug}
                       onClick={() => { setFilterSlug(category?.slug) }}
                       style={{ border: 'none' }}>{category.name}</Dropdown.Item>
+                    )
+                  })}
+
+                </DropdownButton>
+              )}
+              <DropdownButton
+                as={ButtonGroup}
+                id={"type"}
+                size="sm"
+                key={`dropdown-type`}
+                variant="outline-secondary"
+                title={"Strain Types"}
+                style={{ marginRight: 5, border: 'none !important' }}
+                >
+                {["Indica", "Hybrid", "Sativa"].map((option) => {
+                  return (
+                    <Dropdown.Item eventKey={option} value={typeFilter} onClick={(e) => setTypeFilter(e.target.text)} style={{ border: 'none' }}>{option}</Dropdown.Item>
                   )
                 })}
-
               </DropdownButton>
-            )}
-            <DropdownButton
-              as={ButtonGroup}
-              id={"type"}
-              size="sm"
-              key={`dropdown-type`}
-              variant="outline-secondary"
-              title={"Strain Types"}
-              style={{ marginRight: 5, border: 'none !important' }}
-            >
-              {["Indica", "Hybrid", "Sativa"].map((option) => {
-                return (
-                  <Dropdown.Item eventKey={option} value={typeFilter} onClick={(e) => setTypeFilter(e.target.text)} style={{ border: 'none' }}>{option}</Dropdown.Item>
-                )
-              })}
-            </DropdownButton>
-            <Input id="shopSearchInput" name="searchItem" placeholder="Search..." onChange={onSearchChange} />
-          </Col>
-          <Col lg="12" style={{ height: '82vh', overflowY: 'auto', width: '98%' }} ref={containerRef}>
-            <div fluid style={{ marginTop: 20 }}>
-              {loader ? (
-                <div style={{ width: '100%' }}>
-                  <img style={{ margin: '0 auto' }} src={loading} alt={"loading"} />
-                </div>
-              ) : (
-                <>
-                  <Products
-                    loader={loader}
-                    dataFetched={dataFetched}
-                    selectedFilter={filterObject}
-                    products={products}
-                    resetFilter={resetFilter}
-                    resetTypeFilter={resetTypeFilter}
-                    typeFilter={typeFilter}
-                    emptyCategoryError={emptyCategoryError}
-                  />
-                </>
+              <Input id="shopSearchInput" name="searchItem" placeholder="Search..." onChange={onSearchChange} />
+            </Col>
+            <Col lg="12" style={{ height: '82vh', overflowY: 'auto', width: '98%' }} ref={containerRef}>
+              <div fluid style={{ marginTop: 20 }}>
+                {loader ? (
+                  <div style={{ width: '100%' }}>
+                    <img style={{ margin: '0 auto' }} src={loading} alt={"loading"} />
+                  </div>
+                ) : (
+                  <>
+                    <Products
+                      loader={loader}
+                      dataFetched={dataFetched}
+                      selectedFilter={filterObject}
+                      products={products}
+                      resetFilter={resetFilter}
+                      resetTypeFilter={resetTypeFilter}
+                      typeFilter={typeFilter}
+                      emptyCategoryError={emptyCategoryError}
+                      />
+                  </>
 
-              )}
+                )}
 
-            </div>
-          </Col>
-          <Col style={{ maxWidth: 10 }} className={'backToTop'}>
-            <Button colorScheme='gray' className="bp4-minimal" onClick={() => scrollToTop()}>
-              <ChevronUpIcon /> To Top
-            </Button>
-          </Col>
-        </Row>
-      </div>
+              </div>
+            </Col>
+            <Col style={{ maxWidth: 10 }} className={'backToTop'}>
+              <Button colorScheme='gray' className="bp4-minimal" onClick={() => scrollToTop()}>
+                <ChevronUpIcon /> To Top
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      )}
     </div>
   )
 }
