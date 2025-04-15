@@ -10,6 +10,9 @@ import Product from "../components/Product";
 import loading from '../loading.svg';
 import { LinkContainer } from "react-router-bootstrap";
 import { getItemDiscount } from "../utils/helpers";
+import styled from "styled-components";
+import { client } from "../App";
+import { GET_FEATURED_ITEMS } from "./Shop";
 
 const settings = {
   dots: false, infinite: true, 
@@ -30,6 +33,14 @@ const settings = {
   }]
 }
 
+const CustomBadge = styled(Badge)`
+  color: white !important;
+  padding: 5;
+  nargin-bottom: 5;
+  font-size: 15px !important;
+  user-select: none;
+`;
+
 const ProductShow = (props) => {
   const { slug } = useParams();
   const [product, setProduct] = useState({});
@@ -48,8 +59,11 @@ const ProductShow = (props) => {
       setProduct(response);
       setLoader(false);
       
-      const featuredItemResponse = await featuredItems();
-      setProductFeaturedItems(featuredItemResponse);
+      // const featuredItemResponse = await featuredItems();
+      const featuredItemResponse = await client.query({
+        query: GET_FEATURED_ITEMS,
+      })
+      setProductFeaturedItems(featuredItemResponse.data.featuredItems);
       
     }
     fetchData();
@@ -69,6 +83,18 @@ const ProductShow = (props) => {
     if(cart && product){
       return cart.filter((item) => item.product.id === product.id).length > 0 ? 'showInCart' : '';
     }
+  }
+
+  const getBadgeColor = (typeOf) => {
+    let strainColors = {
+      "Indica": "#682D63",
+      "Sativa": "#F26419",
+      "Hybrid": "#138A36",
+      "Indica Hybrid": "#4092B5",
+      "Sativa Hybrid": "#F6AE2D",
+    }
+
+    return strainColors[typeOf];
   }
 
   return (
@@ -144,36 +170,15 @@ const ProductShow = (props) => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col lg={2}>
-                    <Text>
-                      <strong>THC:{' '}</strong>
-                      {product.thc}%
-                    </Text>
-                  </Col>
-                  <Col lg={2}>
-                    <Text>
-                      <strong>CBD:{' '}</strong>
-                      {product.cbd}%
-                    </Text>
-                  </Col>
-                  <Col lg={5}>
-                    <Text>
-                      <strong>BRAND:{' '}</strong>
-                      {` ${product.brand}`}
-                    </Text>
-                  </Col>
-                </Row>
-                
-                <br/>
-                
-                <Row>
                   <Col>
-                    {product.description}
+                    <CustomBadge style={{ backgroundColor: getBadgeColor(product?.strain_type || product?.strainType) }}>
+                      {`${product?.strain_type || product?.strainType}`}
+                    </CustomBadge>
                   </Col>
                 </Row>
+                
                 <br/>
-                <Divider/>
-                <br/>
+                
                 {/* <Row>
                   <Col>
                     <Text className="header" style={{marginBottom: 5}}>Terpenes</Text>
@@ -225,6 +230,19 @@ const ProductShow = (props) => {
                     
                   </Col>
                 </Row>
+
+                <br/>
+                <Divider/>
+                <br/>
+
+                <Row>
+                  <Col>
+                    {product.description}
+                  </Col>
+                </Row>
+                <br/>
+                <Divider/>
+                <br/>
               </Col>
             </Row>
           )}

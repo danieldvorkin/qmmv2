@@ -15,7 +15,7 @@ import MobileShop from "../components/MobileShop";
 import { gql } from '@apollo/client';
 import { client } from "../App";
 
-const GET_FEATURED_ITEMS = gql`
+export const GET_FEATURED_ITEMS = gql`
   query GetFeaturedItems {
     featuredItems {
       id
