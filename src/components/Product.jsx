@@ -116,11 +116,11 @@ const Product = (props) => {
               {`${product?.strain_type || product?.strainType}`}
             </Badge>
             <div style={{float: 'right', fontSize: 35, position: 'relative', right: 10, userSelect: 'none'}}>
-              {product.on_sale && !!product.sale_price ? (
+              {(product.on_sale && !!product.sale_price) || (product.onSale && !!product.salePrice) ? (
                 <>
                   <s style={{color: 'red'}}>{`$${product.price}`}</s>
                   &nbsp;
-                  {`$${product.sale_price}`}
+                  {`$${product.sale_price || product.salePrice}`}
                 </>
               ) : (
                 `$${product.price}`
@@ -151,7 +151,7 @@ const Product = (props) => {
 
               <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
                 <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>
-                  <Text>Add to Cart - ${quantity * product.price}</Text>
+                  <Text>Add to Cart - ${quantity * (product.on_sale || product.onSale ? (product.sale_price || product.salePrice) : product.price)}</Text>
                 </Button>
               </ButtonGroup>
             </>

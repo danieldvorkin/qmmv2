@@ -45,10 +45,12 @@ const Pictures = ({ product }) => {
   return (
     <Carousel variant="dark" indicators={false} controls={product?.images?.length > 1}>
       <CarouselItem>
-        <Image
-          src={product.coverPhoto || product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
-          borderRadius='lg'
-        />
+        <Link to={"/products/" + product.slug}>
+          <Image
+            src={product.coverPhoto || product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
+            borderRadius='lg'
+          />
+        </Link>
       </CarouselItem>
       {product?.images?.map((img) => {
         return (
@@ -155,9 +157,11 @@ const MobileProduct = ({ product, filterObject }) => {
               </ButtonGroup>
             </>
           )}
-          <Description>
-            {product.description}
-          </Description>
+          <Link to={"/products/" + product.slug}>
+            <Description>
+              {product.description}
+            </Description>
+          </Link>
         </CustomCardBody>
       </Stack>
     </Card>
