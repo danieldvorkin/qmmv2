@@ -128,7 +128,7 @@ const Product = (props) => {
             </div>
           </Heading>
 
-          {category.type_of === "Strains" || product?.category?.typeOf === "Strains" || product.category?.type_of === "Strains" ? (
+          {category?.type_of === "Strains" || product?.category?.typeOf === "Strains" || product.category?.type_of === "Strains" ? (
             <div style={{top: 0, position: 'relative', textAlign: 'center' }}>
               {/* <Text style={{marginBottom: 5, fontWeight: 'bold', textAlign: 'left'}}>Select Qty</Text> */}
               <ButtonGroup>

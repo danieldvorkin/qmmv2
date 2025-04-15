@@ -78,8 +78,8 @@ export const getCartTotal = (items) => {
 
 export const getItemSubtotal = (item) => {
   if(item.product.price){
-    if(item.product?.on_sale){
-      return item.product.sale_price * item.quantity;
+    if(item.product?.on_sale || item.product?.onSale){
+      return (item.product.sale_price || item.product.salePrice) * item.quantity;
     } else {
       return item.product.price * item.quantity;
     }
@@ -180,8 +180,8 @@ export const getTableTotal = (items) => {
 
 export const getTableItemSubtotal = (item) => {
   if(item.item.price){
-    if(item.item?.on_sale){
-      return item.item.sale_price * item.quantity;
+    if(item.item?.on_sale || item.item?.onSale){
+      return (item.item.sale_price || item.item.salePrice) * item.quantity;
     } else {
       return item.item.price * item.quantity;
     }
