@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.js";
 import Home from "./pages/Home";
 
 import Category from './pages/Category';
-import Shop from './pages/Shop';
 import ProductShow from './pages/ProductShow';
 import Checkout from './pages/Checkout';
 import MyOrders from './pages/MyOrders';
@@ -23,38 +22,44 @@ import NewProduct from './pages/NewProduct';
 import Coupons from './pages/Coupons';
 import CouponForm from './pages/CouponForm';
 import Register from './pages/Customer/register';
+import { loader as ShopLoader } from './pages/Shop/loader.jsx';
+import Shop from './pages/Shop/Shop.jsx';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { index: true, element: <Shop />, loader: ShopLoader },
+      { path: "shop", element: <Shop />, loader: ShopLoader },
+      { path: "home", element: <Home /> },
+      { path: "products/:slug", element: <ProductShow /> },
+      { path: "category/:slug", element: <Category /> },
+      { path: "search/:query", element: <Home /> },
+      { path: "checkout", element: <Checkout /> },
+      { path: "order/review/:id", element: <OrderReview /> },
+      { path: "my_orders", element: <MyOrders /> },
+      { path: "my_orders/:id", element: <MyOrders /> },
+      { path: "admin", element: <Admin /> },
+      { path: "login", element: <Login /> },
+      { path: "admin/products", element: <AdminProducts /> },
+      { path: "admin/products/new", element: <NewProduct /> },
+      { path: "admin/orders", element: <AdminOrders /> },
+      { path: "admin/orders/:id", element: <AdminOrder /> },
+      { path: "admin/products/:slug", element: <AdminProduct /> },
+      { path: "admin/coupons", element: <Coupons /> },
+      { path: "admin/coupons/:id", element: <CouponForm /> },
+      { path: "admin/coupons/new", element: <CouponForm /> },
+      { path: "register", element: <Register /> },
+    ],
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<Shop/>} />
-          <Route index path="shop" element={<Shop />} />
-          <Route path="home" element={<Home />} />
-          <Route path="products/:slug" element={<ProductShow />} />
-          <Route path="category/:slug" element={<Category />} />
-          <Route path="search/:query" element={<Home />} />
-          <Route path="checkout" element={<Checkout/>} />
-          <Route path="order/review/:id" element={<OrderReview />} />
-          <Route path="my_orders" exact element={<MyOrders/>} />
-          <Route path="my_orders/:id" exact element={<MyOrders/>} />
-          <Route path="admin" element={<Admin />} />
-          <Route path="login" element={<Login />} />
-          <Route path="admin/products" exact element={<AdminProducts />} />
-          <Route path="admin/products/new" exact element={<NewProduct />} />
-          <Route path="admin/orders" exact element={<AdminOrders />} />
-          <Route path="admin/orders/:id" exact element={<AdminOrder />} />
-          <Route path="admin/products/:slug" exact element={<AdminProduct />} />
-          <Route path="admin/coupons" exact element={<Coupons />} />
-          <Route path="admin/coupons/:id" exact element={<CouponForm />} />
-          <Route path="admin/coupons/new" exact element={<CouponForm />} />
-          <Route path="register" exact element={<Register />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

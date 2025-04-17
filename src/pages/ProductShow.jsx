@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getItem, featuredItems } from "../utils/util";
+import { getItem } from "../utils/util";
 import { Badge, Carousel, Col, Container, Image, Row } from "react-bootstrap";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Select, Stack, Text } from "@chakra-ui/react";
 import { connect, useDispatch } from "react-redux";
@@ -9,10 +9,9 @@ import Slider from "react-slick";
 import Product from "../components/Product";
 import loading from '../loading.svg';
 import { LinkContainer } from "react-router-bootstrap";
-import { getItemDiscount } from "../utils/helpers";
 import styled from "styled-components";
 import { client } from "../App";
-import { GET_FEATURED_ITEMS } from "./Shop";
+import { GET_FEATURED_ITEMS } from "./graphql/featuredItems";
 
 const settings = {
   dots: false, infinite: true, 

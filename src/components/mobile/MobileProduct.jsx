@@ -91,6 +91,10 @@ const MobileProduct = ({ product, filterObject }) => {
     return strainColors[typeOf];
   }
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+
   return (
     <Card flexDirection="row" overflow="hidden" maxW="lg" key={product.id} style={{ width: '100%', marginBottom: 5 }} id={`${product.slug}`}>
       <div style={{display: 'block'}}>

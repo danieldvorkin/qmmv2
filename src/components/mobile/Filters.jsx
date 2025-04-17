@@ -66,7 +66,7 @@ const Filters = ({ categories, setFilterSlug }) => {
               title={key}
               style={{ width: '98%', margin: '10px 0px', border: 'none !important' }}
               >
-                {categories[key].sort((a, b) => a.sort - b.sort).map((category) => {
+                {categories[key].map((category) => {
                   return (
                     <Dropdown.Item
                       eventKey={category.slug}
