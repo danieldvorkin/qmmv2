@@ -8,7 +8,6 @@ export const GET_FEATURED_ITEMS = gql`
       strainType
       description
       imgSrc
-      coverPhoto
       slug
       description
       inventory
@@ -16,6 +15,7 @@ export const GET_FEATURED_ITEMS = gql`
       strainType
       price
       salePrice
+      thumbnail
       category {
         id
         name

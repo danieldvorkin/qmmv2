@@ -83,10 +83,15 @@ const Product = (props) => {
         <Carousel variant="dark" indicators={false} controls={product?.images?.length > 1}>
           <Carousel.Item style={{cursor: 'pointer'}}>
             {/* <LinkContainer to={"/products/" + product.slug}> */}
-              <Image
+              {/* <Image
                 src={product.coverPhoto || product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
                 borderRadius='lg'
                 onClick={() => setShowMore(!showMore)} 
+              /> */}
+              <Image
+                src={product.thumbnail}
+                borderRadius='lg'
+                onClick={() => setShowMore(!showMore)}
               />
             {/* </LinkContainer> */}
           </Carousel.Item>

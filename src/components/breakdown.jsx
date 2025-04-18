@@ -13,8 +13,8 @@ const Breakdown = (props) => {
     <div key={"index-" + index}>
       <Row style={{paddingLeft: 10}}>
         <Col xs={4} lg={3} style={{paddingTop: 12}}>
-          {(item.product?.cover_photo || item.product?.coverPhoto) && (
-            <img src={item.product?.cover_photo || item.product?.coverPhoto} alt={"img-" + index} />
+          {(item.product?.cover_photo || item.product?.coverPhoto || item.product?.thumbnail) && (
+            <img src={item.product?.cover_photo || item.product?.coverPhoto || item.product?.thumbnail} alt={"img-" + index} />
           )}
         </Col>
         <Col>

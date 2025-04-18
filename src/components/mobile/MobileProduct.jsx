@@ -47,7 +47,7 @@ const Pictures = ({ product }) => {
       <CarouselItem>
         <Link to={"/products/" + product.slug}>
           <Image
-            src={product.coverPhoto || product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
+            src={product.coverPhoto || product.cover_photo || product.thumbnail || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
             borderRadius='lg'
           />
         </Link>

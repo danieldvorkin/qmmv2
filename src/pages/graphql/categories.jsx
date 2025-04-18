@@ -26,7 +26,7 @@ export const GET_CATEGORY = gql`
         inventory
         description
         strainType
-        coverPhoto
+        thumbnail
         category {
           id
           name
