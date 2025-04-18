@@ -69,11 +69,7 @@ const NewShop = () => {
         <Await resolve={Promise.all([categories, products])}>
           {(resolvedData) => {
             const [resolvedCategories, resolvedProducts] = resolvedData;
-            if (resolvedProducts.length === 0) {
-              return (
-                <p>No products available</p>
-              );
-            }
+            
             return (
               <MobileShop 
                 categories={resolvedCategories} 

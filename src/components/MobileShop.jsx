@@ -101,7 +101,11 @@ const MobileShop = ({
           </SelectedFilter>
         )}
       </div>
-      
+
+      {products.length === 0 && (
+        <div className="container"><p>No products available</p></div>
+      )}
+
       {products.map((product) => (
         <MobileProduct product={product} filterObject={filterObject} />
       ))}
