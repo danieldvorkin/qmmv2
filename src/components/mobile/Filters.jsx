@@ -2,15 +2,14 @@ import React, { useRef, useState } from "react";
 import {
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
   Button,
 } from "@chakra-ui/react";
 import styled from "styled-components";
 import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const FloatingButton = styled(Button)`
   position: fixed !important;
@@ -22,7 +21,7 @@ const FloatingButton = styled(Button)`
   border: none;
   border-radius: 50% !important;
   padding: 10px;
-  height: 75px !important;
+  height: 65px !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   &:hover {
     background-color: #0056b3;
@@ -35,6 +34,7 @@ const FloatingButton = styled(Button)`
 const Filters = ({ categories, setFilterSlug }) => {
   const [isOpen, setIsOpen] = useState(false);
   const btnRef = useRef();
+  const navigate = useNavigate();
 
   const onOpen = () => setIsOpen(true);
   const onClose = () => setIsOpen(false);
@@ -50,7 +50,6 @@ const Filters = ({ categories, setFilterSlug }) => {
         onClose={onClose}
         finalFocusRef={btnRef}
       >
-        <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>Menu</DrawerHeader>
@@ -58,20 +57,22 @@ const Filters = ({ categories, setFilterSlug }) => {
           <DrawerBody>
             {Object.keys(categories).map((key) =>
               <DropdownButton
-              as={ButtonGroup}
-              id={"filter"}
-              size="md"
-              key={`dropdown-${key}`}
-              variant="outline-secondary"
-              title={key}
-              style={{ width: '98%', margin: '10px 0px', border: 'none !important' }}
+                as={ButtonGroup}
+                id={"filter"}
+                size="md"
+                key={`dropdown-${key}`}
+                variant="outline-secondary"
+                title={key}
+                style={{ width: '98%', margin: '10px 0px', border: 'none !important' }}
               >
                 {categories[key].map((category) => {
                   return (
                     <Dropdown.Item
                       eventKey={category.slug}
                       onClick={() => { 
-                        setFilterSlug(category?.slug);
+                        const searchParams = new URLSearchParams(window.location.search);
+                        searchParams.set("category", category.slug);
+                        navigate(`?${searchParams.toString().toLowerCase()}`);
                         onClose();
                       }}
                       style={{ border: 'none' }}>{category.name}</Dropdown.Item>
@@ -80,13 +81,33 @@ const Filters = ({ categories, setFilterSlug }) => {
 
               </DropdownButton>
             )}
+            <DropdownButton
+              as={ButtonGroup}
+              id={"type"}
+              size="md"
+              key={`dropdown-type`}
+              variant="outline-secondary"
+              title={"Strain Types"}
+              style={{ margin: '10px 0', width: '98%', border: 'none !important' }}
+              >
+              {["Indica", "Hybrid", "Sativa"].map((option) => {
+                return (
+                  <Dropdown.Item 
+                    eventKey={option} 
+                    onClick={() => {
+                      const searchParams = new URLSearchParams(window.location.search);
+                      searchParams.set("type", option);
+                      navigate(`?${searchParams.toString().toLowerCase()}`);
+                      onClose();
+                    }} 
+                    style={{ border: 'none' }}
+                  >
+                    {option}
+                  </Dropdown.Item>
+                  )
+                })}
+            </DropdownButton>
           </DrawerBody>
-
-          {/* <DrawerFooter>
-            <Button colorScheme="blue" onClick={onClose}>
-              Apply
-            </Button>
-          </DrawerFooter> */}
         </DrawerContent>
       </Drawer>
     </>

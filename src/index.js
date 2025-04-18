@@ -23,15 +23,18 @@ import Coupons from './pages/Coupons';
 import CouponForm from './pages/CouponForm';
 import Register from './pages/Customer/register';
 import { loader as ShopLoader } from './pages/Shop/loader.jsx';
+import { loader as NewShopLoader } from './pages/Shop/newLoader.jsx';
 import Shop from './pages/Shop/Shop.jsx';
+import NewShop from './pages/Shop/NewShop.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <Shop />, loader: ShopLoader },
-      { path: "shop", element: <Shop />, loader: ShopLoader },
+      { index: true, element: <NewShop />, loader: NewShopLoader },
+      { path: "shop", element: <NewShop />, loader: NewShopLoader },
+      { path: "old_shop", element: <Shop />, loader: ShopLoader },
       { path: "home", element: <Home /> },
       { path: "products/:slug", element: <ProductShow /> },
       { path: "category/:slug", element: <Category /> },

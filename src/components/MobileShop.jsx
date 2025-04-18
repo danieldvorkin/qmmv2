@@ -1,29 +1,35 @@
 import React from 'react';
-import loader from '../loading.svg';
 import MobileProduct from './mobile/MobileProduct';
 import Filters from './mobile/Filters';
 import styled from 'styled-components';
 import { Tag, TagCloseButton, TagLabel } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const SelectedFilter = styled.div`
-  width: 100%;
   text-align: left;
-  padding: 10px 15px;
+  padding: 5px 5px;
 `;
 
 const MobileShop = ({ 
-  loading, 
   products, 
   categories, 
   setFilterSlug, 
   filterObject, 
-  resetFilter,
-  onSearchChange
+  typeFilter,
 }) => {
   const location = useLocation();
-  console.log('Current route:', location.hash);
+  const navigate = useNavigate();
+
+  const getBadgeColor = (typeOf) => {
+    let strainColors = {
+      "indica": "#682D63",
+      "sativa": "#F26419",
+      "hybrid": "#138A36",
+    }
+
+    return strainColors[typeOf];
+  }
   
   useEffect(() => {
     if (!location.hash) return;
@@ -57,37 +63,48 @@ const MobileShop = ({
         setFilterSlug={setFilterSlug}
       />
 
-      {loading ? (
-        <div style={{ width: '100%' }}>
-          <img style={{ margin: '0 auto' }} src={loader} alt={"loading"}/>
-        </div>
-      ) : (
-        <>
-          {/* <input 
-            type="text" 
-            placeholder="Search..." 
-            style={{ width: '100%', padding: '10px', margin: '10px 0' }} 
-            onChange={onSearchChange}
-          /> */}
-          {filterObject?.name && (
-            <SelectedFilter>
-              <Tag
-                size={'lg'}
-                key={'lg'}
-                borderRadius='full'
-                variant='solid'
-                colorScheme='green'
-              >
-                <TagLabel>{filterObject?.name}</TagLabel>
-                <TagCloseButton onClick={() => resetFilter()} />
-              </Tag>
-            </SelectedFilter>
-          )}
-          {products.map((product) => (
-            <MobileProduct product={product} filterObject={filterObject} />
-          ))}
-        </>
-      )}
+      <div style={{ display: 'flex' }}>
+        {filterObject?.name && (
+          <SelectedFilter>
+            <Tag
+              size={'lg'}
+              key={'lg'}
+              borderRadius='full'
+              variant='solid'
+              colorScheme='green'
+            >
+              <TagLabel>{filterObject?.name}</TagLabel>
+              <TagCloseButton onClick={() => {
+                const searchParams = new URLSearchParams(window.location.search);
+                searchParams.delete("category");
+                navigate(`?${searchParams.toString().toLowerCase()}`);
+              }} />
+            </Tag>
+          </SelectedFilter>
+        )}
+        {typeFilter && (
+          <SelectedFilter>
+            <Tag
+              size={'lg'}
+              key={'lg'}
+              borderRadius='full'
+              variant='solid'
+              backgroundColor={getBadgeColor(typeFilter.toLowerCase())}
+            >
+              <TagLabel>{typeFilter}</TagLabel>
+              <TagCloseButton onClick={() => {
+                const searchParams = new URLSearchParams(window.location.search);
+                searchParams.delete("type");
+                navigate(`?${searchParams.toString().toLowerCase()}`);
+              }} />
+            </Tag>
+          </SelectedFilter>
+        )}
+      </div>
+      
+      {products.map((product) => (
+        <MobileProduct product={product} filterObject={filterObject} />
+      ))}
     </div>
   );
 }

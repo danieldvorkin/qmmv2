@@ -10,6 +10,7 @@ export const GET_FEATURED_ITEMS = gql`
       imgSrc
       coverPhoto
       slug
+      description
       inventory
       onSale
       strainType

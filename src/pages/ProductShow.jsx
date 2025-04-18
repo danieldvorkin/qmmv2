@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getItem } from "../utils/util";
 import { Badge, Carousel, Col, Container, Image, Row } from "react-bootstrap";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Select, Stack, Text } from "@chakra-ui/react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Text } from "@chakra-ui/react";
 import { connect, useDispatch } from "react-redux";
 import { add } from "../manageCart";
 import Slider from "react-slick";
@@ -106,7 +106,6 @@ const ProductShow = (props) => {
             </div>
           ) : (
             <Row>
-              
               <Col lg={12} style={{marginBottom: 10}}>
                 <Breadcrumb>
                   <BreadcrumbItem>

@@ -23,8 +23,16 @@ export const GET_CATEGORY = gql`
         price
         salePrice
         onSale
+        inventory
+        description
         strainType
         coverPhoto
+        category {
+          id
+          name
+          slug
+          typeOf
+        }
       }
     }
   }
