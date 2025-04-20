@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardBody, Heading, Stack, Text, Image, Button, ButtonGroup, CardFooter, CardHeader, Select } from '@chakra-ui/react';
 import { Badge, Carousel } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { add } from "../manageCart";
 import { LinkContainer } from "react-router-bootstrap";
@@ -12,6 +12,7 @@ const Product = (props) => {
 
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getBadgeColor = (typeOf) => {
     let strainColors = {
@@ -91,7 +92,8 @@ const Product = (props) => {
               <Image
                 src={product.thumbnail}
                 borderRadius='lg'
-                onClick={() => setShowMore(!showMore)}
+                // onClick={() => setShowMore(!showMore)}
+                onClick={() => navigate("/products/" + product.slug)}
               />
             {/* </LinkContainer> */}
           </Carousel.Item>
@@ -165,7 +167,11 @@ const Product = (props) => {
       </CardBody>
 
       <CardFooter style={{display: 'block', margin: '0px auto 14px', paddingLeft: 18, textAlign: 'center'}}>
-        <Text noOfLines={showMore ? 50 : 4} onClick={() => setShowMore(!showMore)} style={{userSelect: 'none'}}>
+        <Text 
+          noOfLines={showMore ? 50 : 4} 
+          // onClick={() => setShowMore(!showMore)} 
+          style={{userSelect: 'none'}}
+        >
           {/* {product?.thc && (
             <><strong style={{fontSize: 10}}>THC:{' '}</strong>{product.thc?.length > 1 ? product.thc : ''}{' | '}</>
           )}

@@ -39,7 +39,7 @@ function App() {
 
   const onLandingPage = () => {
     let pathnames = location.pathname;
-    return pathnames === "/";
+    return pathnames === "/" || pathnames == "/shop";
   }
 
   return (
@@ -58,15 +58,7 @@ function App() {
               <>
                 <div>
                   <MainNavbar cartClick={onOpen} />
-                  {onLandingPage() ? (
-                    <>
-                      <Outlet/>
-                    </>
-                  ) : (
-                    <div style={{ minHeight: 700 }}>
-                      <Outlet />
-                    </div>
-                  )}
+                  <Outlet />
                 </div>
                 <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
               </>

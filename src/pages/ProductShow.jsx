@@ -200,7 +200,18 @@ const ProductShow = (props) => {
                 <br/> */}
                 <Row>
                   <Col>
-                    <Text style={{fontSize: 25}}>Select amount: </Text>
+                    <Text style={{fontSize: 25}}></Text>
+                    <div style={{ fontSize: 30, userSelect: 'none'}}>
+                      {(product.on_sale && !!product.sale_price) || (product.onSale && !!product.salePrice) ? (
+                        <>
+                          <s style={{color: 'red'}}>{`$${product.price}`}</s>
+                          &nbsp;
+                          {`$${product.sale_price || product.salePrice}`}
+                        </>
+                      ) : (
+                        `$${product.price}`
+                      )}
+                    </div>
                     <br/>
                     {product?.category?.type_of === "Strains" ? (
                       <ButtonGroup>
