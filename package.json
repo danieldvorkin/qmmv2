@@ -6,7 +6,7 @@
     "@apollo/client": "^3.8.7",
     "@blueprintjs/core": "^4.17.1",
     "@blueprintjs/popover2": "^1.13.5",
-    "@chakra-ui/icons": "^2.0.17",
+    "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.5.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",

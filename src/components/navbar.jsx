@@ -3,13 +3,15 @@
 import { Button } from '@blueprintjs/core';
 import { Badge, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { Nav, Navbar, ProgressBar } from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown, ProgressBar } from 'react-bootstrap';
 import { connect, useDispatch } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { logout } from '../manageCart';
 import logo from '../new_logo.svg';
 import { DISCOUNT_SETTINGS, getCartTotal, getDiscountTotal, getGrandTotal } from '../utils/helpers';
+import { client } from '../App';
+import { GET_CATEGORIES } from '../pages/graphql/categories';
 
 const MainNavbar = (props) => {
   const [search, setSearch] = useState("");
@@ -17,6 +19,19 @@ const MainNavbar = (props) => {
   const [width, setWidth] = useState(window.innerWidth);
   const isMobile = width <= 768;
   const dispatch = useDispatch();
+  const [categories, setCategories] = useState([]);
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const result = await client.query({
+        query: GET_CATEGORIES,
+      });
+      setCategories(result.data.categories);
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleWindowSizeChange = () => {
     setWidth(window.innerWidth);
@@ -82,7 +97,7 @@ const MainNavbar = (props) => {
   }
 
   return (
-    <Navbar bg="light" expand="lg" sticky="top">
+    <Navbar bg="light" expand="lg" sticky="top" collapseOnSelect={true}>
       {!isMobile && (
         <LinkContainer to="/shop">
           <Navbar.Brand href="#">
@@ -118,28 +133,61 @@ const MainNavbar = (props) => {
             <Text className="nav-link"><strong>{getDiscountPercent(props.cart)}</strong></Text>
           )}
           {isMobile && (
-          <>
-            <Link className="nav-link" to="/my_orders">
-              My Orders
-            </Link>
+            <>
+              <Link className="nav-link" to="/my_orders">
+                Orders
+              </Link>
 
-            {props.isLoggedIn && props.user?.admin && (
-              <LinkContainer  to="/admin">
-                <Button className="nav-link bp4-minimal" text="Admin" style={{textAlign: 'left', color: 'grey' }} />
-              </LinkContainer>
-            )}
+              {categories && Object.keys(categories).map((key) =>  
+                <Link>
+                  <NavDropdown title={key} id="basic-nav-dropdown">
+                    {categories[key].map((category) => (
+                      category && category.slug && (
+                        <NavDropdown.Item 
+                          key={category.id} 
+                          onClick={() => {
+                            searchParams.set("category", category.slug);
+                            navigate(`?${searchParams.toString().toLowerCase()}`);
+                          }}
+                        >
+                          {category.name}
+                        </NavDropdown.Item>
+                      )
+                    ))}
+                  </NavDropdown>
+                </Link>
+              )}
+              <NavDropdown title={"Strain type"} id="strain-type-dropdown">
+                {["Indica", "Sativa", "Hybrid"].map((type) => (
+                  <NavDropdown.Item
+                    key={type}
+                    onClick={() => {
+                      searchParams.set("type", type.toLowerCase());
+                      navigate(`?${searchParams.toString().toLowerCase()}`);
+                    }}
+                  >
+                    {type}
+                  </NavDropdown.Item>
+                ))}  
+              </NavDropdown>
 
-            {!props.isLoggedIn ? (
-              <>
-                {/* <LinkContainer to="/login">
-                  <Button className="nav-link bp4-minimal" text="Login" style={{textAlign: 'left', color: 'grey' }} />
-                </LinkContainer> */}
-              </>
-            ) : (
-              <Button className="nav-link bp4-minimal" text="Logout" onClick={() => dispatch(logout())}  style={{textAlign: 'left', color: 'grey', height: 40 }} />
-            )}
-          </>
-        )}
+              {props.isLoggedIn && props.user?.admin && (
+                <LinkContainer  to="/admin">
+                  <Button className="nav-link bp4-minimal" text="Admin" style={{textAlign: 'left', color: 'grey' }} />
+                </LinkContainer>
+              )}
+
+              {!props.isLoggedIn ? (
+                <>
+                  {/* <LinkContainer to="/login">
+                    <Button className="nav-link bp4-minimal" text="Login" style={{textAlign: 'left', color: 'grey' }} />
+                  </LinkContainer> */}
+                </>
+              ) : (
+                <Button className="nav-link bp4-minimal" text="Logout" onClick={() => dispatch(logout())}  style={{textAlign: 'left', color: 'grey', height: 40 }} />
+              )}
+            </>
+          )}
         </Nav>
       </Navbar.Collapse>
       

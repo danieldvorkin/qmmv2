@@ -1,25 +1,51 @@
 import React from 'react';
 import MobileProduct from './mobile/MobileProduct';
-import Filters from './mobile/Filters';
 import styled from 'styled-components';
-import { Tag, TagCloseButton, TagLabel } from '@chakra-ui/react';
+import { Tag, TagCloseButton, TagLabel, useDisclosure } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useNavigation } from 'react-router-dom';
+import Cart from './cart';
+import { Button, Icon } from '@blueprintjs/core';
+import { connect } from 'react-redux';
 
 const SelectedFilter = styled.div`
   text-align: left;
   padding: 5px 5px;
 `;
 
-const MobileShop = ({ 
-  products, 
-  categories, 
-  setFilterSlug, 
-  filterObject, 
-  typeFilter,
-}) => {
+const FloatingButton = styled(Button)`
+  position: fixed !important;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  border: 1px solid #e9e9e9 !important;
+  border-radius: 50% !important;
+  padding: 10px;
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  span > svg{
+    width: 25px;
+    height: 25px;
+  }
+`;
+
+const CartTag = styled(Tag)`
+  position: absolute;
+  bottom: 45px;
+  right: 35px;
+  min-height: 20px;
+  min-width: 20px;
+  font-size: 12px;
+  padding: 0px 6px;
+  border-radius: 25px !important;
+`;
+
+const MobileShop = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { cart, products, filterObject, typeFilter } = props;
 
   const getBadgeColor = (typeOf) => {
     let strainColors = {
@@ -58,10 +84,16 @@ const MobileShop = ({
 
   return (
     <div className="mobile-shop">
-      <Filters 
-        categories={categories} 
-        setFilterSlug={setFilterSlug}
-      />
+      <FloatingButton
+        isRound={true}
+        icon={<Icon icon="shopping-cart" />}
+        onClick={onOpen}
+      >
+        <CartTag size="lg" color="white" backgroundColor="#2B6CB0">
+          {cart?.length}
+        </CartTag>
+      </FloatingButton>
+      <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
 
       <div style={{ display: 'flex' }}>
         {filterObject?.name && (
@@ -102,15 +134,20 @@ const MobileShop = ({
         )}
       </div>
 
-      {products.length === 0 && (
+      {products?.length === 0 && (
         <div className="container"><p>No products available</p></div>
       )}
 
-      {products.map((product) => (
+      {products?.map((product) => (
         <MobileProduct product={product} filterObject={filterObject} />
       ))}
     </div>
   );
 }
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart
+  }
+}
 
-export default MobileShop;
+export default connect(mapStateToProps)(MobileShop);

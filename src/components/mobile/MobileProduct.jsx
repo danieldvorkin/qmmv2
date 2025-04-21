@@ -139,7 +139,17 @@ const MobileProduct = ({ product, filterObject }) => {
               <ButtonGroup>
                 {[1, 3.5, 7, 14, 28].map((variant) => {
                   return (
-                    <Button style={{ minWidth: 50, fontSize: 13, padding: '5px 5px', margin: "0px 1px", fontWeight: 'bold' }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
+                    <Button 
+                      style={{ minWidth: 50, fontSize: 13, padding: '5px 5px', margin: "0px 1px", fontWeight: 'bold' }} 
+                      colorScheme='green' 
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault(); // just in case
+                        e.stopPropagation(); // prevent bubbling
+                        console.log("dispatching...");
+                        dispatch(add({ product: product, quantity: variant }))
+                      }}
+                    >
                       {variant}g
                     </Button>
                   )
@@ -155,7 +165,17 @@ const MobileProduct = ({ product, filterObject }) => {
               </ButtonGroup>
 
               <ButtonGroup spacing='2' style={{width: '100%', marginTop: 10}}>
-                <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: quantity}))} style={{width: '100%'}}>
+                <Button 
+                  colorScheme='green' 
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault(); // just in case
+                    e.stopPropagation(); // prevent bubbling
+                    console.log("dispatching...");
+                    dispatch(add({product: product, quantity: quantity}))
+                  }} 
+                  style={{width: '100%'}}
+                >
                   <Text>Add to Cart - ${quantity * (product.onSale || product.on_sale ? (product.salePrice || product.sale_price) : product.price)}</Text>
                 </Button>
               </ButtonGroup>
