@@ -145,7 +145,7 @@ const WebShop = ({
           <hr/> 
           <Accordion defaultIndex={[0]} allowMultiple>
             {Object.keys(categories).map((categoryGroup) => (
-              <AccordionItem>
+              <AccordionItem key={categoryGroup}>
                 <h2>
                   <AccordionButton>
                     <Box as='span' flex='1' textAlign='left'>
@@ -158,6 +158,7 @@ const WebShop = ({
                   <Stack direction="row" spacing={4} align="center" key={categoryGroup}>
                     {categories[categoryGroup].map((category) => (
                       <Checkbox
+                        key={category.id}
                         isChecked={checked.includes(category.slug)}
                         onChange={(e) => {
                           if (e.target.checked) {

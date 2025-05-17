@@ -13,9 +13,10 @@ export async function loader({ request }) {
     return [];
   });
 
-  let featuredItems = client.query({
-    query: GET_FEATURED_ITEMS
-  }).then((response) => {
+  let featuredItems = client.watchQuery({
+    query: GET_FEATURED_ITEMS,
+    pollInterval: 5000 // poll every 5 seconds
+  }).result().then((response) => {
     return response.data.featuredItems;
   }).catch((error) => {
     console.error("Error fetching featured items:", error);

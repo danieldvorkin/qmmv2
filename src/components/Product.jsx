@@ -142,9 +142,9 @@ const Product = (props) => {
           </Heading>
 
           {category?.type_of === "Strains" || product?.category?.typeOf === "Strains" || product.category?.type_of === "Strains" ? (
-            <div key={category?.type_of || product?.category?.typeOf || product?.category?.type_of} style={{top: 0, position: 'relative', textAlign: 'center' }}>
+            <div key={new Date().toString()} style={{top: 0, position: 'relative', textAlign: 'center' }}>
               {/* <Text style={{marginBottom: 5, fontWeight: 'bold', textAlign: 'left'}}>Select Qty</Text> */}
-              <ButtonGroup>
+              <ButtonGroup key={new Date().toString()}>
                 {[1, 3.5, 7, 14, 28].map((variant) => {
                   return (
                     <Button style={{ minWidth: 50, fontSize: 13, padding: '5px 5px', margin: "0px 1px", fontWeight: 'bold' }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
