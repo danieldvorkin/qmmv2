@@ -11,7 +11,7 @@ import {
   Heading,
   Badge,
 } from "@chakra-ui/react";
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { add } from '../../manageCart';
 
 import styled from "styled-components";
@@ -75,9 +75,19 @@ const CustomBadge = styled(Badge)`
   user-select: none;
 `;
 
-const MobileProduct = ({ product, filterObject }) => {
+const InCartBadge = styled(Badge)`
+  color: white !important;
+  padding: 5;
+  margin-bottom: 5;
+  font-size: 10;
+  user-select: none;
+  background-color: green !important;
+`;
+
+const MobileProduct = ({ product, filterObject, cart }) => {
   const [quantity, setQuantity] = React.useState(1);
   const dispatch = useDispatch();
+  const [inCart, setInCart] = React.useState(false);
 
   const getBadgeColor = (typeOf) => {
     let strainColors = {
@@ -91,12 +101,43 @@ const MobileProduct = ({ product, filterObject }) => {
     return strainColors[typeOf];
   }
 
+  const getCartQty = () => {
+    if(cart && product){
+      let item = cart.filter((i) => Number(i.product.id) === Number(product.id))[0];
+      
+      if(item){
+        return `${item.quantity}${item.variant_by_weight ? 'g' : ''} in Cart`
+      }
+    }
+  }
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [])
 
+  React.useEffect(() => {
+    if (cart && cart.length > 0) {
+      const found = cart.find((item) => Number(item.product.id) === Number(product.id));
+      setInCart(found);
+    } else {
+      setInCart(false);
+    }
+  }, [cart]);
+
   return (
-    <Card flexDirection="row" overflow="hidden" maxW="lg" key={product.id} style={{ width: '100%', marginBottom: 5 }} id={`${product.slug}`}>
+    <Card 
+      flexDirection="row" 
+      overflow="hidden" 
+      maxW="lg" 
+      key={product.id} 
+      style={{ 
+        width: '100%', 
+        marginBottom: 0, 
+        borderRadius: 0, 
+        padding: 5
+      }} 
+      id={`${product.slug}`}
+    >
       <div style={{display: 'block'}}>
 
         <Pictures product={product} />
@@ -114,7 +155,7 @@ const MobileProduct = ({ product, filterObject }) => {
             
             <div style={{ display: 'block', width: '100%' }}>
               <Link to={"/products/" + product.slug}>
-                <StyledTitle size="sm">{product.name}</StyledTitle>
+                <StyledTitle size="sm">{product.name}<br/>{inCart ? <InCartBadge>{getCartQty()}</InCartBadge> : ''}</StyledTitle>
               </Link>
               <Text fontSize="sm" color="gray.500">
                 {product.category?.name}
@@ -192,4 +233,10 @@ const MobileProduct = ({ product, filterObject }) => {
   )
 };
 
-export default MobileProduct;
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart
+  }
+}
+
+export default connect(mapStateToProps)(MobileProduct);
