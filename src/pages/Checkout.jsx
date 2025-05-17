@@ -6,12 +6,12 @@ import WebCheckout from "../components/checkout/webCheckout";
 import { remove, updateQty } from "../manageCart";
 import Slider from 'react-slick'
 import Product from "../components/Product";
-import { featuredItems } from "../utils/util";
 import { submitNewOrder } from "../actions";
 import { getCartTotal, getDiscountTotal, getGrandTotal, getItemSubtotal } from "../utils/helpers";
-import { createSearchParams, useNavigate } from "react-router-dom";
-import loading from '../loading.svg';
+import { useNavigate } from "react-router-dom";
 import { AppToaster } from "../toast";
+import { client } from "../App";
+import { GET_FEATURED_ITEMS } from "./graphql/featuredItems";
 
 const Checkout = (props) => {
   const dispatch = useDispatch();
@@ -41,11 +41,18 @@ const Checkout = (props) => {
   }
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await featuredItems();
-      setFeaturedItemsList(response);
-    }
-    fetchData();
+    let isMounted = true;
+    client.query({ query: GET_FEATURED_ITEMS })
+      .then(resp => {
+        if (isMounted && resp.data && resp.data.featuredItems) {
+          setFeaturedItemsList(resp.data.featuredItems);
+        }
+      })
+      .catch(err => {
+        // Optionally handle error here
+        setFeaturedItemsList([]);
+      });
+    return () => { isMounted = false; };
   }, []);
 
   const removeItem = (id, variant, qty) => {
@@ -61,7 +68,7 @@ const Checkout = (props) => {
     
     dispatch(submitNewOrder(Object.assign({}, newOrder, order), props.activeCoupon)).then((resp) => {
       setOrderComplete(true);
-
+      
       if(!!resp.order?.id){
         navigate('/order/review/' + resp.order?.id);
       } else {

@@ -1,6 +1,9 @@
 import axios from "axios"
 
-export const URL = "https://queenmarymedical.herokuapp.com/api/v1";
+const isDev = process.env.NODE_ENV === 'development';
+export const URL = isDev ? 
+  "http://localhost:3000/api/v1" :
+  "https://queenmarymedical.herokuapp.com/api/v1";
 
 export const search = async (query, page, sort, dir) => {
   if(query?.length > 0){

@@ -2,7 +2,10 @@ import { finalizeOrder, login, loginError, logout } from "./manageCart";
 import { getGrandTotal } from "./utils/helpers";
 import { loginUser, submitOrder } from "./utils/util";
 
-export const URL = "https://queenmarymedical.herokuapp.com/api/v1";
+const isDev = process.env.NODE_ENV === "development";
+export const URL = isDev ? 
+  "http://localhost:3000/api/v1" :
+  "https://queenmarymedical.herokuapp.com/api/v1";
 
 export const loginService = (loginData) => async (dispatch) => {
   try {
@@ -24,8 +27,8 @@ export const logoutService = () => async (dispatch) => {
 
 export const submitNewOrder = (order, coupon) => async (dispatch) => {
   let total = getGrandTotal(order.cart, coupon);
-  
   const response = await submitOrder({ ...order, total: total, coupon_code: !!coupon ? coupon.code : null })
+  
   if(response.success){
     dispatch(finalizeOrder(response));
   }

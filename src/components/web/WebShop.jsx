@@ -178,7 +178,6 @@ const WebShop = ({
                           navigate(`?${searchParams.toString().toLowerCase()}`);
                         }}
                         value={category.slug}
-                        key={category.id}
                       >
                         {category.name}
                       </Checkbox> 

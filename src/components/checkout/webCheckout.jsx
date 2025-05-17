@@ -57,7 +57,10 @@ const WebCheckout = (props) => {
     // Check the input value after a short delay
     setTimeout(() => {
       if (e.target.value !== initialOrder[e.target.name]) {
-        setInitialOrder({...initialOrder, [e.target.name]: e.target.value })
+        setInitialOrder({ 
+          ...initialOrder, 
+          [e.target.name]: e.target.value.trim() 
+        })
       }
     }, 400); // Adjust the delay as needed
   }
