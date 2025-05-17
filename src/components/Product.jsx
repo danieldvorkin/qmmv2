@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardBody, Heading, Stack, Text, Image, Button, ButtonGroup, CardFooter, CardHeader, Select } from '@chakra-ui/react';
 import { Badge, Carousel } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { add } from "../manageCart";
-import { LinkContainer } from "react-router-bootstrap";
 import { getItemDiscount } from "../utils/helpers";
 
 const Product = (props) => {
   const { product, category, cart } = props;
+  const [inCart, setInCart] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
@@ -29,20 +29,16 @@ const Product = (props) => {
   const showInCartBorder = () => {
     if(cart && product){
       let itemInCart = cart.filter((item) => {
-        return item.product.id === product.id
+        return Number(item.product.id) === Number(product.id)
       }).length > 0;
       
       return itemInCart && product.on_sale ? 'showInCart' : (itemInCart ? 'showInCart' : '');
     }
   }
 
-  const showNewProductBorder = () => {
-    return !!product?.featured_item ? 'newProduct' : '';
-  }
-
   const getCartQty = () => {
     if(cart && product){
-      let item = cart.filter((i) => i.product.id === product.id)[0];
+      let item = cart.filter((i) => Number(i.product.id) === Number(product.id))[0];
       
       if(item){
         return `${item.quantity}${item.variant_by_weight ? 'g' : ''} in Cart | ${getItemDiscount(item, cart)}`
@@ -50,10 +46,20 @@ const Product = (props) => {
     }
   }
 
+  useEffect(() => {
+    const productIdsInCart = cart.map((item) => Number(item.product.id));
+    
+    if(productIdsInCart && productIdsInCart.includes(Number(product.id))){
+      setInCart(true);
+    } else {
+      setInCart(false);
+    }
+  }, [cart]);
+
   const [showMore, setShowMore] = useState(false);
   
   return (
-    <Card maxW='sm' className={`productCard ${showInCartBorder()}`} id={`${product.slug}`}>
+    <Card maxW='sm' className={`productCard ${inCart ? 'showInCart' : ''}`} id={`${product.slug}`}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
           {product.on_sale && (
@@ -70,7 +76,7 @@ const Product = (props) => {
               </Badge>
             </div>
           )}
-          {showInCartBorder().includes('showInCart') ? (
+          {inCart ? (
             <div style={{float: 'right'}}>
               <Badge bg={'success'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
                 {getCartQty()}
