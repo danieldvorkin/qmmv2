@@ -81,7 +81,7 @@ const InCartBadge = styled(Badge)`
   margin-bottom: 5;
   font-size: 10;
   user-select: none;
-  background-color: green !important;
+  background-color: green !important;  
 `;
 
 const MobileProduct = ({ product, filterObject, cart }) => {
@@ -139,6 +139,16 @@ const MobileProduct = ({ product, filterObject, cart }) => {
       id={`${product.slug}`}
     >
       <div style={{display: 'block'}}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {product?.onSale && (
+            <CustomBadge style={{ backgroundColor: 'red' }}>
+              {`Sale`}
+            </CustomBadge>
+          )}
+          {inCart && (
+            <InCartBadge>{getCartQty()}</InCartBadge>
+          )}
+        </div>
 
         <Pictures product={product} />
 
@@ -155,7 +165,10 @@ const MobileProduct = ({ product, filterObject, cart }) => {
             
             <div style={{ display: 'block', width: '100%' }}>
               <Link to={"/products/" + product.slug}>
-                <StyledTitle size="sm">{product.name}<br/>{inCart ? <InCartBadge>{getCartQty()}</InCartBadge> : ''}</StyledTitle>
+                <StyledTitle size="sm">{product.name}&nbsp;{
+                  product.featuredItem && 
+                    <CustomBadge style={{ backgroundColor: 'blue' }}>{`New`}</CustomBadge>
+                }</StyledTitle>
               </Link>
               <Text fontSize="sm" color="gray.500">
                 {product.category?.name}
