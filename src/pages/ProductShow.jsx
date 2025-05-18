@@ -49,6 +49,7 @@ const ProductShow = (props) => {
   const [selectedQty, setSelectedQty] = useState(1);
   const { cart } = props; 
   const [showEditBtn, setShowEditBtn] = useState(false);
+  const [inCart, setInCart] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -78,11 +79,20 @@ const ProductShow = (props) => {
     }
   }, [props])
 
-  const showInCartBorder = () => {
-    if(cart && product){
-      return cart.filter((item) => item.product.id === product.id).length > 0 ? 'showInCart' : '';
+  React.useEffect(() => {
+    if (cart && cart.length > 0 && product) {
+      const found = cart.find((item) => Number(item.product.id) === Number(product.id));
+
+      if(found){
+        setInCart(true);
+      } else {
+        setInCart(false);
+      }
+    } else {
+      setInCart(false);
     }
-  }
+
+  }, [cart, product]);
 
   const getBadgeColor = (typeOf) => {
     let strainColors = {
@@ -94,6 +104,17 @@ const ProductShow = (props) => {
     }
 
     return strainColors[typeOf];
+  }
+
+  const getCartQty = () => {
+    if(cart && product){
+      let item = cart.filter((i) => Number(i.product.id) === Number(product.id))[0];
+      
+      if(item){
+        console.log(`${item.quantity}${item.variant_by_weight ? 'g' : ''} in Cart`)
+        return `${item.quantity}${item.variant_by_weight ? 'g' : ''} in Cart`
+      }
+    }
   }
 
   return (
@@ -121,10 +142,10 @@ const ProductShow = (props) => {
               </Col>
 
               <Col lg={5}>
-                {showInCartBorder() === 'showInCart' ? (
+                {inCart ? (
                   <div style={{float: 'right'}}>
                     <Badge bg={'success'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
-                      In Cart
+                      {getCartQty()}
                     </Badge>
                   </div>
                 ) : (
@@ -135,7 +156,6 @@ const ProductShow = (props) => {
                   <Carousel.Item>
                     <Image
                       src={product.cover_photo || "https://via.placeholder.com/500?text=No+Product+Image+Available"}
-                      borderRadius='lg'
                     />
                   </Carousel.Item>
                   {product?.images?.map((img) => {
@@ -143,7 +163,6 @@ const ProductShow = (props) => {
                       <Carousel.Item key={img}>
                         <Image
                           src={img}
-                          borderRadius='lg'
                         />
                       </Carousel.Item> 
                     )
@@ -177,27 +196,6 @@ const ProductShow = (props) => {
                 
                 <br/>
                 
-                {/* <Row>
-                  <Col>
-                    <Text className="header" style={{marginBottom: 5}}>Terpenes</Text>
-                    {product?.terpenes?.length > 0 ? (    
-                      <Stack direction='row'>
-                        {product.terpenes.map((terpene) => {
-                          return (
-                            <Badge>
-                              {` ${terpene.name}`}
-                            </Badge>
-                          )
-                        })}
-                      </Stack>
-                    ) : (
-                      <Stack direction='row'>
-                        <Badge>Not Available</Badge>
-                      </Stack>
-                    )}
-                  </Col>
-                </Row>
-                <br/> */}
                 <Row>
                   <Col>
                     <Text style={{fontSize: 25}}></Text>
@@ -214,10 +212,15 @@ const ProductShow = (props) => {
                     </div>
                     <br/>
                     {product?.category?.type_of === "Strains" ? (
-                      <ButtonGroup>
+                      <ButtonGroup key={product?.id}>
                         {[1, 3.5, 7, 14, 28].map((variant) => {
                           return (
-                            <Button style={{ fontSize: 18, padding: '2px 0px', margin: "0px 4px", fontWeight: 'bold', height: 50, width: 60 }} colorScheme='green' onClick={() => dispatch(add({product: product, quantity: variant}))}>
+                            <Button 
+                              style={{ fontSize: 18, padding: '2px 0px', margin: "0px 4px", fontWeight: 'bold', height: 50, width: 60 }} 
+                              colorScheme='green' 
+                              onClick={() => dispatch(add({product: product, quantity: variant}))}
+                              key={variant}
+                            >
                               {variant}g
                             </Button>
                           )

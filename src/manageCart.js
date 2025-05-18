@@ -17,7 +17,7 @@ export const cartSlice = createSlice({
     add: (state, params) => {
       if(state.cart.length > 0){
         let existingProduct = state.cart.find((item) => {
-          return item.product?.id === params.payload.product.id
+          return +item.product?.id === +params.payload.product.id
         });
 
         if(existingProduct){

@@ -47,6 +47,7 @@ const Cart = (props) => {
             {props.cart?.length > 0 && props.cart.map((item, index) => {
               return(
                 <Breakdown
+                  key={`${item.product.id}-${index}`}
                   index={index}
                   item={item}
                   qtyChange={qtyChange}
