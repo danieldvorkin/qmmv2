@@ -12,10 +12,13 @@ export const GET_FEATURED_ITEMS = gql`
       description
       inventory
       onSale
+      featuredItem
       strainType
       price
       salePrice
       thumbnail
+      createdAt
+      updatedAt
       category {
         id
         name

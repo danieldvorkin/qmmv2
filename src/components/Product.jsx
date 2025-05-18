@@ -62,14 +62,14 @@ const Product = (props) => {
     <Card maxW='sm' className={`productCard ${inCart ? 'showInCart' : ''}`} id={`${product.slug}`} style={{ overflow: 'hidden' }}>
       <CardBody style={{padding: 5}}>
         <CardHeader style={{padding: 0}}>
-          {product.on_sale && (
+          {product.onSale && (
             <div style={{float: 'left'}}>
               <Badge bg={'danger'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
                 SALE
               </Badge>
             </div>
           )}
-          {product?.featured_item && (
+          {product?.featuredItem && (
             <div style={{float: 'left', marginLeft: 5}}>
               <Badge bg={'primary'} style={{ padding: 5, marginBottom: 5, fontSize: 12 }}>
                 NEW
