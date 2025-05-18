@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getItem } from "../utils/util";
 import { Badge, Carousel, Col, Container, Image, Row } from "react-bootstrap";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Text } from "@chakra-ui/react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, ButtonGroup, Button as Chakrabutton, Card, CardBody, CardHeader, Divider, Tag, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Icon } from '@blueprintjs/core';
 import { connect, useDispatch } from "react-redux";
 import { add } from "../manageCart";
 import Slider from "react-slick";
@@ -12,6 +13,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import styled from "styled-components";
 import { client } from "../App";
 import { GET_FEATURED_ITEMS } from "./graphql/featuredItems";
+import Cart from "../components/cart";
 
 const settings = {
   dots: false, infinite: true, 
@@ -40,10 +42,39 @@ const CustomBadge = styled(Badge)`
   user-select: none;
 `;
 
+const FloatingButton = styled(Button)`
+  position: fixed !important;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  border: 1px solid #e9e9e9 !important;
+  border-radius: 50% !important;
+  padding: 10px;
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  span > svg{
+    width: 25px;
+    height: 25px;
+  }
+`;
+
+const CartTag = styled(Tag)`
+  position: absolute;
+  bottom: 45px;
+  right: 35px;
+  min-height: 20px;
+  min-width: 20px;
+  font-size: 12px;
+  padding: 0px 6px;
+  border-radius: 25px !important;
+`;
+
 const ProductShow = (props) => {
   const { slug } = useParams();
   const [product, setProduct] = useState({});
   const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [productFeaturedItems, setProductFeaturedItems] = useState([]);
   const [loader, setLoader] = useState(true);
   const [selectedQty, setSelectedQty] = useState(1);
@@ -102,10 +133,10 @@ const ProductShow = (props) => {
       "Indica Hybrid": "#4092B5",
       "Sativa Hybrid": "#F6AE2D",
     }
-
+    
     return strainColors[typeOf];
   }
-
+  
   const getCartQty = () => {
     if(cart && product){
       let item = cart.filter((i) => Number(i.product.id) === Number(product.id))[0];
@@ -116,9 +147,19 @@ const ProductShow = (props) => {
       }
     }
   }
-
+  
   return (
     <Container>
+      <FloatingButton
+        isRound={true}
+        icon={<Icon icon="shopping-cart" />}
+        onClick={onOpen}
+      >
+        <CartTag size="lg" color="white" backgroundColor="#2B6CB0">
+          {cart?.length}
+        </CartTag>
+      </FloatingButton>
+      <Cart isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Card>
         <CardBody>
           {loader ? (
@@ -181,7 +222,7 @@ const ProductShow = (props) => {
                   <Col lg={2}>
                     {showEditBtn && (
                       <Link to={`/admin/products/${product.slug}`} style={{float: 'right'}}>
-                        <Button style={{marginTop: 10}}>Edit Product</Button>
+                        <Chakrabutton style={{marginTop: 10}}>Edit Product</Chakrabutton>
                       </Link>
                     )}
                   </Col>
@@ -215,29 +256,29 @@ const ProductShow = (props) => {
                       <ButtonGroup key={product?.id}>
                         {[1, 3.5, 7, 14, 28].map((variant) => {
                           return (
-                            <Button 
+                            <Chakrabutton 
                               style={{ fontSize: 18, padding: '2px 0px', margin: "0px 4px", fontWeight: 'bold', height: 50, width: 60 }} 
                               colorScheme='green' 
                               onClick={() => dispatch(add({product: product, quantity: variant}))}
                               key={variant}
                             >
                               {variant}g
-                            </Button>
+                            </Chakrabutton>
                           )
                         })}
                       </ButtonGroup>
                     ) : (
                       <ButtonGroup spacing='2' style={{width: '100%'}}>
-                        <Button style={{ width: 130 }} onClick={() => (selectedQty - 1) > 0 ? setSelectedQty(selectedQty - 1) : null}>-</Button>
+                        <Chakrabutton style={{ width: 130 }} onClick={() => (selectedQty - 1) > 0 ? setSelectedQty(selectedQty - 1) : null}>-</Chakrabutton>
                         <input type="number" min={0} className="chakra-input-custom chakra-input-custom-2" value={selectedQty} onChange={(e) => parseFloat(e.target.value) > 0.0 ? setSelectedQty(parseFloat(e.target.value)) : null} />
-                        <Button style={{ width: 130 }} onClick={() => setSelectedQty(selectedQty + 1)}>+</Button>
+                        <Chakrabutton style={{ width: 130 }} onClick={() => setSelectedQty(selectedQty + 1)}>+</Chakrabutton>
                       </ButtonGroup>
                     )}
                     <br/>
                     {product?.category?.type_of !== 'Strains' && (
-                      <Button colorScheme='green' onClick={() => dispatch(add({product: product, quantity: selectedQty}))} style={{ width: '100%', marginTop: 10 }}>
+                      <Chakrabutton colorScheme='green' onClick={() => dispatch(add({product: product, quantity: selectedQty}))} style={{ width: '100%', marginTop: 10 }}>
                         Add to cart
-                      </Button>
+                      </Chakrabutton>
                     )}
                     
                   </Col>
@@ -284,7 +325,6 @@ const ProductShow = (props) => {
           )}
         </CardBody>
       </Card>
-      
     </Container>
   )
 }
